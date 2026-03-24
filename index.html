@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Workshop-Diy</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --orange:#E8820A;--orange2:#FF9D1A;--dark:#060709;
+  --card-w:280px;--card-h:185px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--dark);
+  font-family:'Rajdhani',sans-serif;color:#f0ede8}
+
+/* ── CANVAS PARTICLES ── */
+#cvs{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── SCENE ── */
+#scene{
+  position:fixed;inset:0;z-index:1;
+  perspective:1200px;
+  display:flex;align-items:center;justify-content:center;
+}
+#world{
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  position:relative;
+}
+
+/* ── RINGS ── */
+.ring{
+  position:absolute;left:50%;top:50%;
+  transform-style:preserve-3d;
+  transform:translateX(-50%) translateY(-50%);
+}
+.ring-0{animation:rot0 35s linear infinite;margin-top:-100px}
+.ring-1{animation:rot1 28s linear infinite;margin-top:40px}
+.ring-2{animation:rot2 42s linear infinite;margin-top:180px}
+
+@keyframes rot0{from{transform:translateX(-50%) translateY(-50%) rotateY(0)}to{transform:translateX(-50%) translateY(-50%) rotateY(360deg)}}
+@keyframes rot1{from{transform:translateX(-50%) translateY(-50%) rotateY(0)}to{transform:translateX(-50%) translateY(-50%) rotateY(-360deg)}}
+@keyframes rot2{from{transform:translateX(-50%) translateY(-50%) rotateY(0)}to{transform:translateX(-50%) translateY(-50%) rotateY(360deg)}}
+
+/* ── CARD ── */
+.card{
+  position:absolute;
+  width:var(--card-w);height:var(--card-h);
+  margin-left:calc(var(--card-w) / -2);
+  margin-top:calc(var(--card-h) / -2);
+  border-radius:10px;overflow:hidden;
+  border:1px solid rgba(232,130,10,0.25);
+  background:#0a0c0f;
+  box-shadow:0 0 20px rgba(0,0,0,0.8),inset 0 0 0 1px rgba(232,130,10,0.1);
+  transition:border-color .3s,box-shadow .3s;
+  cursor:default;
+  backface-visibility:hidden;
+}
+.card.lit{
+  border-color:rgba(232,130,10,0.7);
+  box-shadow:0 0 40px rgba(232,130,10,0.4),0 0 80px rgba(232,130,10,0.15);
+}
+
+/* Card thumbnail */
+.card-img{
+  width:100%;height:62%;object-fit:cover;
+  display:block;
+  filter:brightness(0.75) saturate(0.9);
+  transition:filter .4s;
+}
+.card.lit .card-img{filter:brightness(0.95) saturate(1.1)}
+.card-img-fallback{
+  width:100%;height:62%;display:flex;align-items:center;justify-content:center;
+  font-size:48px;background:linear-gradient(135deg,#0f1218,#141820);
+}
+
+/* Card info */
+.card-info{
+  padding:8px 10px;
+  background:linear-gradient(180deg,rgba(6,7,9,0.95),rgba(10,12,15,1));
+  height:38%;
+}
+.card-name{
+  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;
+  color:var(--orange2);letter-spacing:0.06em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;
+}
+.card-desc{
+  font-size:11px;font-weight:400;color:rgba(240,237,232,0.75);
+  line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-cat{
+  position:absolute;top:6px;left:6px;
+  background:rgba(0,0,0,0.7);border:1px solid rgba(232,130,10,0.4);
+  border-radius:3px;padding:2px 6px;font-size:9px;letter-spacing:0.12em;
+  color:var(--orange);text-transform:uppercase;backdrop-filter:blur(4px);
+}
+/* Laser line at card bottom */
+.card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),var(--orange2),var(--orange),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.card.lit::after{opacity:1;animation:laserpulse 2s ease-in-out infinite}
+@keyframes laserpulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ── TITLE ── */
+#title{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:20;text-align:center;pointer-events:none;
+  opacity:0;animation:fadeup 1.4s .5s ease forwards;
+}
+#title h1{
+  font-family:'Orbitron',monospace;font-size:clamp(28px,4vw,60px);font-weight:900;
+  letter-spacing:.1em;line-height:1;
+  background:linear-gradient(135deg,#FFB340,#E8520A,#FFB340);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;filter:drop-shadow(0 0 30px rgba(232,130,10,.7));
+  animation:titleglow 4s ease-in-out infinite;
+}
+@keyframes titleglow{0%,100%{filter:drop-shadow(0 0 20px rgba(232,130,10,.5))}50%{filter:drop-shadow(0 0 50px rgba(232,130,10,1)) drop-shadow(0 0 100px rgba(232,100,10,.3))}}
+#title .bar{
+  height:2px;margin:10px auto;background:linear-gradient(90deg,transparent,var(--orange),var(--orange2),var(--orange),transparent);
+  box-shadow:0 0 8px var(--orange);
+  width:0;animation:barexpand 1.2s 1.4s ease forwards;
+}
+@keyframes barexpand{to{width:320px}}
+#title .sub{
+  font-size:clamp(13px,1.5vw,19px);font-weight:300;letter-spacing:.1em;
+  color:rgba(240,237,232,.5);margin-top:8px;
+}
+
+/* ── HUD ── */
+#ctr{
+  position:fixed;top:20px;left:24px;z-index:30;
+  font-family:'Orbitron',monospace;font-size:10px;letter-spacing:.2em;
+  color:rgba(232,130,10,.45);opacity:0;animation:fadeup 1s 2s ease forwards;
+}
+#ctr b{color:var(--orange2);font-size:14px}
+
+#langs{
+  position:fixed;top:16px;right:20px;z-index:30;display:flex;gap:8px;
+  opacity:0;animation:fadeup 1s 2s ease forwards;
+}
+.lb{background:rgba(255,255,255,.04);border:1px solid rgba(232,130,10,.2);
+  color:rgba(232,130,10,.45);font-family:'Orbitron',monospace;font-size:10px;
+  letter-spacing:.1em;padding:5px 12px;border-radius:4px;cursor:pointer;transition:all .2s}
+.lb.on,.lb:hover{background:rgba(232,130,10,.15);border-color:var(--orange);color:var(--orange2)}
+
+/* ── SPOTLIGHT PANEL ── */
+#spot{
+  position:fixed;bottom:48px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  z-index:30;background:rgba(6,7,9,.94);
+  border:1px solid rgba(232,130,10,.45);border-radius:14px;
+  padding:16px 28px;max-width:500px;width:86%;text-align:center;
+  opacity:0;transition:all .5s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 0 50px rgba(232,130,10,.2);backdrop-filter:blur(20px);
+}
+#spot.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#sp-progress{
+  position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 14px 14px;
+  background:linear-gradient(90deg,transparent,var(--orange),var(--orange2),var(--orange),transparent);
+  animation:progress 4.5s linear;transform-origin:left;
+}
+@keyframes progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#sp-emoji{font-size:30px;display:block;margin-bottom:5px}
+#sp-name{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--orange2);letter-spacing:.06em}
+#sp-desc{font-size:13px;color:rgba(240,237,232,.72);margin-top:6px;line-height:1.55;font-weight:300}
+#sp-cats{display:flex;gap:5px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.ct{padding:2px 8px;border:1px solid rgba(232,130,10,.3);border-radius:20px;
+  font-size:9px;letter-spacing:.12em;color:var(--orange);text-transform:uppercase}
+
+/* ── FOOTER ── */
+#foot{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:30;
+  font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.1);text-transform:uppercase;
+  opacity:0;animation:fadeup 1s 3s ease forwards;white-space:nowrap;
+}
+#foot a{color:rgba(232,130,10,.25);text-decoration:none}
+
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+
+<div id="ctr"><b>93</b> APPS · CHELLES, FRANCE</div>
+<div id="langs">
+  <button class="lb on" onclick="setLang('fr')">FR</button>
+  <button class="lb" onclick="setLang('en')">EN</button>
+  <button class="lb" onclick="setLang('ar')">عر</button>
+</div>
+
+<div id="scene"><div id="world">
+  <div class="ring ring-0" id="r0"></div>
+  <div class="ring ring-1" id="r1"></div>
+  <div class="ring ring-2" id="r2"></div>
+</div></div>
+
+<div id="title">
+  <h1>WORKSHOP-DIY</h1>
+  <div class="bar"></div>
+  <div class="sub" id="sub">On construit, on apprend, on partage</div>
+</div>
+
+<div id="spot">
+  <div id="sp-progress"></div>
+  <span id="sp-emoji"></span>
+  <div id="sp-name"></div>
+  <div id="sp-desc"></div>
+  <div id="sp-cats"></div>
+</div>
+
+<div id="foot">powered by <a href="https://workshop-diy.org" target="_blank">workshop-diy.org</a></div>
+
+<script>
+/* ══ I18N ══ */
+const I18N={
+  fr:{sub:'On construit, on apprend, on partage'},
+  en:{sub:'Build. Learn. Share.'},
+  ar:{sub:'نبني ، نتعلم ، نشارك'},
+};
+let LANG='fr';
+function setLang(l){
+  LANG=l;
+  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',
+    b.textContent.trim()===l.toUpperCase()||(l==='ar'&&b.textContent.includes('ع'))));
+  document.getElementById('sub').textContent=I18N[l].sub;
+  document.documentElement.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  if(curIdx>=0&&APPS[curIdx])
+    document.getElementById('sp-desc').textContent=APPS[curIdx].desc[l]||APPS[curIdx].desc.fr;
+}
+
+/* ══ APPS ══ */
+const BASE='https://abourdim.github.io/apps/thumbs/';
+const APPS=[
+  // Ring 0 — Popular + micro:bit stars
+  {name:'bit-bot',       emoji:'🤖',th:'bit-bot.png',       cats:['microbit','ai'],
+   desc:{fr:'Robot parlant IA — voix, personnalités, connexion micro:bit BLE',en:'AI talking robot — voice, personalities, micro:bit BLE',ar:'روبوت ذكاء اصطناعي ناطق بالصوت'}},
+  {name:'face-quest',    emoji:'🕵️',th:'face-quest.png',    cats:['camera','ai'],
+   desc:{fr:'Jeu de détection faciale — souriez, clignez pour marquer des points !',en:'Face detection game — smile, blink to score points!',ar:'لعبة كشف الوجه — ابتسم واغمز لتسجيل نقاط'}},
+  {name:'magic-hands',   emoji:'🪄',th:'magic-hands.png',   cats:['camera','ai'],
+   desc:{fr:'Agitez vos mains devant la caméra — confettis, traînées néon et effets magiques',en:'Wave hands at the camera — confetti, neon trails and magic effects',ar:'لوّح بيديك أمام الكاميرا لتأثيرات سحرية ملونة'}},
+  {name:'teachable-machine',emoji:'🧠',th:'teachable-machine.png',cats:['ai','microbit'],
+   desc:{fr:'Entraînez des gestes IA dans le navigateur, envoyez vers micro:bit en temps réel',en:'Train AI gestures in the browser, send to micro:bit in real time',ar:'دربّ إيماءات الذكاء الاصطناعي وأرسلها إلى micro:bit'}},
+  {name:'bit-playground', emoji:'🕹️',th:'bit-playground.png',cats:['microbit'],
+   desc:{fr:'Terrain de jeu ultime micro:bit BLE — LEDs, capteurs, servos, graphiques',en:'Ultimate micro:bit BLE playground — LEDs, sensors, servos, charts',ar:'ملعب micro:bit BLE الشامل — LEDs وحساسات وسيرفو'}},
+  {name:'mission-control',emoji:'🛸',th:'mission-control.png',cats:['microbit','classroom'],
+   desc:{fr:'Tableau de bord WebRTC avec vidéo/chat en direct + commandes BLE micro:bit',en:'WebRTC dashboard with live video/chat + BLE micro:bit commands',ar:'لوحة تحكم WebRTC مع فيديو مباشر وأوامر micro:bit'}},
+  {name:'rxy',           emoji:'🎮',th:'rxy.png',           cats:['microbit'],
+   desc:{fr:'Créez une télécommande BLE micro:bit — boutons, curseurs, D-pads. Sans code',en:'Build a BLE micro:bit remote — buttons, sliders, D-pads. No coding',ar:'أنشئ جهاز تحكم BLE لـ micro:bit بدون برمجة'}},
+  {name:'bitmoji-lab',   emoji:'🎪',th:'bitmoji-lab.png',   cats:['microbit'],
+   desc:{fr:'Choisissez des emojis et envoyez-les vers une matrice LED NeoPixel via micro:bit',en:'Pick emojis and send them to a NeoPixel LED matrix via micro:bit',ar:'اختر إيموجي وأرسله إلى مصفوفة LED NeoPixel'}},
+  {name:'ble-logger',    emoji:'📶',th:'ble-logger.png',    cats:['microbit'],
+   desc:{fr:'Journal capteurs Bluetooth micro:bit — inspectez les services, loguez en temps réel',en:'Bluetooth sensor logger — inspect services, log data in real time',ar:'مسجّل بلوتوث لـ micro:bit في الوقت الفعلي'}},
+  {name:'face-tracking', emoji:'👁️',th:'face-tracking.png', cats:['camera','microbit'],
+   desc:{fr:'Suivi de visage pour enfants — envoyez les données de position au micro:bit en BLE',en:'Kids face tracking — send position data to micro:bit via BLE',ar:'تتبع وجه للأطفال مع إرسال البيانات عبر BLE'}},
+  // Ring 1 — Learning + tools
+  {name:'linux-kids-lab',emoji:'🐧',th:'linux-kids-lab.png',cats:['learning'],
+   desc:{fr:'Apprenez Linux dans un bac à sable navigateur sécurisé — terminal ninja !',en:'Learn Linux in a safe browser sandbox — become a terminal ninja!',ar:'تعلّم أوامر لينكس في بيئة متصفح آمنة'}},
+  {name:'crypto-academy',emoji:'🪙',th:'crypto-academy.png',cats:['learning'],
+   desc:{fr:'Cryptographie interactive — chiffrement, hachage, signatures numériques, TLS, PKI',en:'Interactive cryptography — encryption, hashing, digital signatures, TLS, PKI',ar:'تشفير تفاعلي — تشفير وتجزئة وتوقيعات رقمية'}},
+  {name:'pentest-lab',   emoji:'🔐',th:'pentest-lab.png',   cats:['learning'],
+   desc:{fr:'Bac à sable cybersécurité — défis guidés et exercices style CTF pour débutants',en:'Cybersecurity sandbox — guided challenges and CTF-style exercises for beginners',ar:'بيئة اختبار اختراق للمبتدئين مع تحديات CTF'}},
+  {name:'circuit-lab',   emoji:'🔋',th:'circuit-lab.png',   cats:['hardware','learning'],
+   desc:{fr:'Simulez des circuits électroniques — câblez LEDs, résistances, capteurs et visualisez',en:'Simulate circuits — wire LEDs, resistors, sensors and see current flow',ar:'حاكِ الدوائر الإلكترونية وشاهد تدفق التيار'}},
+  {name:'3d-lab',        emoji:'🧊',th:'3d-lab.png',        cats:['learning'],
+   desc:{fr:'Explorez la 3D dans le navigateur — créez, tournez et éclairez des objets Three.js',en:'Explore 3D in the browser — create, rotate and light Three.js objects',ar:'استكشف التصميم ثلاثي الأبعاد بـ Three.js'}},
+  {name:'wled-kids-lab', emoji:'💡',th:'wled-kids-lab.png', cats:['hardware'],
+   desc:{fr:'Contrôlez des rubans LED WS2812/NeoPixel avec WLED — couleurs, effets, luminosité',en:'Control WS2812/NeoPixel LED strips with WLED — colors, effects, brightness',ar:'تحكم في شرائط LED مع WLED — ألوان وتأثيرات'}},
+  {name:'esp32-c3-kids-lab',emoji:'⚡',th:'esp32-c3-kids-lab.png',cats:['hardware'],
+   desc:{fr:'Labo pratique ESP32-C3 — LEDs, capteurs, WiFi et projets IoT depuis le navigateur',en:'Hands-on ESP32-C3 — LEDs, sensors, WiFi and IoT projects from the browser',ar:'مختبر ESP32-C3 — LEDs وحساسات وواي فاي'}},
+  {name:'classroom',     emoji:'🏫',th:'classroom.png',     cats:['classroom'],
+   desc:{fr:'Classe virtuelle PeerJS — créez une salle, partagez l\'écran, collaborez à 12',en:'PeerJS virtual classroom — create a room, share screen, collaborate with 12',ar:'فصل افتراضي PeerJS لمشاركة الشاشة والتعاون'}},
+  {name:'piper-arabic-tts',emoji:'🎙️',th:'piper-arabic-tts.png',cats:['arabic','ai'],
+   desc:{fr:'Synthèse vocale arabe haute qualité via Piper TTS compilé en WebAssembly',en:'High-quality Arabic TTS using Piper compiled to WebAssembly',ar:'تحويل نص عربي إلى كلام عالي الجودة عبر WebAssembly'}},
+  {name:'arabic-translator',emoji:'🌐',th:'arabic-translator.png',cats:['arabic'],
+   desc:{fr:'Traduction arabe dans le navigateur — sans serveur, sans clé API, 100% hors ligne',en:'Arabic translation in the browser — no server, no API key, 100% offline',ar:'ترجمة عربية في المتصفح بدون إنترنت ولا مفتاح API'}},
+  // Ring 2 — More apps
+  {name:'pixel-gateway', emoji:'🟥',th:'pixel-gateway.png', cats:['microbit'],
+   desc:{fr:'Envoyez des emojis colorés vers une matrice LED NeoPixel — USB Serial et BLE',en:'Send colorful emojis to NeoPixel LED matrix — USB Serial and BLE',ar:'أرسل إيموجي ملون إلى مصفوفة LED NeoPixel'}},
+  {name:'usb-logger',    emoji:'🔌',th:'usb-logger.png',    cats:['microbit'],
+   desc:{fr:'Communication micro:bit via USB WebSerial — commandes, données, tests de vitesse',en:'micro:bit USB WebSerial communication — commands, data, speed tests',ar:'تواصل مع micro:bit عبر USB WebSerial'}},
+  {name:'puppeteer-playground',emoji:'🎭',th:'puppeteer-playground.png',cats:['tools'],
+   desc:{fr:'Expérimentez l\'automatisation navigateur avec Puppeteer — scraping, screenshots',en:'Experiment with Puppeteer browser automation — scraping, screenshots',ar:'أتمتة المتصفح مع Puppeteer'}},
+  {name:'claude-toolkit',emoji:'💎',th:'claude-toolkit.png',cats:['ai','tools'],
+   desc:{fr:'Boîte à outils pour créer des apps et workflows avec Claude AI',en:'Toolkit for building apps and workflows with Claude AI',ar:'مجموعة أدوات لبناء تطبيقات مع Claude AI'}},
+  {name:'save-our-planet',emoji:'🌍',th:null,               cats:['learning'],
+   desc:{fr:'Robots qui sauvent la Terre en 2050 — 13 zones, 39 robots, trilingual',en:'Robots saving Earth in 2050 — 13 zones, 39 robots, trilingual',ar:'روبوتات تنقذ الأرض في 2050 — 13 منطقة و39 روبوتاً'}},
+  {name:'ops-catalog-kids-apps',emoji:'🎠',th:null,         cats:['learning'],
+   desc:{fr:'190 jeux éducatifs interactifs pour enfants — GCompris & TuxMath',en:'190 interactive educational games for kids — GCompris & TuxMath',ar:'190 لعبة تعليمية تفاعلية للأطفال'}},
+  {name:'ops-catalog-kids-quizzes',emoji:'🧮',th:null,      cats:['learning'],
+   desc:{fr:'2 215 quiz éducatifs — mathématiques, sciences, géographie',en:'2,215 educational quizzes — math, science, geography',ar:'2215 اختباراً تعليمياً في الرياضيات والعلوم'}},
+  {name:'salat-times',   emoji:'🕌',th:null,                cats:['arabic'],
+   desc:{fr:'Horaires de prière islamique + lanterne Adhan sur micro:bit V2',en:'Islamic prayer times + Adhan Lantern on micro:bit V2',ar:'مواقيت الصلاة مع دعم فانوس الأذان على micro:bit V2'}},
+  {name:'cowsay',        emoji:'🐄',th:null,                cats:['learning'],
+   desc:{fr:'Vache ASCII qui résout des expressions maths et partage des faits amusants',en:'ASCII cow solving math expressions and sharing amazing facts',ar:'بقرة ASCII تحل التعبيرات الرياضية وتشارك حقائق مدهشة'}},
+];
+
+/* ══ BUILD RINGS ══ */
+const RING_CONFIG=[
+  {id:'r0', r:480, count:10, tilt:-8},
+  {id:'r1', r:560, count:10, tilt:0},
+  {id:'r2', r:440, count:9,  tilt:8},
+];
+const ALL_CARDS=[];
+
+RING_CONFIG.forEach(({id,r,count,tilt},ri)=>{
+  const el=document.getElementById(id);
+  const apps=APPS.slice(ri*10,ri*10+count);
+  apps.forEach((app,i)=>{
+    const angle=(i/apps.length)*360;
+    const div=document.createElement('div');
+    div.className='card';
+    div.dataset.idx=ALL_CARDS.length;
+
+    const imgHTML=app.th
+      ?`<img class="card-img" src="${BASE}${app.th}" alt="${app.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      :'';
+    const fallbackStyle=app.th?'display:none':'display:flex';
+
+    div.innerHTML=`
+      ${imgHTML}
+      <div class="card-img-fallback" style="${fallbackStyle}">${app.emoji}</div>
+      <div class="card-info">
+        <div class="card-name">${app.name}</div>
+        <div class="card-desc">${app.desc.fr}</div>
+      </div>
+      <span class="card-cat">${app.cats[0]}</span>
+    `;
+
+    // 3D position on ring
+    div.style.transform=`rotateY(${angle}deg) translateZ(${r}px) rotateX(${tilt}deg)`;
+    el.appendChild(div);
+    ALL_CARDS.push({app,el:div,ringIdx:ri});
+  });
+});
+
+/* ══ PARTICLES ══ */
+const cvs=document.getElementById('cvs');
+const ctx=cvs.getContext('2d');
+let W=cvs.width=innerWidth, H=cvs.height=innerHeight;
+window.addEventListener('resize',()=>{W=cvs.width=innerWidth;H=cvs.height=innerHeight});
+
+const pts=Array.from({length:250},()=>({
+  x:Math.random()*W, y:Math.random()*H,
+  r:Math.random()*.8+.15,
+  vx:(Math.random()-.5)*.2, vy:(Math.random()-.5)*.2,
+  a:Math.random()*.3+.05,
+  spark:Math.random()<.12,
+}));
+
+(function drawPts(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x=(p.x+p.vx+W)%W; p.y=(p.y+p.vy+H)%H;
+    ctx.globalAlpha=p.a;
+    ctx.fillStyle=p.spark?'#FF9D1A':'#5a2e08';
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+  });
+  ctx.globalAlpha=1;
+  requestAnimationFrame(drawPts);
+})();
+
+/* ══ SPOTLIGHT ══ */
+let curIdx=-1;
+const spot=document.getElementById('spot');
+
+function showSpot(idx){
+  curIdx=idx;
+  const {app,el}=ALL_CARDS[idx];
+  // Highlight
+  ALL_CARDS.forEach(({el:e},i)=>e.classList.toggle('lit',i===idx));
+  // Panel
+  document.getElementById('sp-emoji').textContent=app.emoji;
+  document.getElementById('sp-name').textContent=app.name;
+  document.getElementById('sp-desc').textContent=app.desc[LANG]||app.desc.fr;
+  document.getElementById('sp-cats').innerHTML=app.cats.map(c=>`<span class="ct">${c}</span>`).join('');
+  // Restart progress bar
+  const bar=document.getElementById('sp-progress');
+  bar.style.animation='none';void bar.offsetWidth;
+  bar.style.animation='progress 4.5s linear';
+  spot.classList.add('on');
+}
+
+let spotTimer;
+function nextSpot(){
+  curIdx=(curIdx+1)%ALL_CARDS.length;
+  showSpot(curIdx);
+  spotTimer=setTimeout(nextSpot,4500);
+}
+setTimeout(()=>{showSpot(0);spotTimer=setTimeout(nextSpot,4500);},3000);
+
+/* ══ CAMERA PARALLAX ══ */
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX/W-.5;my=e.clientY/H-.5});
+setInterval(()=>{
+  document.getElementById('world').style.transform=
+    `rotateX(${my*4}deg) rotateY(${mx*4}deg)`;
+},50);
+</script>
+</body>
+</html>
