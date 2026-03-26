@@ -155,11 +155,11 @@ body.demo-mode .demo-overlay{display:flex}
 .demo-bg{position:fixed;inset:0;z-index:201;pointer-events:none;overflow:hidden}
 
 /* Demo Header — floating transparent overlay */
-.demo-header{position:absolute;top:0;left:0;right:0;z-index:210;display:flex;align-items:center;justify-content:space-between;padding:12px 32px;
-  background:linear-gradient(rgba(0,0,0,.5),transparent);pointer-events:none}
+.demo-header{position:absolute;top:0;left:0;right:0;z-index:210;direction:ltr;display:flex;align-items:center;justify-content:space-between;padding:8px 24px;
+  background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.2),transparent);pointer-events:none}
 .demo-header>*{pointer-events:auto}
 .demo-title{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:700;color:white;text-shadow:0 1px 8px rgba(0,0,0,.5)}
-.demo-counter{font-family:'Fredoka',sans-serif;font-size:18px;font-weight:700;color:rgba(255,255,255,.7)}
+.demo-counter{font-family:'Fredoka',sans-serif;font-size:18px;font-weight:700;color:rgba(255,255,255,.7);direction:ltr;unicode-bidi:bidi-override}
 .demo-exit{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:white;font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;padding:6px 18px;border-radius:12px;cursor:pointer;transition:.25s}
 .demo-exit:hover{background:rgba(239,68,68,.8);border-color:transparent;transform:scale(1.05)}
 
@@ -190,9 +190,9 @@ body.demo-mode .demo-overlay{display:flex}
 .demo-visual .mini-term,.demo-visual .mini-chat,.demo-visual .mini-mb,.demo-visual .mini-circuit,.demo-visual .mini-book{height:100%;border-radius:0}
 
 /* Glass overlay bar at bottom — strong gradient for readability */
-.demo-glass{position:absolute;bottom:0;left:0;right:0;z-index:10;
+.demo-glass{position:absolute;bottom:0;left:0;right:0;z-index:10;direction:ltr;
   background:linear-gradient(transparent 0%,rgba(0,0,0,.4) 15%,rgba(0,0,0,.85) 40%,rgba(0,0,0,.95) 100%);
-  padding:60px 48px 28px;display:flex;align-items:flex-end;gap:24px}
+  padding:60px 48px 44px;display:flex;align-items:flex-end;gap:24px}
 .demo-glass-content{flex:1;min-width:0}
 .demo-glass-name{font-family:'Fredoka',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:700;color:white;
   line-height:1.1;margin-bottom:6px;text-shadow:0 2px 30px rgba(0,0,0,.8),0 0 60px rgba(0,0,0,.4)}
@@ -217,8 +217,8 @@ body.demo-mode .demo-overlay{display:flex}
 @keyframes cat-title-rise{0%{opacity:0;transform:translateY(60px)}100%{opacity:1;transform:translateY(0)}}
 
 /* QR Code overlay */
-.demo-qr{position:absolute;bottom:20px;right:20px;z-index:215;background:white;border-radius:12px;padding:8px;
-  box-shadow:0 4px 30px rgba(0,0,0,.4);opacity:.7;transition:.3s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.demo-qr{position:absolute;bottom:48px;right:20px;z-index:215;background:white;border-radius:12px;padding:8px;
+  box-shadow:0 4px 30px rgba(0,0,0,.4);opacity:.6;transition:.3s;display:flex;flex-direction:column;align-items:center;gap:4px}
 .demo-qr:hover{opacity:1;transform:scale(1.1)}
 .demo-qr canvas{border-radius:6px}
 .demo-qr span{font-family:'Fredoka',sans-serif;font-size:9px;color:#333;font-weight:600}
