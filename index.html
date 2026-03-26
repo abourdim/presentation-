@@ -154,32 +154,17 @@ body.demo-mode .demo-overlay{display:flex}
 /* Demo background — light & fun */
 .demo-bg{position:fixed;inset:0;z-index:201;pointer-events:none;overflow:hidden}
 
-/* Demo Header */
-.demo-header{position:relative;z-index:210;display:flex;align-items:center;justify-content:space-between;padding:10px 32px;
-  background:rgba(255,252,248,.95);backdrop-filter:blur(16px);border-bottom:3px solid transparent;
-  border-image:var(--rainbow) 1}
-.demo-title{font-family:'Fredoka',sans-serif;font-size:28px;font-weight:700;
-  background:var(--rainbow);background-size:200% 200%;animation:shimmer 4s ease infinite;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-@keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.demo-counter{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
-.demo-exit{background:white;border:2px solid var(--border);color:var(--text2);font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;padding:6px 20px;border-radius:14px;cursor:pointer;transition:.25s}
-.demo-exit:hover{border-color:#ef4444;color:#ef4444;transform:scale(1.05)}
+/* Demo Header — floating transparent overlay */
+.demo-header{position:absolute;top:0;left:0;right:0;z-index:210;display:flex;align-items:center;justify-content:space-between;padding:12px 32px;
+  background:linear-gradient(rgba(0,0,0,.5),transparent);pointer-events:none}
+.demo-header>*{pointer-events:auto}
+.demo-title{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:700;color:white;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.demo-counter{font-family:'Fredoka',sans-serif;font-size:18px;font-weight:700;color:rgba(255,255,255,.7)}
+.demo-exit{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:white;font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;padding:6px 18px;border-radius:12px;cursor:pointer;transition:.25s}
+.demo-exit:hover{background:rgba(239,68,68,.8);border-color:transparent;transform:scale(1.05)}
 
-/* DEMO STAGE — split layout */
-.demo-stage{flex:1;position:relative;z-index:205;overflow:hidden;
-  background:linear-gradient(135deg,#f0f7f0 0%,#e8f5e9 30%,#e3f2fd 60%,#fff8e1 100%)}
-body.dark .demo-stage{background:linear-gradient(135deg,#0d1b0d 0%,#0a1a0a 30%,#0d1a2e 60%,#1a1800 100%)}
-/* Floating particles */
-.demo-stage::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(2px 2px at 20% 30%,rgba(245,158,11,.3),transparent),
-  radial-gradient(2px 2px at 40% 70%,rgba(46,139,87,.3),transparent),
-  radial-gradient(3px 3px at 60% 20%,rgba(59,130,246,.2),transparent),
-  radial-gradient(2px 2px at 80% 60%,rgba(168,85,247,.2),transparent),
-  radial-gradient(2px 2px at 10% 80%,rgba(245,158,11,.2),transparent),
-  radial-gradient(3px 3px at 90% 40%,rgba(46,139,87,.2),transparent);
-  animation:float-particles 20s ease-in-out infinite alternate}
-@keyframes float-particles{from{transform:translate(0,0)}to{transform:translate(-20px,15px)}}
+/* DEMO STAGE — fullscreen */
+.demo-stage{position:absolute;inset:0;z-index:205;overflow:hidden;background:#0a0a0a}
 
 /* FULL-SCREEN CINEMATIC SLIDE */
 .demo-slide{position:absolute;inset:0;animation:cinema-enter .8s cubic-bezier(.16,1,.3,1) both}
@@ -271,27 +256,24 @@ body.dark .sim-book{background:linear-gradient(135deg,#1a1800,#1a1400)}
   .demo-glass-purpose{font-size:clamp(14px,3vw,20px)}
 }
 
-/* Progress */
-.demo-progress{height:4px;background:rgba(245,158,11,.08);position:relative;z-index:210}
+/* Progress — absolute bottom */
+.demo-progress{height:3px;background:rgba(255,255,255,.1);position:absolute;bottom:0;left:0;right:0;z-index:220}
 .demo-progress-bar{height:100%;background:var(--rainbow);background-size:200% 100%;animation:shimmer 3s linear infinite;
-  border-radius:3px;transition:width .5s cubic-bezier(.16,1,.3,1);box-shadow:0 0 20px rgba(245,158,11,.4),0 0 40px rgba(245,158,11,.1)}
+  border-radius:2px;transition:width .5s cubic-bezier(.16,1,.3,1);box-shadow:0 0 12px rgba(245,158,11,.5)}
 
-/* Category filter pills */
-.demo-cats{position:absolute;top:52px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:215;flex-wrap:wrap;justify-content:center;max-width:90%;padding:4px}
-.demo-cat-pill{background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border:2px solid var(--border);color:var(--text3);
-  font-family:'Fredoka',sans-serif;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;cursor:pointer;transition:.25s;white-space:nowrap}
-.demo-cat-pill:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);transform:scale(1.05)}
-.demo-cat-pill.on{background:var(--accent);border-color:var(--accent);color:white;box-shadow:0 2px 12px rgba(245,158,11,.3)}
-body.dark .demo-cat-pill{background:rgba(20,32,20,.7);border-color:rgba(46,139,87,.3);color:var(--text3)}
-body.dark .demo-cat-pill.on{background:var(--accent);color:white}
+/* Category filter pills — floating overlay */
+.demo-cats{position:absolute;top:48px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:215;flex-wrap:wrap;justify-content:center;max-width:85%;padding:4px}
+.demo-cat-pill{background:rgba(0,0,0,.3);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);
+  font-family:'Fredoka',sans-serif;font-size:10px;font-weight:600;padding:3px 10px;border-radius:16px;cursor:pointer;transition:.25s;white-space:nowrap}
+.demo-cat-pill:hover{background:rgba(255,255,255,.2);color:white;transform:scale(1.05)}
+.demo-cat-pill.on{background:var(--accent);border-color:var(--accent);color:white;box-shadow:0 2px 12px rgba(245,158,11,.4)}
 
-/* Nav */
-.demo-nav{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:14px;align-items:center;z-index:215}
-.demo-nav button{background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border:2px solid var(--border);color:var(--text2);
-  width:56px;height:56px;border-radius:50%;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:.3s;
-  box-shadow:0 4px 16px rgba(0,0,0,.06)}
-.demo-nav button:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);transform:scale(1.15);box-shadow:0 8px 32px rgba(245,158,11,.2)}
-.demo-nav .demo-pause{width:auto;border-radius:18px;padding:0 28px;font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;gap:8px}
+/* Nav — floating in glass bar area */
+.demo-nav{position:absolute;bottom:20px;right:48px;display:flex;gap:10px;align-items:center;z-index:215}
+.demo-nav button{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:white;
+  width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:.3s}
+.demo-nav button:hover{background:rgba(255,255,255,.3);transform:scale(1.1)}
+.demo-nav .demo-pause{width:auto;border-radius:14px;padding:0 20px;font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;gap:6px}
 
 /* Fullscreen hint */
 .demo-hint{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:215;
@@ -470,7 +452,7 @@ const I18N={
   ar:{sub:'نبني ، نتعلم ، نشارك 🚀',search:'...بحث',noResult:'لا توجد تطبيقات',catLabel:'الفئات'}
 };
 let LANG='fr',activeFilter='all';
-const BASE='https://abourdim.github.io/apps/thumbs/';
+const BASE=location.hostname==='localhost'||location.protocol==='file:'?'../apps/thumbs/':'https://abourdim.github.io/apps/thumbs/';
 const PAGES='https://abourdim.github.io/';
 const GH='https://github.com/abourdim/';
 
