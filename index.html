@@ -182,7 +182,9 @@ body.demo-mode .demo-overlay{display:flex}
 
 /* Full-screen visual */
 .demo-visual{position:absolute;inset:0;overflow:hidden;background:#111;z-index:1}
-.demo-visual img{display:block;width:100%;height:100%;object-fit:contain;background:#0a0a0a}
+.demo-visual img{display:block;width:100%;height:100%;object-fit:contain;background:#0a0a0a;
+  animation:ken-burns 12s ease-in-out infinite alternate}
+@keyframes ken-burns{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(-2%,-1.5%)}}
 .demo-visual .demo-sim,.demo-visual .card-sim{position:absolute;inset:0;width:100%;height:100%;border-radius:0}
 .demo-visual .sim-terminal,.demo-visual .sim-chat,.demo-visual .sim-circuit,.demo-visual .sim-microbit,.demo-visual .sim-book{border-radius:0;height:100%}
 .demo-visual .mini-term,.demo-visual .mini-chat,.demo-visual .mini-mb,.demo-visual .mini-circuit,.demo-visual .mini-book{height:100%;border-radius:0}
@@ -199,6 +201,39 @@ body.demo-mode .demo-overlay{display:flex}
 .demo-glass-tags{display:flex;gap:8px;flex-wrap:wrap}
 .demo-glass-tags .tag{font-size:12px;padding:5px 14px;border-radius:12px;background:rgba(255,255,255,.15);
   color:white;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2)}
+/* Category Intro Card */
+.demo-cat-intro{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  animation:cat-intro-enter 1.5s cubic-bezier(.16,1,.3,1) both}
+.demo-cat-intro .cat-bg{position:absolute;inset:0;opacity:.15}
+.demo-cat-intro .cat-emoji{font-size:min(25vw,200px);margin-bottom:24px;animation:cat-emoji-pop .8s cubic-bezier(.34,1.56,.64,1) .3s both;filter:drop-shadow(0 0 60px rgba(255,255,255,.3))}
+.demo-cat-intro .cat-title{font-family:'Fredoka',sans-serif;font-size:clamp(48px,8vw,96px);font-weight:700;color:white;text-align:center;
+  animation:cat-title-rise 1s cubic-bezier(.16,1,.3,1) .5s both;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+.demo-cat-intro .cat-subtitle{font-family:'Fredoka',sans-serif;font-size:clamp(20px,3vw,36px);font-weight:400;color:rgba(255,255,255,.7);
+  text-align:center;margin-top:12px;animation:cat-title-rise 1s cubic-bezier(.16,1,.3,1) .7s both}
+.demo-cat-intro .cat-count{font-family:'Fredoka',sans-serif;font-size:clamp(16px,2vw,24px);color:#fbbf24;margin-top:24px;
+  animation:cat-title-rise 1s cubic-bezier(.16,1,.3,1) .9s both}
+@keyframes cat-intro-enter{0%{opacity:0}20%{opacity:1}85%{opacity:1}100%{opacity:0}}
+@keyframes cat-emoji-pop{0%{opacity:0;transform:scale(0) rotate(-20deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes cat-title-rise{0%{opacity:0;transform:translateY(60px)}100%{opacity:1;transform:translateY(0)}}
+
+/* QR Code overlay */
+.demo-qr{position:absolute;bottom:20px;right:20px;z-index:215;background:white;border-radius:12px;padding:8px;
+  box-shadow:0 4px 30px rgba(0,0,0,.4);opacity:.7;transition:.3s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.demo-qr:hover{opacity:1;transform:scale(1.1)}
+.demo-qr canvas{border-radius:6px}
+.demo-qr span{font-family:'Fredoka',sans-serif;font-size:9px;color:#333;font-weight:600}
+
+/* Ambient color shift based on category */
+.demo-stage[data-cat="ai"]{background:linear-gradient(135deg,#0a0a2e,#1a0a3a)!important}
+.demo-stage[data-cat="microbit"]{background:linear-gradient(135deg,#0a1e2e,#001a3a)!important}
+.demo-stage[data-cat="hardware"]{background:linear-gradient(135deg,#0a1a0a,#001a0a)!important}
+.demo-stage[data-cat="security"]{background:linear-gradient(135deg,#1a0a0a,#2a0a0a)!important}
+.demo-stage[data-cat="network"]{background:linear-gradient(135deg,#0a1a2e,#001a3a)!important}
+.demo-stage[data-cat="arabic"]{background:linear-gradient(135deg,#1a1400,#2a1e00)!important}
+.demo-stage[data-cat="learning"]{background:linear-gradient(135deg,#0a0a1a,#1a1a2e)!important}
+.demo-stage[data-cat="games"]{background:linear-gradient(135deg,#1a0a1a,#2a0a2a)!important}
+.demo-stage[data-cat="tools"]{background:linear-gradient(135deg,#0a0a0a,#1a1a1a)!important}
+
 .demo-glass-counter{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:700;color:rgba(255,255,255,.6);
   white-space:nowrap;align-self:flex-end;padding-bottom:4px}
 
@@ -451,6 +486,7 @@ body.dark ::-webkit-scrollbar-thumb{background:var(--border)}
   </div>
   <div class="demo-cats" id="demoCats"></div>
   <div class="demo-stage" id="demoStage"></div>
+  <div class="demo-qr" id="demoQr" title="Scan to browse all apps"><span>workshop-diy.org</span></div>
   <div class="demo-progress"><div class="demo-progress-bar" id="demoProgress"></div></div>
   <div class="demo-nav">
     <button onclick="demoNav(-1)" title="Previous">◀</button>
@@ -893,7 +929,21 @@ render();
 //  DEMO MODE — 3D Spectacular for Kids
 // ═══════════════════════════════════════
 let demoActive=false,demoIndex=0,demoPaused=false,demoTimer=null,demoFilter='all',demoPlaylist=[];
-const DEMO_INTERVAL=6000;
+const DEMO_INTERVAL=7000;
+const CAT_INTRO_DURATION=3500;
+const CAT_COLORS={all:'#2e8b57',ai:'#7c3aed',microbit:'#0ea5e9',hardware:'#059669',security:'#ef4444',network:'#3b82f6',arabic:'#d4a03c',learning:'#6366f1',games:'#ec4899',tools:'#6b7280',camera:'#8b5cf6',classroom:'#f59e0b'};
+const CAT_SUBTITLES={
+  ai:{fr:'Parle, dessine, et cree avec l\'intelligence artificielle',en:'Talk, draw, and create with artificial intelligence'},
+  microbit:{fr:'Programme ton micro:bit — LEDs, capteurs, robots',en:'Program your micro:bit — LEDs, sensors, robots'},
+  hardware:{fr:'Circuits, IoT, et composants electroniques',en:'Circuits, IoT, and electronic components'},
+  security:{fr:'Deviens un hacker ethique — chiffrement et protection',en:'Become an ethical hacker — encryption and protection'},
+  network:{fr:'Explore les reseaux, le WiFi, et les satellites',en:'Explore networks, WiFi, and satellites'},
+  arabic:{fr:'Langue arabe, histoire islamique, et heritage',en:'Arabic language, Islamic history, and heritage'},
+  learning:{fr:'HTML, 3D, Git, et programmation pour tous',en:'HTML, 3D, Git, and programming for everyone'},
+  games:{fr:'Apprendre en s\'amusant !',en:'Learn while having fun!'},
+  tools:{fr:'Outils de productivite et developpement',en:'Productivity and development tools'},
+};
+let lastCatShown=null;
 const DEMO_BG_CLASSES=['demo-bg-0','demo-bg-1','demo-bg-2','demo-bg-3','demo-bg-4','demo-bg-5','demo-bg-6','demo-bg-7','demo-bg-8','demo-bg-9'];
 // What kids need for each category
 const CAT_NEEDS={
@@ -954,7 +1004,7 @@ function toggleDemo(){
   document.querySelectorAll('.demo-btn').forEach(b=>b.classList.toggle('on',demoActive));
   if(demoActive){
     demoFilter='all';
-    demoIndex=0;demoPaused=false;
+    demoIndex=0;demoPaused=false;lastCatShown=null;
     buildDemoPlaylist();
     buildDemoCatPills();
     document.getElementById('demoPauseBtn').innerHTML='⏸ Pause';
@@ -962,6 +1012,9 @@ function toggleDemo(){
     const catsEl=document.getElementById('demoCats');
     catsEl.classList.add('show');
     setTimeout(()=>catsEl.classList.remove('show'),4000);
+    // QR code via Google Charts API (works offline if cached)
+    const qrEl=document.getElementById('demoQr');
+    qrEl.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://workshop-diy.org" width="80" height="80" alt="QR" style="border-radius:6px"/><span>workshop-diy.org</span>`;
     showDemoSlide(0);
     startDemoTimer();
   } else {
@@ -1149,18 +1202,54 @@ function buildSlideHTML(a,idx){
   </div>`;
 }
 
+function showCatIntro(cat,count,callback){
+  const stage=document.getElementById('demoStage');
+  const CAT_EMOJI={all:'🌟',ai:'🤖',microbit:'📟',hardware:'⚡',security:'🔐',network:'📡',arabic:'🕌',learning:'📚',games:'🎮',tools:'🛠️',camera:'📷',classroom:'🏫'};
+  const color=CAT_COLORS[cat]||'#2e8b57';
+  const subtitle=CAT_SUBTITLES[cat]?(CAT_SUBTITLES[cat][LANG]||CAT_SUBTITLES[cat].fr):'';
+  const title=CATS[cat]?CATS[cat][LANG]:cat;
+  stage.innerHTML=`<div class="demo-cat-intro" style="background:radial-gradient(ellipse at center,${color}33 0%,#0a0a0a 70%)">
+    <div class="cat-emoji">${CAT_EMOJI[cat]||'🌟'}</div>
+    <div class="cat-title">${title.toUpperCase()}</div>
+    ${subtitle?`<div class="cat-subtitle">${subtitle}</div>`:''}
+    <div class="cat-count">${count} app${count>1?'s':''}</div>
+  </div>`;
+  setTimeout(callback,CAT_INTRO_DURATION);
+}
+
 function showDemoSlide(idx,dir){
   const stage=document.getElementById('demoStage');
   if(!demoPlaylist.length)return;
   const a=demoPlaylist[idx%demoPlaylist.length];
   const globalIdx=APPS.indexOf(a);
 
-  // Clean swap: remove everything, insert new
+  // Determine the primary category for ambient color
+  const primaryCat=a.cats[0]||'all';
+  stage.dataset.cat=primaryCat;
+
+  // Show category intro card when entering a new category (only in 'all' filter mode)
+  if(demoFilter==='all'){
+    const currentCat=a.cats[0];
+    if(currentCat!==lastCatShown && dir!==undefined){
+      lastCatShown=currentCat;
+      const catCount=APPS.filter(x=>x.cats[0]===currentCat).length;
+      clearInterval(demoTimer);
+      showCatIntro(currentCat,catCount,()=>{
+        _renderSlide(stage,a,globalIdx,idx);
+        if(!demoPaused) startDemoTimer();
+      });
+      return;
+    }
+  }
+
+  _renderSlide(stage,a,globalIdx,idx);
+}
+
+function _renderSlide(stage,a,globalIdx,idx){
   stage.innerHTML='';
   const tmp=document.createElement('div');
   tmp.innerHTML=buildSlideHTML(a,globalIdx);
   stage.appendChild(tmp.firstElementChild);
-
   document.getElementById('demoCounter').textContent=`${idx+1} / ${demoPlaylist.length}`;
   document.getElementById('demoProgress').style.width=((idx+1)/demoPlaylist.length*100)+'%';
 }
