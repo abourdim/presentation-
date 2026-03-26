@@ -3,248 +3,1268 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Workshop-Diy</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+<title>Workshop-DIY — Apps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#F4F0E8;overflow:hidden;font-family:'Rajdhani',sans-serif;color:#2a1a08}
-#c{position:fixed;inset:0;z-index:0}
-#hud{position:fixed;inset:0;z-index:10;pointer-events:none}
-#title{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;animation:ap 1.5s 0.6s ease forwards}
-#title h1{font-family:'Orbitron',monospace;font-size:clamp(28px,3.8vw,58px);font-weight:900;letter-spacing:0.1em;background:linear-gradient(135deg,#B84400 0%,#D45000 50%,#B84400 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:glow 4s ease-in-out infinite}
-@keyframes glow{0%,100%{filter:drop-shadow(0 0 10px rgba(180,80,0,.25))}50%{filter:drop-shadow(0 0 24px rgba(180,80,0,.5))}}
-#title .bar{width:0;height:2px;margin:12px auto;background:linear-gradient(90deg,transparent,#B84400,#D46000,#B84400,transparent);animation:expand 1.5s 1.5s ease forwards;box-shadow:0 0 6px rgba(180,80,0,.3)}
-@keyframes expand{to{width:320px}}
-#title .sub{font-size:clamp(13px,1.6vw,20px);font-weight:400;letter-spacing:0.1em;color:rgba(60,35,10,.52);margin-top:10px}
-#spot{
-  position:absolute;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:rgba(255,252,245,.97);border:1px solid rgba(180,80,0,.3);
-  border-radius:20px;padding:28px 40px 24px;max-width:680px;width:92%;
-  opacity:0;transition:all .6s cubic-bezier(.16,1,.3,1);
-  box-shadow:0 8px 60px rgba(160,70,0,.14),0 0 0 1px rgba(180,80,0,.07);
-  backdrop-filter:blur(24px);
+:root{
+  --bg:#f8faf8;--card:#ffffff;--card-hover:#f0f7f0;--border:#a7d9a7;
+  --accent:#2e8b57;--accent2:#1a7a3a;--accent-soft:#eaf5ea;
+  --text:#1a2e1a;--text2:#4a5c4a;--text3:#8a9e8a;
+  --radius:24px;--shadow:0 4px 24px rgba(46,139,87,.08);
+  --rainbow:linear-gradient(135deg,#d4a03c,#2e8b57,#1e6f9f,#2e8b57,#d4a03c);
 }
-#spot.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#spot-inner{display:flex;align-items:flex-start;gap:24px;text-align:left}
-#se{font-size:64px;flex-shrink:0;line-height:1;margin-top:2px;filter:drop-shadow(0 3px 12px rgba(180,80,0,.25))}
-#spot-body{flex:1;min-width:0}
-#sn{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#B84400;letter-spacing:.05em;line-height:1.1;margin-bottom:12px}
-#sd{font-size:17px;color:rgba(40,22,6,.75);line-height:1.75;font-weight:400;margin-bottom:14px}
-#sc{display:flex;gap:7px;flex-wrap:wrap}
-.ct{padding:4px 12px;border:1px solid rgba(180,80,0,.3);border-radius:20px;font-size:11px;letter-spacing:.1em;color:rgba(150,60,0,.85);text-transform:uppercase;font-weight:600;background:rgba(180,80,0,.06)}
-#ctr{position:absolute;top:22px;left:26px;font-family:'Orbitron',monospace;font-size:10px;letter-spacing:.2em;color:rgba(150,70,0,.55);opacity:0;animation:ap 1s 2s ease forwards}
-#ctr b{color:#B84400;font-size:14px}
-#ln{position:absolute;top:16px;right:22px;display:flex;gap:8px;pointer-events:all;opacity:0;animation:ap 1s 2s ease forwards}
-.lb{background:rgba(255,255,255,.75);border:1px solid rgba(180,80,0,.22);color:rgba(150,65,0,.6);font-family:'Orbitron',monospace;font-size:10px;letter-spacing:.1em;padding:5px 11px;border-radius:4px;cursor:pointer;transition:all .2s}
-.lb.on,.lb:hover{background:rgba(180,80,0,.1);border-color:#B84400;color:#B84400}
-#ft{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.18em;color:rgba(80,40,0,.3);text-transform:uppercase;opacity:0;animation:ap 1s 3s ease forwards;white-space:nowrap}
-#ft a{color:rgba(160,70,0,.4);text-decoration:none}
-@keyframes ap{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-#sp-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#B84400,#D46000,#B84400,transparent);animation:scanbar 4.5s linear infinite;opacity:.45}
-@keyframes scanbar{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1)}100%{transform:scaleX(0);transform-origin:right}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* BISMILLAH */
+.bismillah{font-family:'Amiri',serif;font-size:clamp(14px,2vw,18px);color:#d4a03c;text-align:center;padding:8px 0 0;letter-spacing:.02em;opacity:.8}
+
+/* RAINBOW BAND */
+.rainbow-band{height:5px;background:var(--rainbow);border-radius:3px}
+
+/* HERO */
+.hero{position:relative;padding:20px 24px 36px;text-align:center;overflow:hidden;
+  background:linear-gradient(180deg,#f0f7f0 0%,#e8f5e9 40%,#e3f2fd 70%,#fff8e1 100%)}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='%23f59e0b' opacity='.12'/%3E%3C/svg%3E");pointer-events:none}
+.hero-deco{position:absolute;font-size:40px;opacity:.15;pointer-events:none;animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-15px) rotate(10deg)}}
+.hero-logo{font-family:'Fredoka',sans-serif;font-size:clamp(36px,7vw,72px);font-weight:700;letter-spacing:.02em;
+  background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  position:relative;filter:drop-shadow(0 2px 8px rgba(245,158,11,.2))}
+.hero-sub{font-size:clamp(15px,2.5vw,22px);color:var(--text2);margin-top:4px;font-weight:400}
+.hero-stats{display:flex;justify-content:center;gap:32px;margin-top:20px;flex-wrap:wrap}
+.stat{text-align:center;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);padding:14px 28px;border-radius:20px;border:2px solid rgba(245,158,11,.15);box-shadow:0 4px 16px rgba(245,158,11,.08)}
+.stat-num{font-family:'Fredoka',sans-serif;font-size:32px;font-weight:700;background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+
+/* FLOATING EMOJIS in hero */
+.hero-emoji{position:absolute;pointer-events:none;opacity:.2;font-size:28px}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:8px 20px;
+  background:rgba(255,252,248,.92);backdrop-filter:blur(16px);border-bottom:2px solid rgba(245,158,11,.1);transition:.3s}
+.top-bar.hidden{transform:translateY(-100%)}
+.top-logo{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:700;background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.top-controls{display:flex;gap:6px;align-items:center}
+
+/* BUTTONS */
+.lang-bar{display:flex;gap:4px}
+.lang-btn,.demo-btn{background:transparent;border:2px solid var(--border);color:var(--text3);font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:12px;cursor:pointer;transition:.25s}
+.lang-btn.on,.lang-btn:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.demo-btn{border-color:#8b5cf6;color:#8b5cf6;display:flex;align-items:center;gap:6px;font-size:13px}
+.demo-btn:hover,.demo-btn.on{background:#f5f3ff;border-color:#7c3aed;color:#7c3aed;transform:scale(1.05)}
+.demo-btn .dot{width:8px;height:8px;border-radius:50%;background:#8b5cf6;animation:pulse-dot 1.2s infinite}
+.demo-btn:not(.on) .dot{display:none}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+
+/* TOOLBAR */
+.toolbar{max-width:1400px;margin:0 auto;padding:16px 24px 0;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.search-box{flex:1;min-width:200px;position:relative}
+.search-box input{width:100%;background:white;border:2px solid var(--border);border-radius:16px;padding:12px 16px 12px 44px;color:var(--text);font-size:14px;outline:none;transition:.25s;box-shadow:var(--shadow)}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(245,158,11,.12)}
+.search-box input::placeholder{color:var(--text3)}
+.search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--text3)}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filter-btn{background:white;border:2px solid var(--border);color:var(--text2);font-size:12px;font-weight:600;padding:8px 18px;border-radius:24px;cursor:pointer;transition:.25s;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.filter-btn:hover{border-color:var(--accent);color:var(--text);transform:translateY(-2px);box-shadow:0 6px 20px rgba(245,158,11,.12)}
+.filter-btn.on{background:linear-gradient(135deg,#2e8b57,#1a7a3a);border-color:transparent;color:#fff;box-shadow:0 6px 20px rgba(46,139,87,.3)}
+.filter-btn .count{font-size:10px;opacity:.7;margin-left:4px}
+
+/* GRID */
+.grid{max-width:1400px;margin:24px auto;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.card{background:white;border:2px solid rgba(253,230,138,.5);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);position:relative;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.card:hover{border-color:var(--accent);transform:translateY(-6px) scale(1.01);box-shadow:0 20px 60px rgba(245,158,11,.15)}
+.card-thumb{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.card-thumb.has-img{background:#111}
+.card-thumb:not(.has-img){aspect-ratio:4/3}
+.card-thumb img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.card-thumb img.broken{display:none}
+.card:hover .card-thumb img{transform:scale(1.08)}
+.card-emoji{font-size:80px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.1));animation:emoji-bob 3s ease-in-out infinite}
+@keyframes emoji-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+/* Mini sims for grid */
+.card-sim{width:100%;height:100%;overflow:hidden;font-family:'Courier New',monospace;font-size:11px;line-height:1.6;position:absolute;inset:0}
+.mini-term{background:#1a1a2e;color:#aaa;height:100%;display:flex;flex-direction:column}
+.mini-bar{background:#2d2d44;padding:4px 10px;display:flex;gap:4px;align-items:center}
+.mini-dot{width:7px;height:7px;border-radius:50%}.mini-dot.r{background:#ff5f57}.mini-dot.y{background:#febc2e}.mini-dot.g{background:#28c840}
+.mini-bar span{color:#666;font-size:9px;margin-left:8px}
+.mini-body{padding:10px 12px;flex:1;overflow:hidden}
+.mini-body .g{color:#4caf50}.mini-body .y{color:#ffc107}.mini-body .w{color:#eee}
+.mini-chat{background:#f0f7f0;height:100%;display:flex;flex-direction:column}
+body.dark .mini-chat{background:#142014}
+.mini-chat-bar{background:var(--accent);color:white;padding:6px 12px;font-family:'Fredoka',sans-serif;font-size:11px;font-weight:600}
+.mini-chat-body{flex:1;padding:8px;display:flex;flex-direction:column;gap:5px;overflow:hidden}
+.mini-msg{padding:5px 10px;border-radius:10px;font-size:10px;line-height:1.4;max-width:85%}
+.mini-msg.u{align-self:flex-end;background:var(--accent);color:white;border-bottom-right-radius:2px}
+.mini-msg.b{align-self:flex-start;background:white;border:1px solid var(--border);border-bottom-left-radius:2px;color:var(--text)}
+body.dark .mini-msg.b{background:var(--card)}
+.mini-circuit{background:#1a2e1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative}
+.mini-circuit::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(46,139,87,.08) 20px,rgba(46,139,87,.08) 21px),repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(46,139,87,.08) 20px,rgba(46,139,87,.08) 21px)}
+.mini-led-row{display:flex;gap:8px;z-index:1}.mini-led{width:12px;height:12px;border-radius:50%;animation:led-blink 1.5s ease infinite}
+.mini-mb{background:#1a2e3e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.mini-mb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.mini-mb-dot{width:8px;height:8px;border-radius:2px;background:#300}.mini-mb-dot.on{background:#f00;box-shadow:0 0 4px #f00}
+.mini-mb-label{font-family:'Fredoka',sans-serif;font-size:9px;color:#4caf50}
+.mini-book{background:linear-gradient(135deg,#fff8e1,#f5f0e0);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px;text-align:center}
+body.dark .mini-book{background:linear-gradient(135deg,#1a1800,#1a1400)}
+.mini-book .orn{color:#d4a03c;font-size:14px;letter-spacing:4px}
+.mini-book .btitle{font-family:'Amiri',serif;font-size:14px;color:#d4a03c;line-height:1.3}
+.card-body{padding:16px 20px 20px;flex:1;display:flex;flex-direction:column}
+.card-name{font-family:'Fredoka',sans-serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.card-name .emoji-sm{font-size:22px}
+.card-purpose{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--accent);margin-bottom:8px;line-height:1.3}
+.card-desc{font-size:12px;color:var(--text2);line-height:1.6;flex:1;margin-bottom:12px}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10px;padding:5px 14px;border-radius:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.tag-ai{background:#dbeafe;color:#2563eb}
+.tag-microbit{background:#e0f2fe;color:#0369a1}
+.tag-hardware{background:#d1fae5;color:#059669}
+.tag-arabic{background:#fef3c7;color:#d97706}
+.tag-learning{background:#e8f5e9;color:#2e7d32}
+.tag-security{background:#fee2e2;color:#dc2626}
+.tag-network{background:#e0f2fe;color:#0284c7}
+.tag-camera{background:#fef9c3;color:#ca8a04}
+.tag-classroom{background:#f0fdf4;color:#16a34a}
+.tag-games{background:#fff3e0;color:#e65100}
+.tag-tools{background:#f5f5f4;color:#78716c}
+.card-link{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-radius:12px;padding:6px 14px;font-size:11px;font-weight:700;color:var(--accent);opacity:0;transition:.25s;border:2px solid var(--border)}
+.card:hover .card-link{opacity:1}
+
+/* EMPTY */
+.empty{text-align:center;padding:80px 24px;color:var(--text3)}
+.empty-icon{font-size:56px;margin-bottom:12px}
+.empty-text{font-size:16px;font-weight:500}
+
+/* FOOTER */
+.footer{text-align:center;padding:40px 24px;font-size:12px;color:var(--text3);letter-spacing:.05em;font-weight:500}
+.footer a{color:var(--accent);transition:.2s}
+
+/* ══════════════════════════════
+   DEMO MODE — 3D SPECTACULAR
+   ══════════════════════════════ */
+body.demo-mode .toolbar,body.demo-mode .hero,body.demo-mode .footer,body.demo-mode .grid,body.demo-mode .empty,body.demo-mode .rainbow-band,body.demo-mode .bismillah{display:none}
+body.demo-mode .top-bar{display:none}
+body.demo-mode{overflow:hidden}
+
+.demo-overlay{display:none;position:fixed;inset:0;z-index:200;flex-direction:column}
+body.demo-mode .demo-overlay{display:flex}
+
+/* Demo background — light & fun */
+.demo-bg{position:fixed;inset:0;z-index:201;pointer-events:none;overflow:hidden}
+
+/* Demo Header */
+.demo-header{position:relative;z-index:210;display:flex;align-items:center;justify-content:space-between;padding:10px 32px;
+  background:rgba(255,252,248,.95);backdrop-filter:blur(16px);border-bottom:3px solid transparent;
+  border-image:var(--rainbow) 1}
+.demo-title{font-family:'Fredoka',sans-serif;font-size:28px;font-weight:700;
+  background:var(--rainbow);background-size:200% 200%;animation:shimmer 4s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.demo-counter{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
+.demo-exit{background:white;border:2px solid var(--border);color:var(--text2);font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;padding:6px 20px;border-radius:14px;cursor:pointer;transition:.25s}
+.demo-exit:hover{border-color:#ef4444;color:#ef4444;transform:scale(1.05)}
+
+/* DEMO STAGE — split layout */
+.demo-stage{flex:1;position:relative;z-index:205;overflow:hidden;
+  background:linear-gradient(135deg,#f0f7f0 0%,#e8f5e9 30%,#e3f2fd 60%,#fff8e1 100%)}
+body.dark .demo-stage{background:linear-gradient(135deg,#0d1b0d 0%,#0a1a0a 30%,#0d1a2e 60%,#1a1800 100%)}
+/* Floating particles */
+.demo-stage::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(2px 2px at 20% 30%,rgba(245,158,11,.3),transparent),
+  radial-gradient(2px 2px at 40% 70%,rgba(46,139,87,.3),transparent),
+  radial-gradient(3px 3px at 60% 20%,rgba(59,130,246,.2),transparent),
+  radial-gradient(2px 2px at 80% 60%,rgba(168,85,247,.2),transparent),
+  radial-gradient(2px 2px at 10% 80%,rgba(245,158,11,.2),transparent),
+  radial-gradient(3px 3px at 90% 40%,rgba(46,139,87,.2),transparent);
+  animation:float-particles 20s ease-in-out infinite alternate}
+@keyframes float-particles{from{transform:translate(0,0)}to{transform:translate(-20px,15px)}}
+
+/* Single slide — two columns */
+.demo-slide{position:absolute;inset:0;display:flex;align-items:stretch;
+  animation:slide-enter .6s cubic-bezier(.16,1,.3,1) both}
+@keyframes slide-enter{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* Left: screenshot */
+.demo-left{flex:0 0 55%;display:flex;align-items:center;justify-content:center;padding:24px;position:relative}
+.demo-screenshot-wrap{width:100%;height:100%;border-radius:24px;overflow:hidden;position:relative;
+  background:white;border:3px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.08),0 0 0 1px rgba(245,158,11,.05);
+  animation:glow-pulse 4s ease-in-out infinite alternate}
+@keyframes glow-pulse{
+  from{box-shadow:0 20px 60px rgba(0,0,0,.08),0 0 30px rgba(46,139,87,.05)}
+  to{box-shadow:0 20px 60px rgba(0,0,0,.12),0 0 40px rgba(245,158,11,.08)}}
+body.dark .demo-screenshot-wrap{background:var(--card);border-color:var(--border)}
+.demo-screenshot-wrap img{width:100%;height:100%;object-fit:contain;background:#111}
+.demo-emoji-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%;
+  font-size:min(140px,15vw);animation:emoji-bob 3s ease-in-out infinite}
+@keyframes emoji-bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.08)}}
+
+/* Fake visual simulations */
+.demo-sim{width:100%;height:100%;display:flex;flex-direction:column;font-family:'Courier New',monospace;overflow:hidden;position:relative}
+
+/* Terminal simulation */
+.sim-terminal{background:#1a1a2e;color:#0f0;padding:0;height:100%;display:flex;flex-direction:column;border-radius:20px;overflow:hidden}
+.sim-terminal .sim-bar{background:#2d2d44;padding:8px 16px;display:flex;gap:6px;align-items:center}
+.sim-terminal .sim-dot{width:10px;height:10px;border-radius:50%}
+.sim-terminal .sim-dot.r{background:#ff5f57}.sim-terminal .sim-dot.y{background:#febc2e}.sim-terminal .sim-dot.g{background:#28c840}
+.sim-terminal .sim-bar-title{color:#888;font-size:12px;margin-left:12px;font-family:'Fredoka',sans-serif}
+.sim-terminal .sim-body{flex:1;padding:20px;font-size:clamp(12px,1.5vw,16px);line-height:1.8;overflow:hidden}
+.sim-terminal .sim-line{opacity:1}
+.sim-terminal .sim-prompt{color:#4caf50}.sim-terminal .sim-output{color:#aaa}.sim-terminal .sim-accent{color:#ffc107}
+@keyframes sim-type{to{opacity:1}}
+
+/* Chat simulation */
+.sim-chat{background:#f0f7f0;height:100%;display:flex;flex-direction:column;border-radius:20px;overflow:hidden}
+body.dark .sim-chat{background:#142014}
+.sim-chat .sim-bar{background:var(--accent);padding:12px 20px;color:white;font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px}
+.sim-chat .sim-messages{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.sim-bubble{max-width:80%;padding:12px 18px;border-radius:18px;font-size:clamp(12px,1.4vw,15px);line-height:1.5;opacity:1}
+.sim-bubble.user{align-self:flex-end;background:var(--accent);color:white;border-bottom-right-radius:4px}
+.sim-bubble.bot{align-self:flex-start;background:white;color:var(--text);border:2px solid var(--border);border-bottom-left-radius:4px}
+body.dark .sim-bubble.bot{background:var(--card);color:var(--text)}
+.sim-chat .sim-input{padding:12px 16px;border-top:2px solid var(--border);display:flex;gap:8px;align-items:center}
+.sim-chat .sim-input-box{flex:1;background:white;border:2px solid var(--border);border-radius:20px;padding:8px 16px;font-size:13px;color:var(--text3)}
+body.dark .sim-chat .sim-input-box{background:var(--card);border-color:var(--border)}
+.sim-chat .sim-send{background:var(--accent);color:white;border:none;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:default}
+
+/* Circuit simulation */
+.sim-circuit{background:#1a2e1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;border-radius:20px;position:relative;overflow:hidden}
+.sim-circuit::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(46,139,87,.1) 30px,rgba(46,139,87,.1) 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(46,139,87,.1) 30px,rgba(46,139,87,.1) 31px)}
+.sim-led{width:24px;height:24px;border-radius:50%;box-shadow:0 0 20px currentColor;animation:led-blink 1.5s ease infinite}
+.sim-led.red{color:#ef4444;background:#ef4444}.sim-led.green{color:#4caf50;background:#4caf50}.sim-led.blue{color:#2196f3;background:#2196f3}.sim-led.yellow{color:#ffc107;background:#ffc107}
+@keyframes led-blink{0%,100%{opacity:1}50%{opacity:.3}}
+.sim-circuit-row{display:flex;gap:16px;align-items:center;z-index:1}
+.sim-wire{width:60px;height:3px;background:var(--accent);opacity:.5}
+.sim-chip{background:#333;color:#0f0;padding:8px 16px;border-radius:4px;font-size:11px;font-family:monospace;border:1px solid #555}
+
+/* Micro:bit simulation */
+.sim-microbit{background:#1a2e3e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;border-radius:20px}
+.sim-mb-board{background:#333;border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;border:3px solid #555;position:relative}
+.sim-mb-board::before{content:'micro:bit';position:absolute;bottom:8px;font-size:10px;color:#666;font-family:'Fredoka',sans-serif}
+.sim-mb-leds{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.sim-mb-led{width:clamp(12px,2vw,20px);height:clamp(12px,2vw,20px);border-radius:3px;background:#300;transition:.3s}
+.sim-mb-led.on{background:#f00;box-shadow:0 0 10px #f00}
+.sim-mb-btn{width:20px;height:20px;border-radius:50%;background:#222;border:2px solid #666;position:absolute;top:50%}
+.sim-mb-btn.a{left:-12px;transform:translateY(-50%)}.sim-mb-btn.b{right:-12px;transform:translateY(-50%)}
+
+/* Book/Islamic simulation */
+.sim-book{background:linear-gradient(135deg,#fff8e1,#f5f0e0);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;border-radius:20px;padding:32px;text-align:center}
+body.dark .sim-book{background:linear-gradient(135deg,#1a1800,#1a1400)}
+.sim-book .sim-ornament{font-size:32px;color:#d4a03c;letter-spacing:8px}
+.sim-book .sim-title{font-family:'Amiri',serif;font-size:clamp(24px,3vw,40px);color:#d4a03c;line-height:1.4}
+.sim-book .sim-verse{font-family:'Amiri',serif;font-size:clamp(16px,2vw,24px);color:var(--text2);line-height:1.8;max-width:400px}
+.demo-badge{position:absolute;top:16px;left:16px;z-index:4;
+  font-family:'Fredoka',sans-serif;font-size:16px;font-weight:700;color:white;
+  background:var(--rainbow);padding:6px 16px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+
+/* Right: info panel */
+.demo-right{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 40px 32px 24px;overflow-y:auto}
+.demo-app-name{font-family:'Fredoka',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:700;line-height:1.1;margin-bottom:8px;
+  background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.demo-purpose{font-family:'Fredoka',sans-serif;font-size:clamp(20px,2.5vw,32px);font-weight:600;color:var(--accent);line-height:1.3;
+  margin-bottom:20px;padding:12px 20px;background:var(--accent-soft);border-radius:16px;border-left:4px solid var(--accent)}
+body.dark .demo-purpose{background:rgba(46,139,87,.15);color:#66bb6a}
+.demo-app-desc{font-size:clamp(13px,1.5vw,17px);color:var(--text2);line-height:1.7;margin-bottom:20px}
+
+/* Info boxes */
+.demo-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.demo-info-box{background:rgba(255,255,255,.7);border:2px solid var(--border);border-radius:16px;padding:12px 16px;backdrop-filter:blur(8px)}
+body.dark .demo-info-box{background:rgba(20,32,20,.5);border-color:var(--border)}
+.demo-info-box-title{font-family:'Fredoka',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px}
+.demo-info-box-content{font-size:14px;font-weight:600;color:var(--text)}
+.demo-info-box-content .emoji{font-size:18px;margin-right:4px}
+
+/* Hint emojis row */
+.demo-hints-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.demo-hints-row span{font-size:32px;animation:hint-bounce 2s ease-in-out infinite;filter:drop-shadow(0 2px 6px rgba(0,0,0,.1))}
+.demo-hints-row span:nth-child(2){animation-delay:.15s}
+.demo-hints-row span:nth-child(3){animation-delay:.3s}
+.demo-hints-row span:nth-child(4){animation-delay:.45s}
+.demo-hints-row span:nth-child(5){animation-delay:.6s}
+.demo-hints-row span:nth-child(6){animation-delay:.75s}
+@keyframes hint-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* Tags row */
+.demo-tags{display:flex;gap:8px;flex-wrap:wrap}
+.demo-tags .tag{font-size:12px;padding:6px 16px;border-radius:14px}
+
+@media(max-width:900px){
+  .demo-slide{flex-direction:column}
+  .demo-left{flex:none;height:40%}
+  .demo-right{padding:16px 20px}
+  .demo-info-grid{grid-template-columns:1fr}
+}
+
+/* Progress */
+.demo-progress{height:4px;background:rgba(245,158,11,.08);position:relative;z-index:210}
+.demo-progress-bar{height:100%;background:var(--rainbow);background-size:200% 100%;animation:shimmer 3s linear infinite;
+  border-radius:3px;transition:width .5s cubic-bezier(.16,1,.3,1);box-shadow:0 0 20px rgba(245,158,11,.4),0 0 40px rgba(245,158,11,.1)}
+
+/* Category filter pills */
+.demo-cats{position:absolute;top:52px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:215;flex-wrap:wrap;justify-content:center;max-width:90%;padding:4px}
+.demo-cat-pill{background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border:2px solid var(--border);color:var(--text3);
+  font-family:'Fredoka',sans-serif;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;cursor:pointer;transition:.25s;white-space:nowrap}
+.demo-cat-pill:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);transform:scale(1.05)}
+.demo-cat-pill.on{background:var(--accent);border-color:var(--accent);color:white;box-shadow:0 2px 12px rgba(245,158,11,.3)}
+body.dark .demo-cat-pill{background:rgba(20,32,20,.7);border-color:rgba(46,139,87,.3);color:var(--text3)}
+body.dark .demo-cat-pill.on{background:var(--accent);color:white}
+
+/* Nav */
+.demo-nav{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:14px;align-items:center;z-index:215}
+.demo-nav button{background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border:2px solid var(--border);color:var(--text2);
+  width:56px;height:56px;border-radius:50%;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:.3s;
+  box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.demo-nav button:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);transform:scale(1.15);box-shadow:0 8px 32px rgba(245,158,11,.2)}
+.demo-nav .demo-pause{width:auto;border-radius:18px;padding:0 28px;font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;gap:8px}
+
+/* Fullscreen hint */
+.demo-hint{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:215;
+  font-family:'Fredoka',sans-serif;font-size:12px;color:var(--text3);opacity:.6;
+  background:rgba(255,255,255,.8);padding:4px 16px;border-radius:10px}
+
+@media(max-width:900px){
+  .demo-3d-wrap{width:92vw;height:60vh}
+  .demo-mirror{display:none}
+  .demo-card-info{padding:16px 20px}
+  .demo-app-desc-3d{font-size:14px}
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .grid{grid-template-columns:1fr}
+  .toolbar{flex-direction:column}
+  .hero{padding:20px 16px}
+  .hero-stats{gap:12px}
+  .stat{padding:10px 18px}
+}
+
+/* DARK THEME */
+body.dark{--bg:#0d1b0d;--card:#142014;--card-hover:#1a2d1a;--border:#2e5a2e;
+  --accent:#4caf50;--accent2:#66bb6a;--accent-soft:#1a3a1a;
+  --text:#e0e8e0;--text2:#a0b8a0;--text3:#607860;
+  --shadow:0 4px 24px rgba(0,0,0,.3)}
+body.dark .hero{background:linear-gradient(180deg,#0d1b0d 0%,#102810 40%,#0d1a2e 70%,#1a1800 100%)}
+body.dark .hero::before{opacity:.05}
+body.dark .bismillah{color:#d4a03c}
+body.dark .rainbow-band{opacity:.6}
+body.dark .top-bar{background:rgba(13,27,13,.92);border-bottom-color:rgba(46,139,87,.2)}
+body.dark .search-box input{background:var(--card);border-color:var(--border);color:var(--text)}
+body.dark .filter-btn{background:var(--card);border-color:var(--border);color:var(--text2)}
+body.dark .card{background:var(--card);border-color:var(--border)}
+body.dark .card:hover{border-color:var(--accent)}
+body.dark .card-link{background:rgba(20,32,20,.9);color:var(--accent)}
+body.dark .stat{background:rgba(20,32,20,.7);border-color:rgba(46,139,87,.2)}
+body.dark .demo-header{background:rgba(13,27,13,.95);border-image:linear-gradient(90deg,#d4a03c,#2e8b57,#1e6f9f) 1}
+body.dark .demo-exit{background:var(--card);border-color:var(--border);color:var(--text2)}
+body.dark .demo-stage{background:linear-gradient(180deg,#0d1b0d 0%,#0a1a0a 25%,#0d1a2e 50%,#1a1800 75%,#0d1b0d 100%);background-size:100% 400%;animation:bg-shift 20s ease infinite}
+body.dark .demo-card-face{background:var(--card);border-color:rgba(46,139,87,.3)}
+body.dark .demo-card-info{background:linear-gradient(transparent,rgba(20,32,20,.97) 30%)}
+body.dark .demo-app-desc-3d{color:var(--text2)}
+body.dark .demo-nav button{background:rgba(20,32,20,.8);border-color:var(--border);color:var(--text2)}
+body.dark .demo-mirror{background:var(--card)}
+body.dark .footer{color:var(--text3)}
+body.dark ::-webkit-scrollbar-track{background:var(--bg)}
+body.dark ::-webkit-scrollbar-thumb{background:var(--border)}
+
+/* Theme toggle */
+.theme-btn{background:transparent;border:2px solid var(--border);color:var(--text3);font-size:16px;padding:4px 10px;border-radius:12px;cursor:pointer;transition:.25s;line-height:1}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Color gradients for emoji cards */
+.grad-0{--card-grad:linear-gradient(135deg,#fff8e1,#e8f5e9)}
+.grad-1{--card-grad:linear-gradient(135deg,#e3f2fd,#e8f5e9)}
+.grad-2{--card-grad:linear-gradient(135deg,#e8f5e9,#fff8e1)}
+.grad-3{--card-grad:linear-gradient(135deg,#e0f2fe,#e8f5e9)}
+.grad-4{--card-grad:linear-gradient(135deg,#f5f5f5,#e8f5e9)}
+.grad-5{--card-grad:linear-gradient(135deg,#fff8e1,#e0f2fe)}
+.grad-6{--card-grad:linear-gradient(135deg,#e3f2fd,#fff8e1)}
+.grad-7{--card-grad:linear-gradient(135deg,#efebe9,#e8f5e9)}
+.grad-8{--card-grad:linear-gradient(135deg,#e8f5e9,#e3f2fd)}
+.grad-9{--card-grad:linear-gradient(135deg,#fff8e1,#e3f2fd)}
+
+/* Floating hint emojis around demo card */
+.demo-hints{position:absolute;inset:-60px;z-index:10;pointer-events:none}
+.demo-hint-emoji{position:absolute;font-size:min(64px,8vw);opacity:.9;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.15));z-index:10}
+.demo-hint-emoji:nth-child(1){top:2%;left:2%;animation:hint-float-1 4s ease-in-out infinite}
+.demo-hint-emoji:nth-child(2){top:5%;right:3%;animation:hint-float-2 3.5s ease-in-out infinite .3s}
+.demo-hint-emoji:nth-child(3){bottom:25%;left:0%;animation:hint-float-3 4.5s ease-in-out infinite .6s}
+.demo-hint-emoji:nth-child(4){bottom:20%;right:1%;animation:hint-float-1 3.8s ease-in-out infinite .9s}
+.demo-hint-emoji:nth-child(5){top:40%;left:-4%;animation:hint-float-2 4.2s ease-in-out infinite 1.2s}
+.demo-hint-emoji:nth-child(6){top:35%;right:-3%;animation:hint-float-3 3.6s ease-in-out infinite .5s}
+@keyframes hint-float-1{0%,100%{transform:translateY(0) rotate(-8deg) scale(1)}50%{transform:translateY(-18px) rotate(8deg) scale(1.15)}}
+@keyframes hint-float-2{0%,100%{transform:translateY(0) rotate(5deg) scale(1.05)}50%{transform:translateY(-22px) rotate(-10deg) scale(1)}}
+@keyframes hint-float-3{0%,100%{transform:translateY(0) rotate(-3deg) scale(1.1)}50%{transform:translateY(-15px) rotate(6deg) scale(.95)}}
+
+/* Demo BG gradients — all light & fun */
+.demo-bg-0{background:linear-gradient(135deg,#fffbeb,#fef3c7,#fde68a)}
+.demo-bg-1{background:linear-gradient(135deg,#e3f2fd,#bbdefb,#90caf9)}
+.demo-bg-2{background:linear-gradient(135deg,#eff6ff,#dbeafe,#bfdbfe)}
+.demo-bg-3{background:linear-gradient(135deg,#f0fdf4,#d1fae5,#a7f3d0)}
+.demo-bg-4{background:linear-gradient(135deg,#f5f5f5,#e8eaf6,#c5cae9)}
+.demo-bg-5{background:linear-gradient(135deg,#fefce8,#fef9c3,#fef08a)}
+.demo-bg-6{background:linear-gradient(135deg,#e8f5e9,#c8e6c9,#a5d6a7)}
+.demo-bg-7{background:linear-gradient(135deg,#ecfeff,#cffafe,#a5f3fc)}
+.demo-bg-8{background:linear-gradient(135deg,#fff7ed,#fed7aa,#fdba74)}
+.demo-bg-9{background:linear-gradient(135deg,#f0fdfa,#ccfbf1,#99f6e4)}
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div id="hud">
-  <div id="ctr"><b>93</b> APPS · CHELLES, FRANCE</div>
-  <div id="ln">
-    <button class="lb on" onclick="setLang('fr')">FR</button>
-    <button class="lb" onclick="setLang('en')">EN</button>
-    <button class="lb" onclick="setLang('ar')">عر</button>
-  </div>
-  <div id="title">
-    <h1>WORKSHOP-DIY</h1>
-    <div class="bar"></div>
-    <div class="sub" id="sub">On construit, on apprend, on partage</div>
-  </div>
-  <div id="spot">
-    <div id="sp-bar"></div>
-    <div id="spot-inner">
-      <span id="se"></span>
-      <div id="spot-body">
-        <div id="sn"></div>
-        <div id="sd"></div>
-        <div id="sc"></div>
-      </div>
+
+<div class="top-bar hidden" id="topbar">
+  <div class="top-logo">Workshop-DIY</div>
+  <div class="top-controls">
+    <div class="lang-bar">
+      <button class="lang-btn on" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ar')">عر</button>
     </div>
+    <button class="demo-btn" onclick="toggleDemo()" id="demoBtnTop">
+      <span class="dot"></span> 🎬 Demo
+    </button>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtnTop" title="Dark/Light">🌙</button>
   </div>
-  <div id="ft">powered by <a href="https://workshop-diy.org" target="_blank">workshop-diy.org</a></div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<div class="bismillah">✦ بِسْمِ ٱللَّٰهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ ✦</div>
+<div class="rainbow-band"></div>
+
+<div class="hero" id="hero">
+  <div class="hero-logo">Workshop-DIY</div>
+  <div class="hero-sub" id="sub">On construit, on apprend, on partage 🚀</div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" id="app-count">0</div><div class="stat-label">Apps</div></div>
+    <div class="stat"><div class="stat-num" id="cat-count">0</div><div class="stat-label" id="cat-label">Categories</div></div>
+    <div class="stat"><div class="stat-num">Chelles</div><div class="stat-label">France 🇫🇷</div></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap">
+    <div class="lang-bar">
+      <button class="lang-btn on" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ar')">عر</button>
+    </div>
+    <button class="demo-btn" onclick="toggleDemo()" id="demoBtnHero">
+      <span class="dot"></span> 🎬 Demo
+    </button>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtnHero" title="Dark/Light">🌙</button>
+  </div>
+</div>
+
+<div class="toolbar" id="toolbar">
+  <div class="search-box">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Rechercher..."/>
+  </div>
+  <div class="filters" id="filters"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" style="display:none"><div class="empty-icon">🔍</div><div class="empty-text" id="empty-text">Aucune app trouvee</div></div>
+
+<div class="footer">powered by <a href="https://workshop-diy.org" target="_blank">workshop-diy.org</a></div>
+
+<!-- DEMO OVERLAY -->
+<div class="demo-overlay" id="demoOverlay">
+  <div class="demo-bg" id="demoBg"></div>
+  <div class="demo-header">
+    <div class="demo-title">🛠️ Workshop-DIY</div>
+    <div class="demo-counter" id="demoCounter">1 / 97</div>
+    <button class="demo-exit" onclick="toggleDemo()">Fermer ✕</button>
+  </div>
+  <div class="demo-cats" id="demoCats"></div>
+  <div class="demo-stage" id="demoStage"></div>
+  <div class="demo-progress"><div class="demo-progress-bar" id="demoProgress"></div></div>
+  <div class="demo-nav">
+    <button onclick="demoNav(-1)" title="Previous">◀</button>
+    <button class="demo-pause" onclick="demoPauseToggle()" id="demoPauseBtn">⏸ Pause</button>
+    <button onclick="demoNav(1)" title="Next">▶</button>
+  </div>
+</div>
+
 <script>
-const I18N={fr:{sub:'On construit, on apprend, on partage'},en:{sub:'Build. Learn. Share.'},ar:{sub:'نبني ، نتعلم ، نشارك'}};
-let LANG='fr';
-function setLang(l){
-  LANG=l;
-  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===l.toUpperCase()||(l==='ar'&&b.textContent.includes('ع'))));
-  document.getElementById('sub').textContent=I18N[l].sub;
-  document.documentElement.lang=l; document.documentElement.dir=l==='ar'?'rtl':'ltr';
-  if(curIdx>=0&&DATA[curIdx])document.getElementById('sd').textContent=DATA[curIdx].app.desc[l]||DATA[curIdx].app.desc.fr;
-}
+const I18N={
+  fr:{sub:'On construit, on apprend, on partage 🚀',search:'Rechercher...',noResult:'Aucune app trouvee',catLabel:'Categories'},
+  en:{sub:'Build. Learn. Share. 🚀',search:'Search apps...',noResult:'No apps found',catLabel:'Categories'},
+  ar:{sub:'نبني ، نتعلم ، نشارك 🚀',search:'...بحث',noResult:'لا توجد تطبيقات',catLabel:'الفئات'}
+};
+let LANG='fr',activeFilter='all';
 const BASE='https://abourdim.github.io/apps/thumbs/';
+const PAGES='https://abourdim.github.io/';
+const GH='https://github.com/abourdim/';
+
 const APPS=[
-  {name:'bit-bot',emoji:'🤖',thumb:'bit-bot.png',cats:['microbit','ai'],desc:{fr:'Compagnon robot parlant alimenté par IA — dialoguez par la voix, choisissez sa personnalité et connectez-le à un micro:bit via Bluetooth.',en:'AI talking robot — voice, micro:bit BLE',ar:'روبوت ذكاء اصطناعي ناطق'}},
-  {name:'face-quest',emoji:'🕵️',thumb:'face-quest.png',cats:['camera','ai'],desc:{fr:'Jeu de détection faciale dans le navigateur — souriez, clignez, tournez la tête pour marquer des points. 100% local, aucune donnée envoyée.',en:'Face detection game — smile, blink!',ar:'لعبة كشف الوجه'}},
-  {name:'magic-hands',emoji:'🪄',thumb:'magic-hands.png',cats:['camera','ai'],desc:{fr:'Agitez vos mains devant la caméra pour déclencher des effets magiques — confettis, traînées lumineuses, lueur néon — propulsé par MediaPipe.',en:'Wave hands — magic effects!',ar:'تأثيرات سحرية بتتبع اليد'}},
-  {name:'teachable-machine',emoji:'🧠',thumb:'teachable-machine.png',cats:['ai','microbit'],desc:{fr:'Entraînez vos propres modèles IA pour reconnaître gestes et sons, puis envoyez les résultats en temps réel vers un micro:bit via Bluetooth.',en:'Train AI gestures → micro:bit real time',ar:'تدريب إيماءات الذكاء الاصطناعي'}},
-  {name:'bit-playground',emoji:'🕹️',thumb:'bit-playground.png',cats:['microbit'],desc:{fr:'Le terrain de jeu ultime pour micro:bit BLE — LEDs, capteurs, servos, jeux et graphiques depuis le navigateur.',en:'Ultimate micro:bit BLE playground',ar:'ملعب micro:bit BLE المطلق'}},
-  {name:'mission-control',emoji:'🛸',thumb:'mission-control.png',cats:['microbit','classroom'],desc:{fr:'Tableau de bord avec vidéo et chat WebRTC — envoyez des commandes à distance vers un micro:bit via Bluetooth.',en:'WebRTC dashboard + micro:bit commands',ar:'لوحة تحكم WebRTC'}},
-  {name:'bitmoji-lab',emoji:'🎪',thumb:'bitmoji-lab.png',cats:['microbit'],desc:{fr:'Choisissez des emojis, peignez-les et envoyez vos créations vers une matrice LED NeoPixel 8x8 ou 16x16 via micro:bit.',en:'Emojis to NeoPixel LED matrix',ar:'إيموجي إلى مصفوفة LED'}},
-  {name:'ble-logger',emoji:'📶',thumb:'ble-logger.png',cats:['microbit'],desc:{fr:'Journal de débogage Bluetooth pour micro:bit — connectez-vous, inspectez les services, lisez les capteurs et logguez en temps réel.',en:'Bluetooth sensor logger for micro:bit',ar:'مسجل بلوتوث لـ micro:bit'}},
-  {name:'face-tracking',emoji:'👁️',thumb:'face-tracking.png',cats:['camera','microbit'],desc:{fr:'Suivi de visage → données BLE micro:bit',en:'Face tracking → BLE micro:bit data',ar:'تتبع الوجه مع micro:bit'}},
-  {name:'linux-kids-lab',emoji:'🐧',thumb:'linux-kids-lab.png',cats:['learning'],desc:{fr:'Apprenez Linux dans un bac à sable sécurisé — fichiers, pipes, scripts bash. Devenez un ninja du terminal !',en:'Learn Linux in a safe browser sandbox',ar:'تعلّم لينكس في المتصفح'}},
-  {name:'crypto-academy',emoji:'🪙',thumb:'crypto-academy.png',cats:['learning'],desc:{fr:'Cryptographie interactive — chiffrement, hachage, signatures numériques, PKI et TLS avec de vraies opérations Web Crypto API.',en:'Interactive cryptography — TLS, PKI',ar:'تشفير تفاعلي متكامل'}},
-  {name:'pentest-lab',emoji:'🔐',thumb:'pentest-lab.png',cats:['learning'],desc:{fr:'Bac à sable cybersécurité pour débutants — apprenez les bases à travers des défis guidés et des exercices CTF interactifs.',en:'Cybersecurity — CTF style',ar:'أمن سيبراني وتحديات CTF'}},
-  {name:'circuit-lab',emoji:'🔋',thumb:'circuit-lab.png',cats:['hardware','learning'],desc:{fr:'Construisez et simulez des circuits électroniques — câblez LEDs, résistances et capteurs, visualisez le courant en temps réel.',en:'Simulate electronic circuits',ar:'محاكاة الدوائر الإلكترونية'}},
-  {name:'3d-lab',emoji:'🧊',thumb:'3d-lab.png',cats:['learning'],desc:{fr:'Explorez la conception 3D dans le navigateur — créez, faites pivoter et éclairez des objets interactifs avec Three.js.',en:'Explore 3D with Three.js',ar:'استكشف التصميم ثلاثي الأبعاد'}},
-  {name:'rxy',emoji:'🎮',thumb:'rxy.png',cats:['microbit'],desc:{fr:'Créez une télécommande Bluetooth personnalisée pour micro:bit — glissez des boutons, curseurs et D-pads. Zéro code requis.',en:'BLE remote for micro:bit — no coding',ar:'جهاز تحكم BLE بدون برمجة'}},
-  {name:'arabic-translator',emoji:'🌐',thumb:'arabic-translator.png',cats:['arabic'],desc:{fr:'Traduisez vers et depuis l arabe dans le navigateur — sans serveur, sans clé API, fonctionne entièrement hors ligne.',en:'Arabic translation 100% local',ar:'ترجمة عربية محلية بدون إنترنت'}},
-  {name:'piper-arabic-tts',emoji:'🎙️',thumb:'piper-arabic-tts.png',cats:['arabic','ai'],desc:{fr:'Synthèse vocale arabe via WebAssembly',en:'Arabic TTS via WebAssembly',ar:'نص عربي إلى كلام عبر WebAssembly'}},
-  {name:'wled-kids-lab',emoji:'💡',thumb:'wled-kids-lab.png',cats:['hardware'],desc:{fr:'Contrôlez des rubans LED WS2812 / NeoPixel avec WLED — choisissez couleurs, effets et luminosité. Introduction ludique aux LEDs adressables.',en:'WS2812 LED strips with WLED',ar:'شرائط LED مع WLED'}},
-  {name:'esp32-c3-kids-lab',emoji:'⚡',thumb:'esp32-c3-kids-lab.png',cats:['hardware'],desc:{fr:'Labo pratique ESP32-C3 — allumez des LEDs, lisez des capteurs, connectez-vous au WiFi et créez vos premiers projets IoT.',en:'Hands-on ESP32-C3 — browser IoT',ar:'مختبر ESP32-C3 عملي'}},
-  {name:'pixel-gateway',emoji:'🟥',thumb:'pixel-gateway.png',cats:['microbit'],desc:{fr:'Emojis colorés → NeoPixel USB & BLE',en:'Colored emojis → NeoPixel USB & BLE',ar:'إيموجي ملون إلى NeoPixel'}},
-  {name:'usb-logger',emoji:'🔌',thumb:'usb-logger.png',cats:['microbit'],desc:{fr:'Communication micro:bit via USB WebSerial',en:'micro:bit USB WebSerial',ar:'تواصل micro:bit عبر USB'}},
-  {name:'classroom',emoji:'🏫',thumb:'classroom.png',cats:['classroom'],desc:{fr:'Classe virtuelle PeerJS — 12 élèves',en:'PeerJS virtual classroom',ar:'فصل افتراضي PeerJS'}},
-  {name:'puppeteer-playground',emoji:'🎭',thumb:'puppeteer-playground.png',cats:['tools'],desc:{fr:'Automatisation navigateur Puppeteer',en:'Puppeteer browser automation',ar:'أتمتة المتصفح مع Puppeteer'}},
-  {name:'save-our-planet',emoji:'🌍',thumb:null,cats:['learning'],desc:{fr:'Robots sauvent la Terre en 2050',en:'Robots saving Earth in 2050',ar:'روبوتات تنقذ الأرض 2050'}},
-  {name:'cowsay',emoji:'🐄',thumb:null,cats:['learning'],desc:{fr:'Vache ASCII — maths et faits amusants !',en:'ASCII cow — math and fun facts!',ar:'بقرة ASCII للرياضيات'}},
-  {name:'salat-times',emoji:'🕌',thumb:null,cats:['arabic'],desc:{fr:'Horaires de prière + lanterne Adhan micro:bit',en:'Prayer times + micro:bit Adhan Lantern',ar:'مواقيت الصلاة + فانوس الأذان'}},
-  {name:'ops-catalog-kids-apps',emoji:'🎠',thumb:null,cats:['learning'],desc:{fr:'190 jeux éducatifs — GCompris & TuxMath',en:'190 educational games — GCompris & TuxMath',ar:'190 لعبة تعليمية تفاعلية'}},
-  {name:'ops-catalog-kids-quizzes',emoji:'🧮',thumb:null,cats:['learning'],desc:{fr:'2 215 quiz — maths, sciences, géographie',en:'2,215 quizzes — math, science, geography',ar:'2215 اختبار تعليمي'}},
-  {name:'emojis',emoji:'😀',thumb:null,cats:['learning'],desc:{fr:'EmojiFlow — apprendre le code par les emojis',en:'EmojiFlow — learn coding through emojis',ar:'تعلم البرمجة بالرموز'}},
+  // ── AI & Camera
+  {name:'bit-bot',emoji:'🤖',thumb:null,cats:['microbit','ai'],hints:['🤖','🎙️','💬','🔊','📱','🧠'],purpose:{"fr":"Parle avec ton robot IA !","en":"Talk to your AI Robot!","ar":"تحدث مع روبوتك الذكي!"},
+    desc:{fr:'Compagnon robot IA qui dialogue par la voix, choisit sa personnalite et se connecte a un micro:bit via Bluetooth.',en:'AI talking robot companion — voice, personality, micro:bit BLE control.',ar:'روبوت ذكاء اصطناعي ناطق يتصل بـ micro:bit عبر البلوتوث'}},
+  {name:'face-quest',emoji:'🕵️',thumb:'face-quest.png',cats:['ai','camera','learning'],hints:['😀','😉','🤨','🏆','📸','🎯'],purpose:{"fr":"Souris pour marquer des points !","en":"Smile to Score Points!","ar":"ابتسم لتسجل نقاطا!"},
+    desc:{fr:'Jeu de detection faciale — souriez, clignez, tournez la tete pour marquer des points. 100% local, zero donnees envoyees.',en:'Face detection game — smile, blink, turn your head to score. Fully local, zero data sent.',ar:'لعبة كشف الوجه — ابتسم وأومض واكسب نقاطا بدون إرسال بيانات'}},
+  {name:'magic-hands',emoji:'🪄',thumb:'magic-hands.png',cats:['ai','camera','learning'],hints:['🖐️','✨','🎆','🌈','🪄','💫'],purpose:{"fr":"Tes mains font de la magie !","en":"Your Hands Make Magic!","ar":"يداك تصنعان السحر!"},
+    desc:{fr:'Agitez vos mains devant la camera pour declencher confettis, trainees lumineuses et lueur neon — propulse par MediaPipe.',en:'Wave your hands for magic effects — confetti, light trails, neon glow. Powered by MediaPipe.',ar:'حرك يديك أمام الكاميرا لتأثيرات سحرية بتقنية MediaPipe'}},
+  {name:'teachable-machine',emoji:'🧠',thumb:'teachable-machine.png',cats:['ai','microbit','camera','learning'],hints:['🧠','👋','🎵','📸','🤖','💡'],purpose:{"fr":"Apprends a ton ordi a te reconnaitre !","en":"Teach Your Computer to See!","ar":"علّم حاسوبك أن يراك!"},
+    desc:{fr:'Entrainez vos propres modeles IA pour reconnaitre gestes et sons, puis envoyez les resultats vers un micro:bit en temps reel.',en:'Train custom AI models for gestures & sounds, send results to micro:bit in real time.',ar:'درّب نماذج ذكاء اصطناعي للإيماءات وأرسل النتائج إلى micro:bit'}},
+  {name:'face-tracking',emoji:'👁️',thumb:'face-tracking.png',cats:['ai','camera','microbit'],hints:['👤','👁️','📍','🎯','🔄','📸'],purpose:{"fr":"Ton visage controle le robot !","en":"Your Face Controls the Robot!","ar":"وجهك يتحكم بالروبوت!"},
+    desc:{fr:'Suivi de visage en temps reel — les donnees de position sont envoyees vers un micro:bit via BLE pour controler des servos ou LEDs.',en:'Real-time face tracking — position data sent to micro:bit via BLE for servo/LED control.',ar:'تتبع الوجه في الوقت الحقيقي وإرسال البيانات إلى micro:bit'}},
+  {name:'talking-robot',emoji:'🗣️',thumb:'talking-robot.png',cats:['ai','microbit','learning'],hints:['🗣️','👂','😊','😢','🤖','💭'],purpose:{"fr":"Un robot qui parle et ecoute !","en":"A Robot that Talks and Listens!","ar":"روبوت يتحدث ويستمع!"},
+    desc:{fr:'Robot web qui parle, ecoute, montre des emotions et envoie des commandes a un micro:bit via Bluetooth.',en:'Web robot that talks, listens, shows emotions and sends commands to micro:bit via BLE.',ar:'روبوت ويب يتحدث ويستمع ويتحكم بـ micro:bit'}},
+  {name:'ollama-bot',emoji:'🦙',thumb:null,cats:['ai','tools'],hints:['🦙','💬','🔒','💻','🧠','🏠'],purpose:{"fr":"Une IA sur ton ordi, sans Internet !","en":"AI on Your Computer, No Internet!","ar":"ذكاء اصطناعي بدون إنترنت!"},
+    desc:{fr:'Chattez avec une IA locale via Ollama — prive, hors-ligne, sans cloud. Interface web simple et legere.',en:'Chat with a local AI via Ollama — private, offline, no cloud. Simple lightweight web interface.',ar:'دردش مع ذكاء اصطناعي محلي عبر Ollama بدون إنترنت'}},
+  {name:'prompt-hero',emoji:'💬',thumb:null,cats:['ai','learning'],hints:['💬','✍️','🧠','🎓','💡','🦸'],purpose:{"fr":"Apprends a parler a l IA !","en":"Learn to Talk to AI!","ar":"تعلم التحدث للذكاء الاصطناعي!"},
+    desc:{fr:'Apprenez a ecrire des prompts efficaces pour l IA — exercices interactifs adaptes aux enfants et debutants.',en:'Learn to write effective AI prompts — interactive exercises for kids and beginners.',ar:'تعلم كتابة أوامر فعالة للذكاء الاصطناعي'}},
+  {name:'claude-toolkit',emoji:'🔮',thumb:'claude-toolkit.png',cats:['ai','tools'],hints:['🔮','⚙️','🤖','💻','🛠️','✨'],purpose:{"fr":"Automatise avec l IA Claude !","en":"Automate with Claude AI!","ar":"أتمتة مع Claude AI!"},
+    desc:{fr:'Boite a outils CLI pour Claude AI — automatisez vos workflows avec des scripts intelligents.',en:'CLI toolkit for Claude AI — automate workflows with smart scripts.',ar:'أدوات سطر الأوامر لـ Claude AI'}},
+  {name:'AI-hacker-lab',emoji:'🤖',thumb:null,cats:['ai','security','learning'],hints:['🤖','🔓','🧪','💻','🛡️','🧠'],purpose:{"fr":"IA + Cybersecurite en s amusant !","en":"AI + Cybersecurity = Fun!","ar":"ذكاء اصطناعي + أمن سيبراني!"},
+    desc:{fr:'Laboratoire interactif d IA et cybersecurite — explorez le machine learning et les techniques de hacking ethique.',en:'Interactive AI & cybersecurity lab — explore ML and ethical hacking techniques.',ar:'مختبر تفاعلي للذكاء الاصطناعي والأمن السيبراني'}},
+  // ── micro:bit
+  {name:'bit-playground',emoji:'🕹️',thumb:null,cats:['microbit','hardware'],hints:["🕹️","💡","📊","🎮","🔧","📶"],purpose:{"fr":"Le terrain de jeu micro:bit !","en":"micro:bit Playground!","ar":"ملعب micro:bit!"},
+    desc:{fr:'Le terrain de jeu ultime pour micro:bit BLE — LEDs, capteurs, servos, jeux et graphiques depuis le navigateur.',en:'Ultimate micro:bit BLE playground — LEDs, sensors, servos, games from the browser.',ar:'ملعب micro:bit BLE المتكامل — تحكم بالأجهزة من المتصفح'}},
+  {name:'mission-control',emoji:'🛸',thumb:'mission-control.png',cats:['microbit','classroom'],hints:["🛸","📹","💬","🎛️","📡","🖥️"],purpose:{"fr":"Pilote ton micro:bit a distance !","en":"Remote-Control Your micro:bit!","ar":"تحكم عن بعد بـ micro:bit!"},
+    desc:{fr:'Tableau de bord avec video et chat WebRTC — envoyez des commandes a distance vers un micro:bit via Bluetooth.',en:'WebRTC video dashboard — send remote commands to micro:bit via Bluetooth.',ar:'لوحة تحكم عن بعد مع فيديو وأوامر micro:bit'}},
+  {name:'bitmoji-lab',emoji:'🎪',thumb:'bitmoji-lab.png',cats:['microbit','hardware'],hints:["🎨","😀","💡","🟥","🟩","🟦"],purpose:{"fr":"Dessine des emojis sur des LEDs !","en":"Draw Emojis on LEDs!","ar":"ارسم إيموجي على LEDs!"},
+    desc:{fr:'Choisissez des emojis, peignez-les et envoyez vos creations vers une matrice LED NeoPixel 8x8 ou 16x16 via micro:bit.',en:'Pick emojis, paint them, and send your art to a NeoPixel LED matrix via micro:bit.',ar:'ارسم إيموجي وأرسله إلى مصفوفة LED عبر micro:bit'}},
+  {name:'ble-logger',emoji:'📶',thumb:'ble-logger.png',cats:['microbit','hardware','network'],hints:["📶","🔍","📊","🐛","📱","📋"],purpose:{"fr":"Espionne le Bluetooth !","en":"Spy on Bluetooth Signals!","ar":"تجسس على إشارات البلوتوث!"},
+    desc:{fr:'Journal de debogage Bluetooth pour micro:bit — connectez, inspectez les services, lisez capteurs et logguez en temps reel.',en:'Bluetooth debug logger for micro:bit — connect, inspect services, read sensors in real time.',ar:'مسجل بلوتوث لتصحيح أخطاء micro:bit'}},
+  {name:'pixel-gateway',emoji:'🟥',thumb:'pixel-gateway.png',cats:['microbit','hardware'],hints:["🟥","🟧","🟨","🟩","🟦","🟪"],purpose:{"fr":"Envoie des couleurs aux NeoPixels !","en":"Send Colors to NeoPixels!","ar":"أرسل ألوانا إلى NeoPixels!"},
+    desc:{fr:'Envoyez des emojis colores vers une matrice NeoPixel connectee a un micro:bit — via USB Serial ou Bluetooth LE.',en:'Send colored emojis to a NeoPixel matrix via micro:bit — USB Serial or BLE.',ar:'أرسل إيموجي ملون إلى NeoPixel عبر micro:bit'}},
+  {name:'usb-logger',emoji:'🔌',thumb:'usb-logger.png',cats:['microbit','tools'],hints:["🔌","📊","📤","📥","💻","🔧"],purpose:{"fr":"Parle a ton micro:bit par USB !","en":"Talk to micro:bit via USB!","ar":"تحدث مع micro:bit عبر USB!"},
+    desc:{fr:'Communication micro:bit via USB WebSerial — envoyez et recevez des donnees directement depuis le navigateur.',en:'micro:bit USB WebSerial communication — send and receive data from the browser.',ar:'تواصل مع micro:bit عبر USB من المتصفح'}},
+  {name:'rxy',emoji:'🎮',thumb:null,cats:['microbit','hardware'],hints:["🎮","🕹️","📱","👆","🔘","📶"],purpose:{"fr":"Fabrique ta telecommande Bluetooth !","en":"Build Your Bluetooth Remote!","ar":"اصنع جهاز تحكم بلوتوث!"},
+    desc:{fr:'Creez une telecommande Bluetooth personnalisee pour micro:bit — glissez boutons, curseurs et D-pads. Zero code requis.',en:'Build a custom BLE remote for micro:bit — drag buttons, sliders, D-pads. Zero code.',ar:'أنشئ جهاز تحكم بلوتوث مخصص لـ micro:bit بدون برمجة'}},
+  {name:'bit-54-activities',emoji:'📘',thumb:null,cats:['microbit','learning'],hints:["📘","💡","🎵","🌡️","🤖","🎮"],purpose:{"fr":"54 projets micro:bit !","en":"54 micro:bit Projects!","ar":"54 مشروع micro:bit!"},
+    desc:{fr:'54 activites pratiques pour BBC micro:bit — des LEDs clignotantes aux robots BLE, en passant par les capteurs et la musique.',en:'54 hands-on BBC micro:bit activities — from blinking LEDs to BLE robots, sensors, music.',ar:'54 نشاطا عمليا لـ micro:bit — من وميض LEDs إلى روبوتات BLE'}},
+  {name:'morse-code',emoji:'📡',thumb:null,cats:['microbit','learning'],hints:["📡","⚡","🔊","✉️","🔤","💡"],purpose:{"fr":"Envoie des messages en Morse !","en":"Send Messages in Morse Code!","ar":"أرسل رسائل بشفرة مورس!"},
+    desc:{fr:'Apprenez le code Morse de maniere ludique avec une vraie connectivite BLE micro:bit — envoyez des messages en Morse !',en:'Learn Morse code the fun way with real micro:bit BLE — send messages in Morse!',ar:'تعلم شفرة مورس مع micro:bit بطريقة ممتعة'}},
+  {name:'makecode-adventures',emoji:'🧩',thumb:null,cats:['microbit','learning'],hints:["🧩","💻","🎮","🏆","📘","🤖"],purpose:{"fr":"Programme ton micro:bit !","en":"Code Your micro:bit!","ar":"برمج micro:bit!"},
+    desc:{fr:'Apprenez la programmation avec Microsoft MakeCode pour micro:bit — missions interactives et defis progressifs pour enfants.',en:'Learn coding with MakeCode for micro:bit — interactive missions and challenges for kids.',ar:'تعلم البرمجة مع MakeCode لـ micro:bit'}},
+  {name:'salat-times',emoji:'🕌',thumb:null,cats:['arabic','microbit'],hints:["🕌","🕐","🌙","💡","📿","🤲"],purpose:{"fr":"Horaires de priere + LED Adhan !","en":"Prayer Times + LED Adhan!","ar":"مواقيت الصلاة + فانوس الأذان!"},
+    desc:{fr:'Horaires de priere precis + lanterne Adhan connectee a un micro:bit V2 — allume une LED a chaque appel a la priere.',en:'Accurate prayer times + micro:bit V2 Adhan Lantern — LED lights up at each prayer call.',ar:'مواقيت الصلاة الدقيقة + فانوس الأذان مع micro:bit'}},
+  // ── Hardware & IoT
+  {name:'ble-dashboard',emoji:'📊',thumb:null,cats:['hardware','network'],hints:["📊","📶","🔍","📡","📱","📈"],purpose:{"fr":"Scanne tout le Bluetooth autour !","en":"Scan All Bluetooth Around!","ar":"امسح كل البلوتوث حولك!"},
+    desc:{fr:'Dashboard BLE complet — scanner, connecter, lire, ecrire, surveiller et analyser le spectre 2.4 GHz.',en:'Full BLE dashboard — scan, connect, read, write, monitor, and analyze the 2.4 GHz spectrum.',ar:'لوحة بلوتوث متكاملة لتحليل الطيف 2.4 جيجاهرتز'}},
+  {name:'esp32-c3-kids-lab',emoji:'⚡',thumb:'esp32-c3-kids-lab.png',cats:['hardware','learning'],hints:["⚡","💡","🌡️","📶","🔧","🧪"],purpose:{"fr":"Decouvre l ESP32 et l IoT !","en":"Discover ESP32 and IoT!","ar":"اكتشف ESP32 وإنترنت الأشياء!"},
+    desc:{fr:'Labo pratique ESP32-C3 — allumez des LEDs, lisez des capteurs, connectez-vous au WiFi et creez vos premiers projets IoT.',en:'Hands-on ESP32-C3 lab — LEDs, sensors, WiFi, first IoT projects.',ar:'مختبر ESP32-C3 العملي — LED ومستشعرات وواي فاي'}},
+  {name:'wled-kids-lab',emoji:'💡',thumb:'wled-kids-lab.png',cats:['hardware','learning'],hints:["💡","🌈","✨","🎨","🔴","🟢"],purpose:{"fr":"Controle des rubans LED colores !","en":"Control Colorful LED Strips!","ar":"تحكم بشرائط LED ملونة!"},
+    desc:{fr:'Controlez des rubans LED WS2812 / NeoPixel avec WLED — choisissez couleurs, effets et luminosite. Introduction ludique aux LEDs.',en:'Control WS2812 / NeoPixel LED strips with WLED — colors, effects, brightness.',ar:'تحكم بشرائط LED مع WLED — ألوان وتأثيرات'}},
+  {name:'circuit-lab',emoji:'🔋',thumb:'circuit-lab.png',cats:['hardware','learning'],hints:["🔋","💡","⚡","🔌","📐","🧪"],purpose:{"fr":"Construis des circuits electriques !","en":"Build Electric Circuits!","ar":"ابنِ دوائر كهربائية!"},
+    desc:{fr:'Construisez et simulez des circuits electroniques — cablez LEDs, resistances et capteurs, visualisez le courant en temps reel.',en:'Build and simulate electronic circuits — wire LEDs, resistors, sensors, watch current flow.',ar:'ابنِ ومحاكاة الدوائر الإلكترونية — شاهد تدفق التيار'}},
+  {name:'smart-home',emoji:'🏠',thumb:null,cats:['hardware','network','learning'],hints:["🏠","💡","🌡️","📱","🔌","🤖"],purpose:{"fr":"Rends ta maison intelligente !","en":"Make Your Home Smart!","ar":"اجعل بيتك ذكيا!"},
+    desc:{fr:'Connectez, automatisez et controlez — labo domotique pour enfants avec capteurs, relais et interface web.',en:'Connect, automate, control — smart home lab for kids with sensors, relays, web interface.',ar:'مختبر المنزل الذكي للأطفال — تحكم وأتمتة'}},
+  {name:'mqtt-lab',emoji:'📬',thumb:null,cats:['hardware','network','learning'],hints:["📬","📡","🔒","🌐","💻","📊"],purpose:{"fr":"Connecte des objets entre eux !","en":"Connect Things Together!","ar":"اربط الأشياء ببعضها!"},
+    desc:{fr:'Apprenez MQTT, IoT et la cybersecurite de maniere ludique — localement, en prive et gratuitement.',en:'Learn MQTT, IoT and cybersecurity the fun way — locally, privately, and for free.',ar:'تعلم MQTT وإنترنت الأشياء بطريقة ممتعة ومجانية'}},
+  {name:'sdr-lab',emoji:'📻',thumb:null,cats:['hardware','learning'],hints:["📻","📡","🎵","📊","🔊","⚡"],purpose:{"fr":"Explore les ondes radio !","en":"Explore Radio Waves!","ar":"استكشف موجات الراديو!"},
+    desc:{fr:'Apprenez la radio logicielle (SDR) de maniere interactive — spectres, modulations, decodage. 100% hors-ligne.',en:'Learn Software Defined Radio interactively — spectrums, modulation, decoding. 100% offline.',ar:'تعلم الراديو البرمجي بشكل تفاعلي ومجاني'}},
+  {name:'hackrf-one',emoji:'📡',thumb:null,cats:['hardware','security'],hints:["📡","📻","⚡","🔍","📊","🛰️"],purpose:{"fr":"Analyse les signaux radio !","en":"Analyze Radio Signals!","ar":"حلل إشارات الراديو!"},
+    desc:{fr:'Explorez le HackRF One — outil SDR pour l analyse et la transmission radio de 1 MHz a 6 GHz.',en:'Explore HackRF One — SDR tool for radio analysis and transmission from 1 MHz to 6 GHz.',ar:'استكشف HackRF One — أداة SDR للتحليل اللاسلكي'}},
+  {name:'firmware-update',emoji:'📲',thumb:null,cats:['hardware','tools'],hints:["📲","⬆️","🔧","📡","💾","✅"],purpose:{"fr":"Mets a jour tes appareils !","en":"Update Your Devices!","ar":"حدّث أجهزتك!"},
+    desc:{fr:'Mettez a jour le firmware de vos appareils via une interface web — OTA, USB Serial et BLE.',en:'Update device firmware via web interface — OTA, USB Serial and BLE.',ar:'تحديث البرامج الثابتة عبر واجهة الويب'}},
+  {name:'evic-toolkit',emoji:'🔧',thumb:null,cats:['hardware','tools'],hints:["🔧","🔋","⚡","🚗","🔌","📊"],purpose:{"fr":"Outils pour bornes de recharge !","en":"EV Charger Tools!","ar":"أدوات محطات الشحن!"},
+    desc:{fr:'Boite a outils pour firmware de bornes de recharge EV — diagnostic, flashage et configuration.',en:'EV charger firmware toolkit — diagnostics, flashing and configuration.',ar:'أدوات البرامج الثابتة لمحطات شحن السيارات الكهربائية'}},
+  {name:'ocpp',emoji:'🔋',thumb:null,cats:['hardware','network','tools'],hints:["🔋","⚡","🚗","🔌","📊","🖥️"],purpose:{"fr":"Simule des bornes electriques !","en":"Simulate EV Chargers!","ar":"محاكاة محطات الشحن!"},
+    desc:{fr:'Ecosysteme OCPP v3.0 complet — simulateurs, serveur central et dashboard pour bornes de recharge electrique.',en:'Complete OCPP v3.0 ecosystem — simulators, central server and dashboard for EV chargers.',ar:'نظام OCPP v3.0 متكامل لمحطات الشحن الكهربائية'}},
+  {name:'tty',emoji:'💻',thumb:null,cats:['hardware','tools'],hints:["💻","📟","⌨️","🔌","📜","🐧"],purpose:{"fr":"Envoie des scripts par cable !","en":"Send Scripts Over Cable!","ar":"أرسل سكربتات عبر الكابل!"},
+    desc:{fr:'Envoyez et executez des scripts bash sur une carte Linux via liaison serie — aucun reseau requis.',en:'Send and execute bash scripts on a Linux board over serial — no network required.',ar:'نفّذ سكربتات على لوح لينكس عبر المنفذ التسلسلي'}},
+  // ── Arabic & Islamic
+  {name:'arabic-translator',emoji:'🌐',thumb:'arabic-translator.png',cats:['arabic','ai'],hints:["🌐","🔤","🇸🇦","🔄","📝","🗣️"],purpose:{"fr":"Traduis en arabe, hors-ligne !","en":"Translate Arabic, Offline!","ar":"ترجمة عربية بدون إنترنت!"},
+    desc:{fr:'Traduisez vers et depuis l arabe dans le navigateur — sans serveur, sans cle API, fonctionne entierement hors ligne.',en:'Translate to/from Arabic in the browser — no server, no API key, fully offline.',ar:'ترجمة عربية محلية بالكامل بدون إنترنت'}},
+  {name:'arabic-speaker',emoji:'🔊',thumb:'arabic-speaker.png',cats:['arabic','ai'],hints:["🔊","🗣️","🇸🇦","👂","🎙️","📝"],purpose:{"fr":"Fais parler ton ordi en arabe !","en":"Make Your Computer Speak Arabic!","ar":"اجعل حاسوبك يتحدث العربية!"},
+    desc:{fr:'Synthese vocale et reconnaissance de la parole en arabe — entierement local dans le navigateur.',en:'Arabic text-to-speech and speech-to-text — fully local in the browser.',ar:'تحويل النص إلى كلام والكلام إلى نص بالعربية'}},
+  {name:'piper-arabic-tts',emoji:'🎙️',thumb:null,cats:['arabic','ai'],hints:["🎙️","🔊","🇸🇦","🗣️","💬","🧠"],purpose:{"fr":"Voix arabe naturelle dans le navigateur !","en":"Natural Arabic Voice in Browser!","ar":"صوت عربي طبيعي في المتصفح!"},
+    desc:{fr:'Synthese vocale arabe via Piper et WebAssembly — voix naturelle, 100% local dans le navigateur.',en:'Arabic TTS via Piper and WebAssembly — natural voice, 100% local.',ar:'نص عربي إلى كلام طبيعي عبر WebAssembly'}},
+  {name:'arabic-tts',emoji:'🎤',thumb:null,cats:['arabic','ai'],hints:["🎤","🔊","🇸🇦","🗣️","💬","🧠"],purpose:{"fr":"Transforme le texte arabe en parole !","en":"Turn Arabic Text into Speech!","ar":"حوّل النص العربي إلى كلام!"},
+    desc:{fr:'Synthese vocale arabe moderne via VITS + HiFi-GAN — serveur FastAPI avec voix haute fidelite.',en:'Modern Standard Arabic TTS via VITS + HiFi-GAN — FastAPI server with high-fidelity voice.',ar:'تحويل النص العربي إلى كلام عبر VITS'}},
+  {name:'kalami',emoji:'🗨️',thumb:null,cats:['arabic','ai'],hints:["🗨️","🎙️","🔄","🌐","🔊","👂"],purpose:{"fr":"Parle et traduis en arabe !","en":"Speak and Translate Arabic!","ar":"تحدث وترجم بالعربية!"},
+    desc:{fr:'Traducteur vocal arabe — parlez et obtenez une traduction instantanee avec synthese vocale.',en:'Arabic voice translator — speak and get instant translation with text-to-speech.',ar:'مترجم صوتي عربي فوري'}},
+  {name:'al-maqlub',emoji:'📜',thumb:null,cats:['arabic','learning','games'],hints:["📜","✍️","🔄","🎭","📖","🕌"],purpose:{"fr":"Poesie arabe qui se lit a l envers !","en":"Arabic Poetry Reads Backwards!","ar":"شعر عربي يُقرأ بالعكس!"},
+    desc:{fr:'Poesie arabe reversible — musee interactif, createur, jeu et recitateur de poemes palindromes.',en:'Arabic reversible poetry — interactive museum, creator, game, and reciter.',ar:'الشعر العربي المقلوب — متحف تفاعلي ومنشئ'}},
+  {name:'builders-of-light',emoji:'🏛️',thumb:null,cats:['arabic','learning'],hints:["🏛️","⭐","🔭","📚","🧪","🌍"],purpose:{"fr":"Decouvre les savants de l Age d Or !","en":"Meet Golden Age Scientists!","ar":"تعرف على علماء العصر الذهبي!"},
+    desc:{fr:'Voyage educatif interactif a travers l Age d Or islamique — decouvrez les savants qui ont illumine le monde.',en:'Interactive educational journey through the Islamic Golden Age — discover the scholars.',ar:'رحلة تعليمية عبر العصر الذهبي الإسلامي'}},
+  {name:'golden-age',emoji:'✨',thumb:null,cats:['arabic','learning'],hints:["✨","🔭","💊","⭐","📐","📚"],purpose:{"fr":"Voyage dans l Age d Or islamique !","en":"Travel the Islamic Golden Age!","ar":"سافر عبر العصر الذهبي الإسلامي!"},
+    desc:{fr:'Voyage interactif a travers l Age d Or islamique — sciences, medecine, astronomie et inventions.',en:'Interactive journey through the Islamic Golden Age — science, medicine, astronomy.',ar:'رحلة تفاعلية عبر العصر الذهبي — علوم وطب وفلك'}},
+  {name:'luminaries-of-islam',emoji:'🌟',thumb:null,cats:['arabic','learning'],hints:["🌟","📚","🔬","🧪","🌍","📖"],purpose:{"fr":"Les grands savants musulmans !","en":"Great Muslim Scientists!","ar":"عظماء علماء المسلمين!"},
+    desc:{fr:'Les savants du monde musulman — experience educative interactive avec biographies, decouvertes et chronologie.',en:'Scientists of the Muslim world — interactive educational experience with biographies.',ar:'علماء المسلمين — تجربة تعليمية تفاعلية'}},
+  {name:'time-machine',emoji:'⏳',thumb:null,cats:['arabic','learning','games'],hints:["⏳","🕰️","🔬","🌍","🎮","📚"],purpose:{"fr":"Voyage dans le temps des savants !","en":"Time Travel with Scientists!","ar":"سافر عبر الزمن مع العلماء!"},
+    desc:{fr:'Jeu educatif interactif sur les savants musulmans qui ont change le monde — voyagez dans le temps !',en:'Interactive game about Muslim scientists who changed the world — travel through time!',ar:'لعبة تفاعلية عن العلماء المسلمين عبر الزمن'}},
+  {name:'jisr',emoji:'🌉',thumb:null,cats:['arabic','learning'],hints:["🌉","🌍","🗣️","📚","🤝","🔤"],purpose:{"fr":"Le pont entre les civilisations !","en":"Bridge Between Civilizations!","ar":"جسر بين الحضارات!"},
+    desc:{fr:'Le pont entre les civilisations — application culturelle et linguistique multilingue.',en:'The bridge between civilizations — multilingual cultural and linguistic app.',ar:'الجسر بين الحضارات — تطبيق ثقافي متعدد اللغات'}},
+  {name:'tethkir',emoji:'📋',thumb:null,cats:['arabic','tools'],hints:["📋","🔒","✅","📿","✍️","📅"],purpose:{"fr":"Organise tes ibadates !","en":"Organize Your Ibadah!","ar":"نظّم عباداتك!"},
+    desc:{fr:'Gestionnaire de taches islamique avec notes chiffrees — organisez vos ibadates et taches quotidiennes.',en:'Islamic task manager with encrypted notes — organize your ibadah and daily tasks.',ar:'مدير مهام إسلامي مع ملاحظات مشفرة'}},
+  {name:'tesbih',emoji:'📿',thumb:null,cats:['arabic'],hints:["📿","🤲","🔢","✨","🕌","💚"],purpose:{"fr":"Tasbih numerique, 100% hors-ligne !","en":"Digital Tasbih, 100% Offline!","ar":"تسبيح رقمي بدون إنترنت!"},
+    desc:{fr:'Tasbih numerique avec suivi de dhikr — touchez pour compter, fonctionne 100% hors-ligne (PWA).',en:'Digital tasbih with dhikr tracking — tap to count, 100% offline PWA.',ar:'تسبيح رقمي مع تتبع الأذكار — يعمل بدون إنترنت'}},
+  {name:'nusuk',emoji:'🕋',thumb:null,cats:['arabic','learning'],hints:["🕋","🗺️","🤲","📖","🏔️","🌙"],purpose:{"fr":"Guide du Hajj et de la Omra !","en":"Hajj and Umrah Guide!","ar":"دليل الحج والعمرة!"},
+    desc:{fr:'Guide interactif des rites du Hajj et de la Omra — etapes, cartes et supplications.',en:'Interactive Hajj and Umrah guide — steps, maps and supplications.',ar:'دليل تفاعلي لمناسك الحج والعمرة'}},
+  {name:'eid',emoji:'🎉',thumb:null,cats:['arabic'],hints:["🎉","🌙","🎆","🎊","🕌","✨"],purpose:{"fr":"Bonne fete ! Eid Mubarak !","en":"Happy Eid Mubarak!","ar":"عيد مبارك!"},
+    desc:{fr:'Page de voeux Eid Mubarak avec theme hacker — animation festive par Workshop-DIY.',en:'Hacker-themed Eid Mubarak greeting page — festive animation by Workshop-DIY.',ar:'صفحة تهنئة عيد مبارك بطابع تقني'}},
+  // ── Security
+  {name:'crypto-academy',emoji:'🔐',thumb:'crypto-academy.png',cats:['security','learning'],hints:["🔐","🔑","🧮","🛡️","📜","💻"],purpose:{"fr":"Apprends la cryptographie !","en":"Learn Cryptography!","ar":"تعلم التشفير!"},
+    desc:{fr:'Cryptographie interactive — chiffrement, hachage, signatures numeriques, PKI et TLS avec Web Crypto API.',en:'Interactive cryptography — encryption, hashing, digital signatures, PKI and TLS.',ar:'تشفير تفاعلي — تجزئة وتوقيعات رقمية و PKI'}},
+  {name:'pentest-lab',emoji:'🛡️',thumb:'pentest-lab.png',cats:['security','learning'],hints:["🛡️","🔓","🏴","💻","🧪","🏆"],purpose:{"fr":"Deviens un hacker ethique !","en":"Become an Ethical Hacker!","ar":"كن هاكر أخلاقي!"},
+    desc:{fr:'Bac a sable cybersecurite pour debutants — apprenez les bases via des defis guides et exercices CTF interactifs.',en:'Cybersecurity sandbox for beginners — learn through guided challenges and CTF exercises.',ar:'بيئة اختبار أمن سيبراني للمبتدئين مع تحديات CTF'}},
+  {name:'crypto-vault',emoji:'🔒',thumb:null,cats:['security','learning'],hints:["🔒","🔑","💬","🧮","🛡️","💾"],purpose:{"fr":"Chiffre tes messages secrets !","en":"Encrypt Your Secret Messages!","ar":"شفّر رسائلك السرية!"},
+    desc:{fr:'Apprenez la cryptographie en pratique — chiffrez des messages, hachez des mots de passe, verifiez des signatures.',en:'Learn crypto hands-on — encrypt messages, hash passwords, verify digital signatures.',ar:'تعلم التشفير عمليا — رسائل وكلمات مرور وتوقيعات'}},
+  {name:'true-crypt',emoji:'🗄️',thumb:null,cats:['security','tools'],hints:["🗄️","🔒","💾","🛡️","🔑","💻"],purpose:{"fr":"Un coffre-fort numerique !","en":"A Digital Safe!","ar":"خزنة رقمية!"},
+    desc:{fr:'Gestionnaire de volumes chiffres dans le navigateur — conteneurs AES-256-GCM inspires de TrueCrypt/VeraCrypt.',en:'Browser-based encrypted volume manager — AES-256-GCM containers inspired by TrueCrypt.',ar:'مدير أقراص مشفرة في المتصفح بتشفير AES-256'}},
+  {name:'rocket-shield-vpn',emoji:'🚀',thumb:'rocket-shield-vpn.png',cats:['security','network','learning'],hints:["🚀","🛡️","🔒","🌍","💻","⚡"],purpose:{"fr":"Apprends le VPN comme un astronaute !","en":"Learn VPN Like an Astronaut!","ar":"تعلم VPN كرائد فضاء!"},
+    desc:{fr:'Apprenez le VPN comme un commandant spatial — application educative interactive sur les tunnels chiffres.',en:'Learn VPN like a Space Commander — interactive educational app on encrypted tunnels.',ar:'تعلم VPN كقائد فضائي — تطبيق تعليمي تفاعلي'}},
+  {name:'hacktivist-kids',emoji:'🎭',thumb:null,cats:['security','learning','games'],hints:["🎭","🕵️","💻","🔓","🎮","😈"],purpose:{"fr":"Pranks educatifs pour jeunes agents !","en":"Fun Pranks for Young Agents!","ar":"مقالب تعليمية للعملاء الصغار!"},
+    desc:{fr:'Boite a outils de pranks educatifs pour jeunes agents — apprenez la cybersecurite en vous amusant.',en:'Educational prank toolkit for young agents — learn cybersecurity while having fun.',ar:'أدوات مقالب تعليمية لتعلم الأمن السيبراني'}},
+  {name:'virus',emoji:'🦠',thumb:null,cats:['security','learning'],hints:["🦠","💻","🔬","🛡️","⚠️","🧪"],purpose:{"fr":"Comment fonctionne un virus ?","en":"How Does a Virus Work?","ar":"كيف يعمل الفيروس؟"},
+    desc:{fr:'Simulation educative de virus informatique — comprenez comment les malwares fonctionnent sans risque.',en:'Educational virus simulation — understand how malware works, safely.',ar:'محاكاة تعليمية للفيروسات — افهم كيف تعمل البرامج الضارة'}},
+  // ── Network
+  {name:'wifi-dashboard',emoji:'📡',thumb:null,cats:['network','tools'],hints:["📡","📶","📊","🔍","📱","📈"],purpose:{"fr":"Visualise le WiFi autour de toi !","en":"See WiFi Around You!","ar":"شاهد الواي فاي حولك!"},
+    desc:{fr:'Scanner WiFi temps reel, analyseur de canaux et moniteur de signal — visualisez votre environnement radio.',en:'Real-time WiFi scanner, channel analyzer and signal monitor.',ar:'ماسح واي فاي مع تحليل القنوات ومراقبة الإشارة'}},
+  {name:'dhcp-lab',emoji:'🌐',thumb:null,cats:['network','tools','learning'],hints:["🌐","📊","🔢","💻","🐍","📡"],purpose:{"fr":"Comment ton ordi recoit son IP !","en":"How Your PC Gets Its IP!","ar":"كيف يحصل حاسوبك على IP!"},
+    desc:{fr:'Serveur DHCP Python zero-dependance avec dashboard web temps reel — apprenez comment IP est attribuee.',en:'Zero-dependency Python DHCP server with real-time web dashboard.',ar:'خادم DHCP مع لوحة تحكم ويب في الوقت الحقيقي'}},
+  {name:'bonjour',emoji:'👋',thumb:null,cats:['network','learning'],hints:["👋","🔍","📡","🖥️","🌐","📱"],purpose:{"fr":"Decouvre les appareils sur ton reseau !","en":"Find Devices on Your Network!","ar":"اكتشف الأجهزة على شبكتك!"},
+    desc:{fr:'Explorez mDNS et Bonjour de maniere interactive — decouvrez les services reseau autour de vous.',en:'Explore mDNS and Bonjour interactively — discover network services around you.',ar:'استكشف mDNS و Bonjour بشكل تفاعلي'}},
+  {name:'scapy',emoji:'🐍',thumb:null,cats:['network','security','learning'],hints:["🐍","📦","🔍","🧅","📊","🌐"],purpose:{"fr":"Construis des paquets reseau !","en":"Build Network Packets!","ar":"ابنِ حزم الشبكة!"},
+    desc:{fr:'16 demos interactives pour construire, inspecter et visualiser des paquets reseau couche par couche.',en:'16 interactive demos to build, inspect and visualize network packets layer by layer.',ar:'16 عرضا تفاعليا لبناء وفحص حزم الشبكة'}},
+  {name:'flight-tracker',emoji:'✈️',thumb:null,cats:['network','learning'],hints:["✈️","🗺️","🌍","📍","☁️","🛫"],purpose:{"fr":"Suis les avions en temps reel !","en":"Track Planes in Real Time!","ar":"تتبع الطائرات مباشرة!"},
+    desc:{fr:'Suivi de vols en temps reel pour enfants — transformez le ciel en salle de classe interactive.',en:'Real-time flight tracker for kids — turn the sky into an interactive classroom.',ar:'متتبع رحلات طيران تفاعلي للأطفال'}},
+  {name:'satellites',emoji:'🛰️',thumb:null,cats:['network','learning'],hints:["🛰️","🌍","⭐","🔭","🚀","🌙"],purpose:{"fr":"Explore les satellites en orbite !","en":"Explore Orbiting Satellites!","ar":"استكشف الأقمار الصناعية!"},
+    desc:{fr:'Experience educative interactive sur les satellites, la mecanique orbitale et l heritage astronomique arabe.',en:'Interactive educational experience on satellites, orbital mechanics, and Arab astronomy.',ar:'تجربة تعليمية عن الأقمار الصناعية والتراث الفلكي'}},
+  // ── Learning
+  {name:'linux-kids-lab',emoji:'🐧',thumb:'linux-kids-lab.png',cats:['learning','tools'],hints:["🐧","💻","📂","⌨️","🥷","📜"],purpose:{"fr":"Deviens un ninja du terminal !","en":"Become a Terminal Ninja!","ar":"كن نينجا الطرفية!"},
+    desc:{fr:'Apprenez Linux dans un bac a sable securise — fichiers, pipes, scripts bash. Devenez un ninja du terminal !',en:'Learn Linux in a safe browser sandbox — files, pipes, bash scripts. Become a terminal ninja!',ar:'تعلم لينكس في بيئة آمنة — ملفات وأنابيب وسكربتات'}},
+  {name:'3d-lab',emoji:'🧊',thumb:null,cats:['learning'],hints:["🧊","🎨","💡","🔄","🖼️","✨"],purpose:{"fr":"Cree des objets 3D dans le navigateur !","en":"Create 3D Objects in Browser!","ar":"أنشئ أشكال ثلاثية الأبعاد!"},
+    desc:{fr:'Explorez la conception 3D dans le navigateur — creez, faites pivoter et eclairez des objets interactifs avec Three.js.',en:'Explore 3D design in the browser — create, rotate and light objects with Three.js.',ar:'استكشف التصميم ثلاثي الأبعاد مع Three.js'}},
+  {name:'web-kids',emoji:'🌈',thumb:null,cats:['learning'],hints:["🌈","💻","🎨","👶","📝","🌐"],purpose:{"fr":"Apprends HTML, CSS, JS en jouant !","en":"Learn HTML, CSS, JS by Playing!","ar":"تعلم HTML وCSS وJS باللعب!"},
+    desc:{fr:'Plateforme de codage educative zero-dependance pour enfants de 6 a 14 ans — HTML, CSS, JS dans le navigateur.',en:'Zero-dependency coding platform for kids aged 6-14 — HTML, CSS, JS in the browser.',ar:'منصة برمجة للأطفال من 6 إلى 14 سنة'}},
+  {name:'git-lab',emoji:'🌿',thumb:null,cats:['learning','tools'],hints:["🌿","💻","🔀","📂","🤝","📝"],purpose:{"fr":"Apprends Git comme un pro !","en":"Learn Git Like a Pro!","ar":"تعلم Git كالمحترفين!"},
+    desc:{fr:'Apprenez Git et GitHub de maniere interactive — branches, commits, merges et pull requests pour enfants.',en:'Learn Git and GitHub interactively — branches, commits, merges for kids.',ar:'تعلم Git و GitHub بشكل تفاعلي'}},
+  {name:'cowsay',emoji:'🐄',thumb:null,cats:['learning','games'],hints:["🐄","🔢","💬","😂","📟","🧮"],purpose:{"fr":"Une vache qui fait des maths !","en":"A Cow that Does Math!","ar":"بقرة تحل الرياضيات!"},
+    desc:{fr:'Une vache ASCII qui resout des maths et partage des faits amusants — apprentissage ludique en ligne de commande.',en:'ASCII cow that solves math and shares fun facts — playful command-line learning.',ar:'بقرة ASCII تحل الرياضيات وتشارك حقائق ممتعة'}},
+  {name:'emojis',emoji:'😀',thumb:null,cats:['learning'],hints:["😀","💻","🎨","🧩","🔤","🌈"],purpose:{"fr":"Programme avec des emojis !","en":"Code with Emojis!","ar":"برمج بالإيموجي!"},
+    desc:{fr:'EmojiFlow — apprenez le code par les emojis. Programmation visuelle et ludique pour debutants.',en:'EmojiFlow — learn coding through emojis. Visual, fun programming for beginners.',ar:'تعلم البرمجة من خلال الرموز التعبيرية'}},
+  {name:'save-our-planet',emoji:'🌍',thumb:null,cats:['learning','games'],hints:["🌍","🤖","♻️","🌱","💚","2️⃣"],purpose:{"fr":"Des robots sauvent la Terre !","en":"Robots Save the Earth!","ar":"روبوتات تنقذ الأرض!"},
+    desc:{fr:'Application web interactive trilingue pour enfants — des robots sauvent la Terre en 2050.',en:'Interactive trilingual web app for kids — robots saving Earth in 2050.',ar:'تطبيق تفاعلي ثلاثي اللغات — روبوتات تنقذ الأرض'}},
+  {name:'classroom',emoji:'🏫',thumb:null,cats:['classroom','network'],hints:["🏫","📹","💬","✏️","👨‍🏫","👩‍🎓"],purpose:{"fr":"Ta classe virtuelle !","en":"Your Virtual Classroom!","ar":"فصلك الافتراضي!"},
+    desc:{fr:'Classe virtuelle PeerJS avec partage d ecran, chat et tableau blanc — jusqu a 12 eleves connectes.',en:'PeerJS virtual classroom with screen share, chat, whiteboard — up to 12 students.',ar:'فصل افتراضي مع مشاركة الشاشة والدردشة'}},
+  // ── Catalogs
+  {name:'ops-catalog',emoji:'📦',thumb:null,cats:['tools','learning'],hints:["📦","🔧","📡","🛡️","📋","🗂️"],purpose:{"fr":"488 projets DIY a explorer !","en":"488 DIY Projects to Explore!","ar":"488 مشروع DIY لاستكشافها!"},
+    desc:{fr:'Catalogue interactif de 488+ projets DIY hardware, radio et securite — repartis en 55 categories.',en:'Interactive catalog of 488+ DIY hardware, radio and security projects in 55 categories.',ar:'كتالوج تفاعلي لـ 488 مشروع في 55 فئة'}},
+  {name:'ops-catalog-kids-apps',emoji:'🎠',thumb:null,cats:['learning','games'],hints:["🎠","🎮","🧮","🎨","📚","🧒"],purpose:{"fr":"190 jeux educatifs pour toi !","en":"190 Educational Games for You!","ar":"190 لعبة تعليمية لك!"},
+    desc:{fr:'190 jeux educatifs interactifs pour enfants — recreations de GCompris, TuxMath et plus.',en:'190 interactive educational games for kids — GCompris, TuxMath and more.',ar:'190 لعبة تعليمية تفاعلية للأطفال'}},
+  {name:'ops-catalog-kids-quizzes',emoji:'🧮',thumb:null,cats:['learning'],hints:["🧮","❓","🎓","📊","🏆","📚"],purpose:{"fr":"2 215 quiz pour tester tes connaissances !","en":"2,215 Quizzes to Test You!","ar":"2215 اختبار لتحدي معلوماتك!"},
+    desc:{fr:'2 215 quiz educatifs — maths, sciences, geographie, anglais, codage et arts pour enfants.',en:'2,215 educational quizzes — math, science, geography, English, coding, arts.',ar:'2215 اختبارا تعليميا في الرياضيات والعلوم'}},
+  {name:'ops-catalog-islamic-kids-apps',emoji:'🌙',thumb:null,cats:['arabic','learning'],hints:["🌙","🎮","📖","🕌","🧒","✨"],purpose:{"fr":"Jeux islamiques pour enfants !","en":"Islamic Games for Kids!","ar":"ألعاب إسلامية للأطفال!"},
+    desc:{fr:'5 applications educatives islamiques interactives pour enfants musulmans — apprentissage par le jeu.',en:'5 interactive Islamic educational apps for Muslim kids — learning through play.',ar:'5 تطبيقات تعليمية إسلامية تفاعلية للأطفال'}},
+  {name:'ops-catalog-islamic-kids-quizzes',emoji:'☪️',thumb:null,cats:['arabic','learning'],hints:["☪️","❓","📖","🎓","🏆","🌙"],purpose:{"fr":"1 091 quiz islamiques !","en":"1,091 Islamic Quizzes!","ar":"1091 اختبار إسلامي!"},
+    desc:{fr:'1 091 quiz educatifs islamiques pour enfants musulmans — Coran, Sira, Fiqh et plus.',en:'1,091 Islamic educational quizzes — Quran, Sira, Fiqh and more.',ar:'1091 اختبارا إسلاميا تعليميا للأطفال'}},
+  // ── Dev Tools & Infra
+  {name:'termlite',emoji:'🖥️',thumb:null,cats:['tools','network'],hints:["🖥️","📂","🔑","🌐","📡","💻"],purpose:{"fr":"Acces a distance depuis le navigateur !","en":"Remote Access from Browser!","ar":"وصول عن بعد من المتصفح!"},
+    desc:{fr:'Hub d acces a distance auto-heberge — terminal SSH, SFTP, VNC, scanner reseau dans le navigateur.',en:'Self-hosted remote access hub — SSH terminal, SFTP, VNC, network scanner in the browser.',ar:'مركز وصول عن بعد — SSH و SFTP و VNC في المتصفح'}},
+  {name:'warsha',emoji:'🪟',thumb:null,cats:['tools'],hints:["🪟","💻","📟","🔲","⌨️","🖥️"],purpose:{"fr":"Multiplexeur de terminal web !","en":"Web Terminal Multiplexer!","ar":"مُعدد أطراف ويب!"},
+    desc:{fr:'Multiplexeur de terminal web inspire de tmux — construit en un seul fichier HTML.',en:'Web-based terminal multiplexer inspired by tmux — single HTML file.',ar:'مُعدِّد أطراف ويب مستوحى من tmux'}},
+  {name:'web-kvm',emoji:'🖱️',thumb:null,cats:['tools','network'],hints:["🖱️","⌨️","🖥️","🔄","📡","💻"],purpose:{"fr":"Partage clavier et souris entre PCs !","en":"Share Keyboard Between PCs!","ar":"شارك لوحة المفاتيح بين الحواسيب!"},
+    desc:{fr:'Switch KVM logiciel — partagez clavier et souris entre plusieurs ordinateurs via le reseau local.',en:'Software KVM switch — share keyboard and mouse across computers over local network.',ar:'مفتاح KVM برمجي لمشاركة لوحة المفاتيح والماوس'}},
+  {name:'sync-files',emoji:'🔄',thumb:null,cats:['tools'],hints:["🔄","📂","💻","📁","⚡","🔗"],purpose:{"fr":"Synchronise tes fichiers !","en":"Sync Your Files!","ar":"زامن ملفاتك!"},
+    desc:{fr:'Synchronisation intelligente de fichiers pour developpeurs travaillant sur plusieurs PC.',en:'Smart file sync for developers working on multiple PCs.',ar:'مزامنة ذكية للملفات بين أجهزة متعددة'}},
+  {name:'callgraph',emoji:'🗺️',thumb:null,cats:['tools'],hints:["🗺️","🔗","📊","💻","🔍","🧩"],purpose:{"fr":"Visualise le code C !","en":"Visualize C Code!","ar":"تصور كود C!"},
+    desc:{fr:'Analyseur de graphe d appels interactif pour codebases C — ideal pour le transfert de projets embarques.',en:'Interactive call graph analyzer for C codebases — ideal for embedded project handover.',ar:'محلل تفاعلي لمخططات الاستدعاء في لغة C'}},
+  {name:'git-pulse',emoji:'💓',thumb:null,cats:['tools'],hints:["💓","📊","💻","📁","🔍","📈"],purpose:{"fr":"Gere tous tes repos GitHub !","en":"Manage All Your GitHub Repos!","ar":"أدر كل مستودعات GitHub!"},
+    desc:{fr:'Gestionnaire complet de depots GitHub — CLI + interface web pour surveiller et gerer tous vos repos.',en:'Complete GitHub repo manager — CLI + web UI to monitor and manage all your repos.',ar:'مدير مستودعات GitHub متكامل — CLI + واجهة ويب'}},
+  {name:'git-date-rewrite',emoji:'📅',thumb:null,cats:['tools'],hints:["📅","⏰","💻","🔄","📝","🗓️"],purpose:{"fr":"Reecris les dates de tes commits !","en":"Rewrite Your Commit Dates!","ar":"أعد كتابة تواريخ التزاماتك!"},
+    desc:{fr:'Reecrivez les dates de commits de tous vos repos GitHub depuis un seul menu terminal interactif.',en:'Rewrite commit dates across all GitHub repos from a single interactive terminal menu.',ar:'أعد كتابة تواريخ الالتزامات من قائمة تفاعلية'}},
+  {name:'dir-pulse',emoji:'📂',thumb:null,cats:['tools'],hints:["📂","💓","👁️","📊","🔔","📁"],purpose:{"fr":"Surveille tes fichiers en direct !","en":"Watch Your Files Live!","ar":"راقب ملفاتك مباشرة!"},
+    desc:{fr:'Le battement de coeur de vos repertoires — surveillez les changements de fichiers en temps reel.',en:'The heartbeat of your directories — monitor file changes in real time.',ar:'راقب تغييرات الملفات في الوقت الحقيقي'}},
+  {name:'production-chain',emoji:'🏭',thumb:'production-chain.png',cats:['tools','hardware'],hints:["🏭","⚙️","🐳","🔄","📦","🧪"],purpose:{"fr":"CI/CD pour firmware embarque !","en":"CI/CD for Embedded Firmware!","ar":"CI/CD للبرامج الثابتة!"},
+    desc:{fr:'Infrastructure CI/CD conteneurisee pour equipes firmware et Linux embarque.',en:'Containerized CI/CD infrastructure for firmware and embedded Linux teams.',ar:'بنية CI/CD للفرق المدمجة والبرامج الثابتة'}},
+  {name:'bash-toolkit',emoji:'🧰',thumb:null,cats:['tools'],hints:["🧰","📜","⚙️","💻","🔧","⌨️"],purpose:{"fr":"Scripts Bash utiles !","en":"Useful Bash Scripts!","ar":"سكربتات Bash مفيدة!"},
+    desc:{fr:'Collection de scripts Bash utiles pour automatiser les taches quotidiennes de developpement.',en:'Collection of useful Bash scripts to automate daily development tasks.',ar:'مجموعة سكربتات Bash لأتمتة المهام اليومية'}},
+  {name:'sanitize-names-toolkit',emoji:'✏️',thumb:null,cats:['tools'],hints:["✏️","📂","🧹","✅","🔤","📁"],purpose:{"fr":"Nettoie les noms de fichiers !","en":"Clean Up File Names!","ar":"نظّف أسماء الملفات!"},
+    desc:{fr:'Nettoyez et normalisez les noms de fichiers et dossiers — supprimez accents, espaces et caracteres speciaux.',en:'Clean and normalize file and folder names — remove accents, spaces, special chars.',ar:'نظّف وطبّع أسماء الملفات والمجلدات'}},
+  {name:'meridian',emoji:'🎬',thumb:null,cats:['tools'],hints:["🎬","📹","🔒","🖥️","▶️","🏠"],purpose:{"fr":"Ton propre YouTube prive !","en":"Your Own Private YouTube!","ar":"يوتيوبك الخاص!"},
+    desc:{fr:'Plateforme video auto-hebergee respectueuse de la vie privee — votre propre YouTube prive.',en:'Self-hosted, privacy-first video platform — your own private YouTube.',ar:'منصة فيديو ذاتية الاستضافة تحترم الخصوصية'}},
+  {name:'mac-weird-keys',emoji:'⌨️',thumb:null,cats:['tools'],hints:["⌨️","⌥","⇧","🔣","📋","💻"],purpose:{"fr":"Trouve les symboles bizarres du Mac !","en":"Find Mac's Weird Symbols!","ar":"اعثر على رموز Mac الغريبة!"},
+    desc:{fr:'Trouvez, apprenez et copiez les symboles bizarres que vous ne pouvez pas taper sur votre clavier Mac.',en:'Find, learn and copy weird symbols you can not type on your Mac keyboard.',ar:'اعثر على الرموز الغريبة التي لا يمكنك كتابتها'}},
+  {name:'puppeteer-playground',emoji:'🎭',thumb:'puppeteer-playground.png',cats:['tools','learning'],hints:["🎭","🌐","🤖","📸","💻","🧪"],purpose:{"fr":"Automatise le navigateur !","en":"Automate the Browser!","ar":"أتمتة المتصفح!"},
+    desc:{fr:'Automatisation de navigateur avec Puppeteer — apprenez, experimentez et creez des demos.',en:'Browser automation with Puppeteer — learn, experiment, create demos.',ar:'أتمتة المتصفح مع Puppeteer — تعلم وجرب'}},
+  // ── Content & Social
+  {name:'sada',emoji:'📚',thumb:null,cats:['tools','learning'],hints:["📚","🌐","🇫🇷","🇬🇧","🇸🇦","📄"],purpose:{"fr":"564 pages educatives en 3 langues !","en":"564 Educational Pages in 3 Languages!","ar":"564 صفحة تعليمية بثلاث لغات!"},
+    desc:{fr:'564 fichiers HTML autonomes dans 3 langues pour l ecosysteme educatif Workshop-DIY.',en:'564 self-contained HTML files in 3 languages for the Workshop-DIY educational ecosystem.',ar:'564 ملف HTML مستقل بثلاث لغات'}},
+  {name:'posts',emoji:'📰',thumb:null,cats:['tools'],hints:["📰","🎨","📱","🖼️","✍️","📤"],purpose:{"fr":"Cree des posts pour les reseaux !","en":"Create Social Media Posts!","ar":"أنشئ منشورات للتواصل!"},
+    desc:{fr:'Outil de creation visuelle multi-mode pour posts reseaux sociaux Workshop-DIY (PWA).',en:'Multi-mode visual creation tool for Workshop-DIY social media posts (PWA).',ar:'أداة إنشاء منشورات وسائل التواصل الاجتماعي'}},
+  {name:'flyers',emoji:'🪧',thumb:null,cats:['tools'],hints:["🪧","🎨","📣","🖼️","✨","📱"],purpose:{"fr":"Cree des flyers promotionnels !","en":"Create Promotional Flyers!","ar":"أنشئ منشورات ترويجية!"},
+    desc:{fr:'Templates de flyers promotionnels et posts reseaux sociaux pour les apps Workshop-DIY.',en:'Promotional flyer templates and social media posts for Workshop-DIY apps.',ar:'قوالب منشورات ترويجية لتطبيقات Workshop-DIY'}},
+  {name:'linkedin',emoji:'💼',thumb:null,cats:['tools'],hints:["💼","📄","🌍","💻","🔍","👔"],purpose:{"fr":"Portfolio ingenieur embarque !","en":"Embedded Engineer Portfolio!","ar":"ملف مهندس برمجيات مدمجة!"},
+    desc:{fr:'Portfolio de recherche d emploi — Ingenieur Logiciel Embarque Senior, application web multi-pays.',en:'Job search portfolio — Senior Embedded Software Engineer, multi-country web app.',ar:'ملف بحث عن عمل — مهندس برمجيات مدمجة'}},
+  {name:'PlanPilot',emoji:'📋',thumb:null,cats:['tools'],hints:["📋","⏰","✅","📅","🧠","📊"],purpose:{"fr":"Organise ta journee !","en":"Organize Your Day!","ar":"نظّم يومك!"},
+    desc:{fr:'Gestionnaire de taches intelligent avec planification automatique — organisez votre journee efficacement.',en:'Intelligent task manager with automatic scheduling — organize your day efficiently.',ar:'مدير مهام ذكي مع جدولة تلقائية'}},
+  {name:'fihris',emoji:'📇',thumb:null,cats:['tools'],hints:["📇","🔍","📚","📋","🗂️","🌐"],purpose:{"fr":"Index de toutes les apps !","en":"Index of All Apps!","ar":"فهرس كل التطبيقات!"},
+    desc:{fr:'Le catalogue des applications Workshop-DIY — index navigable de tous les projets.',en:'The Workshop-DIY app catalog — browsable index of all projects.',ar:'فهرس تطبيقات Workshop-DIY'}},
+  {name:'tools',emoji:'🛠️',thumb:null,cats:['tools'],hints:["🛠️","📦","🔧","💻","📝","⚙️"],purpose:{"fr":"Toolkit pour creer des apps !","en":"Toolkit to Create Apps!","ar":"أدوات لإنشاء تطبيقات!"},
+    desc:{fr:'Tout ce qu il faut pour creer une nouvelle web app Workshop-DIY — toolkit projet v1.2.',en:'Everything you need to create a new Workshop-DIY web app — project toolkit v1.2.',ar:'كل ما تحتاجه لإنشاء تطبيق Workshop-DIY جديد'}},
+  {name:'passassion-report',emoji:'📊',thumb:null,cats:['tools'],hints:["📊","📝","🔄","📋","✅","📄"],purpose:{"fr":"Genere des rapports de passation !","en":"Generate Handover Reports!","ar":"أنشئ تقارير التسليم!"},
+    desc:{fr:'Generateur de rapports de passation — documentez le transfert de projets et responsabilites.',en:'Handover report generator — document project transfers and responsibilities.',ar:'مولد تقارير تسليم المشاريع'}},
+  {name:'workshop-diy',emoji:'🏗️',thumb:'workshop-diy.png',cats:['tools','learning'],hints:["🏗️","🔧","📚","🌐","🚀","💡"],purpose:{"fr":"Le site Workshop-DIY !","en":"The Workshop-DIY Website!","ar":"موقع Workshop-DIY!"},
+    desc:{fr:'Le site principal Workshop-DIY — on construit, on apprend, on partage.',en:'The main Workshop-DIY website — build, learn, share.',ar:'الموقع الرئيسي لـ Workshop-DIY'}},
 ];
 
-const W=()=>window.innerWidth,H=()=>window.innerHeight;
-const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(W(),H());
-renderer.setClearColor(0xF4F0E8,1);
-const scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0xF0ECE4,0.038);
-const camera=new THREE.PerspectiveCamera(55,W()/H(),.1,200);
-camera.position.set(0,0,16);
-scene.add(new THREE.AmbientLight(0xFFF5E0,.7));
-const pt1=new THREE.PointLight(0xFF8C00,4,35);pt1.position.set(0,2,4);scene.add(pt1);
-const pt2=new THREE.PointLight(0x8866ff,.8,35);pt2.position.set(0,8,-10);scene.add(pt2);
-const pt3=new THREE.PointLight(0xFF6600,1,20);pt3.position.set(-8,-4,2);scene.add(pt3);
+const CATS={
+  all:{fr:'Tout',en:'All',ar:'الكل'},
+  ai:{fr:'IA',en:'AI',ar:'ذكاء اصطناعي'},
+  microbit:{fr:'micro:bit',en:'micro:bit',ar:'micro:bit'},
+  hardware:{fr:'Hardware',en:'Hardware',ar:'عتاد'},
+  arabic:{fr:'Arabe / Islam',en:'Arabic / Islam',ar:'عربي / إسلام'},
+  learning:{fr:'Education',en:'Learning',ar:'تعليم'},
+  security:{fr:'Securite',en:'Security',ar:'أمن'},
+  network:{fr:'Reseau',en:'Network',ar:'شبكة'},
+  camera:{fr:'Camera',en:'Camera',ar:'كاميرا'},
+  classroom:{fr:'Classe',en:'Classroom',ar:'فصل'},
+  games:{fr:'Jeux',en:'Games',ar:'ألعاب'},
+  tools:{fr:'Outils',en:'Tools',ar:'أدوات'},
+};
 
-const sg=new THREE.BufferGeometry();
-const sp=new Float32Array(600*3),sc=new Float32Array(600*3);
-for(let i=0;i<600;i++){
-  sp[i*3]=(Math.random()-.5)*100;sp[i*3+1]=(Math.random()-.5)*70;sp[i*3+2]=(Math.random()-.5)*80;
-  const t=Math.random();sc[i*3]=t>.7?.65:.3;sc[i*3+1]=t>.7?.32:.18;sc[i*3+2]=t>.7?0:.02;
-}
-sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
-sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
-scene.add(new THREE.Points(sg,new THREE.PointsMaterial({size:.06,vertexColors:true,transparent:true,opacity:.35})));
+const TAG_COLORS={ai:'tag-ai',microbit:'tag-microbit',hardware:'tag-hardware',arabic:'tag-arabic',
+  learning:'tag-learning',security:'tag-security',network:'tag-network',camera:'tag-camera',
+  classroom:'tag-classroom',games:'tag-games',tools:'tag-tools'};
 
-function makeCard(app,img){
-  const cv=document.createElement('canvas');cv.width=768;cv.height=480;
-  const cx=cv.getContext('2d');
-  if(img){
-    cx.fillStyle='#FDFAF4';cx.fillRect(0,0,768,480);
-    cx.save();cx.beginPath();cx.roundRect(0,0,768,288,0);cx.clip();cx.drawImage(img,0,0,768,288);cx.restore();
-    const sc=cx.createLinearGradient(0,135,0,288);
-    sc.addColorStop(0,'rgba(253,250,244,0)');sc.addColorStop(1,'rgba(253,250,244,0.35)');
-    cx.fillStyle=sc;cx.fillRect(0,0,768,288);
-    cx.fillStyle='rgba(253,250,244,.97)';cx.fillRect(0,282,768,198);
-    cx.strokeStyle='rgba(180,80,0,.3)';cx.lineWidth=2;cx.beginPath();cx.roundRect(1,1,766,478,14);cx.stroke();
-    cx.font='42px serif';cx.textAlign='left';cx.fillText(app.emoji,18,336);
-    cx.fillStyle='#A83A00';cx.font='bold 28px Orbitron,monospace';
-    cx.fillText(app.name.length>17?app.name.substr(0,16)+'…':app.name,74,332);
-    cx.fillStyle='rgba(160,70,0,.6)';cx.font='19px Rajdhani,sans-serif';
-    cx.fillText(app.cats[0].toUpperCase(),74,360);
-    cx.fillStyle='rgba(35,18,5,.8)';cx.font='400 20px Rajdhani,sans-serif';
-    const ws=app.desc.fr.split(' ');let l='',y=400;
-    for(const w of ws){const t=l+w+' ';if(cx.measureText(t).width>718&&l){cx.fillText(l,18,y);l=w+' ';y+=24;if(y>470)break;}else l=t;}
-    if(y<=470)cx.fillText(l,18,y);
-  } else {
-    const g=cx.createLinearGradient(0,0,768,480);g.addColorStop(0,'#FDFAF2');g.addColorStop(1,'#F5F0E6');
-    cx.fillStyle=g;cx.fillRect(0,0,768,480);
-    cx.strokeStyle='rgba(180,80,0,.2)';cx.lineWidth=2;cx.beginPath();cx.roundRect(1,1,766,478,14);cx.stroke();
-    cx.font='110px serif';cx.textAlign='center';cx.fillText(app.emoji,384,190);
-    cx.fillStyle='#A83A00';cx.font='bold 34px Orbitron,monospace';cx.textAlign='center';
-    cx.fillText(app.name.length>14?app.name.substr(0,13)+'…':app.name,384,270);
-    cx.fillStyle='rgba(160,70,0,.55)';cx.font='21px Rajdhani,sans-serif';
-    cx.fillText(app.cats.slice(0,2).join(' · ').toUpperCase(),384,308);
-    cx.fillStyle='rgba(35,18,5,.72)';cx.font='400 22px Rajdhani,sans-serif';
-    const ws=app.desc.fr.split(' ');let l='',y=360;
-    for(const w of ws){const t=l+w+' ';if(cx.measureText(t).width>680&&l){cx.fillText(l,384,y);l=w+' ';y+=28;if(y>465)break;}else l=t;}
-    if(y<=465)cx.fillText(l,384,y);
-  }
-  const lg=cx.createLinearGradient(0,474,768,474);
-  lg.addColorStop(0,'transparent');lg.addColorStop(.35,'#B84400');
-  lg.addColorStop(.5,'#D46000');lg.addColorStop(.65,'#B84400');lg.addColorStop(1,'transparent');
-  cx.fillStyle=lg;cx.fillRect(0,473,768,7);
-  return cv;
-}
+// Count per category
+const catCounts={all:APPS.length};
+Object.keys(CATS).forEach(c=>{if(c!=='all')catCounts[c]=APPS.filter(a=>a.cats.includes(c)).length;});
 
-const RINGS=[{y:3.2,r:12,speed:.004,a0:0},{y:-.6,r:14,speed:-.0028,a0:Math.PI/6},{y:-4.5,r:12,speed:.0035,a0:Math.PI/3}];
-const DATA=[];
-[[0,10],[10,20],[20,APPS.length]].forEach(([a,b],ri)=>{
-  const apps=APPS.slice(a,b),ring=RINGS[ri],n=apps.length;
-  apps.forEach((app,i)=>{
-    const angle=ring.a0+(i/n)*Math.PI*2;
-    const tex=new THREE.CanvasTexture(makeCard(app,null));
-    const mat=new THREE.MeshStandardMaterial({map:tex,transparent:true,opacity:.92,emissiveMap:tex,emissive:new THREE.Color(.02,.007,0),roughness:.85,metalness:.05});
-    const mesh=new THREE.Mesh(new THREE.PlaneGeometry(5.2,3.3),mat);
-    mesh.position.set(Math.sin(angle)*ring.r,ring.y,Math.cos(angle)*ring.r);
-    mesh.lookAt(0,ring.y,0);
-    scene.add(mesh);
-    DATA.push({app,mesh,ring:ri,angle,mat});
-    if(app.thumb){
-      const img=new Image();img.crossOrigin='anonymous';
-      img.onload=()=>{const t2=new THREE.CanvasTexture(makeCard(app,img));mat.map=t2;mat.emissiveMap=t2;mat.needsUpdate=true;};
-      img.src=BASE+app.thumb;
-    }
-  });
+// Build filter buttons
+const filtersEl=document.getElementById('filters');
+Object.keys(CATS).forEach(c=>{
+  const btn=document.createElement('button');
+  btn.className='filter-btn'+(c==='all'?' on':'');
+  btn.dataset.cat=c;
+  btn.innerHTML=`${CATS[c][LANG]}<span class="count">${catCounts[c]}</span>`;
+  btn.onclick=()=>{activeFilter=c;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('on',b.dataset.cat===c));render();};
+  filtersEl.appendChild(btn);
 });
 
-let curIdx=-1;
-const spotEl=document.getElementById('spot');
-function showSpot(idx){
-  curIdx=idx;const d=DATA[idx];if(!d)return;
-  document.getElementById('se').textContent=d.app.emoji;
-  document.getElementById('sn').textContent=d.app.name;
-  document.getElementById('sd').textContent=d.app.desc[LANG]||d.app.desc.fr;
-  document.getElementById('sc').innerHTML=d.app.cats.map(c=>`<span class="ct">${c}</span>`).join('');
-  spotEl.classList.add('show');
-  DATA.forEach((e,i)=>{
-    const active = i===idx;
-    e.mat.opacity = active ? 1 : .72;
-    e.mat.emissive = new THREE.Color(active?.06:.005, active?.02:.002, 0);
-    // Scale up active card smoothly
-    const targetS = active ? 1.18 : 1.0;
-    e.mesh.scale.lerp(new THREE.Vector3(targetS,targetS,targetS), 0.08);
+document.getElementById('app-count').textContent=APPS.length;
+document.getElementById('cat-count').textContent=Object.keys(CATS).length-1;
+
+const gridEl=document.getElementById('grid');
+const emptyEl=document.getElementById('empty');
+
+function buildMiniSim(a){
+  const c=a.cats,n=a.name,e=a.emoji;
+  const p=a.purpose?(a.purpose[LANG]||a.purpose.fr):'';
+  // APP-SPECIFIC simulations — each app gets a unique visual
+  const SIMS={
+    'ollama-bot':()=>`<div class="card-sim"><div class="mini-chat"><div class="mini-chat-bar">🦙 Ollama</div><div class="mini-chat-body"><div class="mini-msg u">🧒 Salut !</div><div class="mini-msg b">🦙 Bonjour ! Je suis une IA locale 💻</div><div class="mini-msg u">🧒 Sans Internet ?</div><div class="mini-msg b">🦙 Oui, 100% prive ! 🔒</div></div></div></div>`,
+    'prompt-hero':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>Prompt Lab</span></div><div class="mini-body"><span class="y">📝 Prompt:</span><br><span class="w">"Dessine un chat sur la lune"</span><br><br><span class="y">🤖 Reponse:</span><br><span class="g">🌙 Un chat roux flotte...</span><br><span class="g">parmi les etoiles ✨🐱</span></div></div></div>`,
+    'AI-hacker-lab':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🕵️ Hacker Lab</span></div><div class="mini-body"><span class="g">agent@lab:~$</span> train --model<br><span class="y">🧠 Entrainement: 87%</span><br><span class="g">agent@lab:~$</span> detect anomaly<br><span class="w">⚠️ Intrusion detectee !</span><br><span class="g">agent@lab:~$</span> defend 🛡️</div></div></div>`,
+    'morse-code':()=>`<div class="card-sim"><div style="background:#0a1628;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px"><div style="font-size:32px;letter-spacing:8px;color:#ffc107;font-family:monospace;text-shadow:0 0 10px #ffc107">·· · −·</div><div style="font-size:24px;color:#4caf50;font-family:Fredoka,sans-serif">= SOS</div><div style="display:flex;gap:6px">${[1,1,1,0,1,0,1,1,1].map(v=>`<div style="width:${v?'20':'8'}px;height:8px;border-radius:4px;background:${v?'#ffc107':'transparent'};box-shadow:${v?'0 0 6px #ffc107':'none'}"></div>`).join('')}</div><div style="font-size:11px;color:#888;font-family:monospace">📟 micro:bit BLE</div></div></div>`,
+    'makecode-adventures':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1a3e,#2d1a4e);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${['🎮','💡','🔊','📡','🌡️','🧲','🎵','⚡'].map(i=>`<div style="background:rgba(255,255,255,.1);border-radius:8px;padding:8px;text-align:center;font-size:20px">${i}</div>`).join('')}</div><div style="font-size:11px;color:#a78bfa;font-family:Fredoka,sans-serif">MakeCode Missions</div></div></div>`,
+    'salat-times':()=>`<div class="card-sim"><div style="background:linear-gradient(180deg,#0c1445,#1a237e);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">🕌</div><div style="color:#ffd54f;font-family:Fredoka,sans-serif;font-size:14px">Fajr 05:42</div><div style="display:flex;gap:12px">${['🌅','☀️','🌤️','🌇','🌙'].map(i=>`<div style="font-size:16px;opacity:.6">${i}</div>`).join('')}</div><div style="width:8px;height:8px;border-radius:50%;background:#4caf50;box-shadow:0 0 12px #4caf50;animation:led-blink 2s infinite"></div></div></div>`,
+    'bit-54-activities':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a2e3e,#0a1e2e);height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px">${['💡LED','🎵Son','🧲Magnet','🌡️Temp','🎮Jeu','📡Radio','🔘Bouton','⚡Shake','🎲Random'].map(i=>`<div style="background:rgba(255,255,255,.08);border-radius:8px;padding:6px 4px;text-align:center;font-size:9px;color:#4caf50;font-family:Fredoka,sans-serif">${i}</div>`).join('')}</div></div>`,
+    'smart-home':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a2e1a,#0a1e1a);height:100%;display:flex;flex-direction:column;gap:8px;padding:14px"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;flex:1">${[['💡','Salon','on','#4caf50'],['🌡️','23°C','','#ff9800'],['🔒','Porte','off','#f44336'],['💨','Ventilo','on','#2196f3']].map(([i,l,s,c])=>`<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:20px">${i}</span><span style="font-size:9px;color:#aaa;font-family:Fredoka,sans-serif">${l}</span>${s?`<div style="width:28px;height:14px;border-radius:7px;background:${s==='on'?c:'#555'};position:relative"><div style="width:10px;height:10px;border-radius:50%;background:white;position:absolute;top:2px;${s==='on'?'right:2px':'left:2px'}"></div></div>`:''}</div>`).join('')}</div></div></div>`,
+    'mqtt-lab':()=>`<div class="card-sim"><div style="background:#0a1a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">📱</span><span style="color:#4caf50;font-size:20px">→</span><span style="background:#333;color:#0f0;padding:6px 10px;border-radius:6px;font-size:11px;font-family:monospace">MQTT</span><span style="color:#4caf50;font-size:20px">→</span><span style="font-size:20px">💡</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">🌡️</span><span style="color:#ff9800;font-size:20px">→</span><span style="background:#333;color:#0f0;padding:6px 10px;border-radius:6px;font-size:11px;font-family:monospace">MQTT</span><span style="color:#ff9800;font-size:20px">→</span><span style="font-size:20px">📊</span></div></div></div>`,
+    'circuit-lab':()=>`<div class="card-sim"><div style="background:#0a1a0a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;position:relative"><div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(46,139,87,.06) 20px,rgba(46,139,87,.06) 21px),repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(46,139,87,.06) 20px,rgba(46,139,87,.06) 21px)"></div><div style="display:flex;align-items:center;gap:6px;z-index:1"><div style="width:14px;height:14px;border-radius:50%;background:#f44336;box-shadow:0 0 10px #f44336;animation:led-blink 1s infinite"></div><div style="width:40px;height:2px;background:#4caf50"></div><div style="background:#222;border:2px solid #4caf50;border-radius:4px;padding:4px 8px;color:#4caf50;font-size:10px;font-family:monospace">R 220Ω</div><div style="width:40px;height:2px;background:#4caf50"></div><div style="font-size:18px">🔋</div></div><div style="display:flex;align-items:center;gap:6px;z-index:1"><div style="width:14px;height:14px;border-radius:50%;background:#4caf50;box-shadow:0 0 10px #4caf50;animation:led-blink 1.5s infinite"></div><div style="width:40px;height:2px;background:#ff9800"></div><div style="background:#222;border:2px solid #ff9800;border-radius:4px;padding:4px 8px;color:#ff9800;font-size:10px;font-family:monospace">C 10μF</div><div style="width:40px;height:2px;background:#ff9800"></div><div style="font-size:18px">⚡</div></div></div></div>`,
+    'crypto-vault':()=>`<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:36px">🔐</div><div style="font-family:monospace;font-size:10px;color:#4caf50;background:#111;padding:8px 12px;border-radius:6px;border:1px solid #333;word-break:break-all">7f3a9b2c4e8d1f6a<br>b5c7d9e2f4a6b8c0</div><div style="display:flex;gap:6px">${['AES','RSA','SHA'].map(a=>`<span style="background:#1a3a1a;color:#4caf50;padding:3px 8px;border-radius:4px;font-size:9px;font-family:monospace">${a}</span>`).join('')}</div></div></div>`,
+    'wifi-dashboard':()=>`<div class="card-sim"><div style="background:#0a1a2a;height:100%;display:flex;flex-direction:column;gap:6px;padding:12px"><div style="color:#4caf50;font-size:10px;font-family:monospace">📶 WiFi Scanner</div>${[['Workshop-DIY','████████','-42dBm','#4caf50'],['MakerSpace','█████','-58dBm','#ff9800'],['IoT-Lab','███','-72dBm','#f44336']].map(([s,b,d,c])=>`<div style="background:rgba(255,255,255,.05);border-radius:6px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center"><span style="color:#eee;font-size:10px;font-family:monospace">${s}</span><span style="color:${c};font-size:9px;font-family:monospace">${b} ${d}</span></div>`).join('')}</div></div>`,
+    'flight-tracker':()=>`<div class="card-sim"><div style="background:linear-gradient(180deg,#0a1a3a,#1a2a4a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;position:relative"><div style="font-size:48px;transform:rotate(-30deg);filter:drop-shadow(0 0 12px rgba(255,255,255,.3))">✈️</div><div style="font-family:monospace;font-size:10px;color:#4caf50">AF1234 · CDG→JFK · FL380</div><div style="font-family:monospace;font-size:9px;color:#888">48.8°N 2.3°E · 890km/h</div></div></div>`,
+    'satellites':()=>`<div class="card-sim"><div style="background:radial-gradient(circle at 30% 70%,#0a2a4a,#000);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;position:relative"><div style="font-size:48px;animation:emoji-bob 4s ease-in-out infinite">🛰️</div><div style="width:120px;height:120px;border:1px dashed rgba(100,180,255,.2);border-radius:50%;position:absolute"></div><div style="font-family:monospace;font-size:10px;color:#64b5f6">ISS · 408km · 27 600 km/h</div></div></div>`,
+    'linux-kids-lab':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🐧 Linux</span></div><div class="mini-body"><span class="g">ninja@diy:~$</span> ls<br><span class="w">📁 projets 📁 jeux 📁 code</span><br><span class="g">ninja@diy:~$</span> whoami<br><span class="y">🥷 Super Ninja Linux !</span><br><span class="g">ninja@diy:~$</span> _</div></div></div>`,
+    'cowsay':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🐮 Cowsay</span></div><div class="mini-body"><span class="w"> ___________</span><br><span class="w">| 2+2 = 4 ! |</span><br><span class="w"> -----------</span><br><span class="w">    \\   ^__^</span><br><span class="w">     \\  (oo)\\_____</span><br><span class="w">        (__)\\     )</span></div></div></div>`,
+    'emojis':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1a3e,#2d1a3e);height:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px;align-content:center">${['🚀','→','console','📺','🎮','→','score','⭐','🔄','→','loop','♻️','❓','→','if/else','🎯'].map(i=>`<div style="text-align:center;font-size:${i.length>2?'9px':'18px'};color:${i.length>2?'#a78bfa':'inherit'};font-family:${i.length>2?'monospace':'inherit'};display:flex;align-items:center;justify-content:center">${i}</div>`).join('')}</div></div>`,
+    'bit-bot':()=>`<div class="card-sim"><div class="mini-chat"><div class="mini-chat-bar">🤖 Bit-Bot</div><div class="mini-chat-body"><div class="mini-msg u">🧒 Salut robot !</div><div class="mini-msg b">🤖 Choisis ma personnalite 🎭</div><div class="mini-msg u">🧒 Mode pirate !</div><div class="mini-msg b">🏴‍☠️ Arrr capitaine !</div></div></div></div>`,
+    'bit-playground':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1e2e,#1a2e3e);height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px;align-content:center">${['💡LEDs','📊Graph','🎮Servo','🌡️Temp','🎵Music','📡BLE','🔘Input','⚡Motor','🎲Games'].map(i=>`<div style="background:rgba(255,255,255,.08);border-radius:8px;padding:8px 4px;text-align:center;font-size:9px;color:#4caf50;font-family:Fredoka,sans-serif">${i}</div>`).join('')}</div></div>`,
+    'golden-age':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#2a1e00);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="color:#d4a03c;letter-spacing:6px;font-size:11px">✦ ✧ ✦ ✧ ✦</div><div style="font-size:40px">🏛️</div><div style="font-family:Amiri,serif;font-size:16px;color:#d4a03c">L&apos;Age d&apos;Or</div><div style="display:flex;gap:10px;font-size:20px">🔭🧪⚗️📐🌍</div><div style="color:#d4a03c;letter-spacing:6px;font-size:11px">✦ ✧ ✦ ✧ ✦</div></div></div>`,
+    'web-kids':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🌐 Web</span></div><div class="mini-body"><span class="y">&lt;h1&gt;</span><span class="w">Bonjour!</span><span class="y">&lt;/h1&gt;</span><br><span class="g">p { color:</span> <span class="y">red</span><span class="g">; }</span><br><span class="y">function</span> <span class="g">click</span>() {<br>&nbsp;&nbsp;alert(<span class="y">"Bravo!"</span>)<br>}</div></div></div>`,
+    '3d-lab':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a2a,#1a0a2a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:48px;transform:perspective(200px) rotateY(20deg) rotateX(10deg);animation:emoji-bob 4s ease-in-out infinite">🎲</div><div style="display:flex;gap:8px;font-size:20px">🔺🟦🔵🟡</div><div style="font-family:monospace;font-size:10px;color:#a78bfa">X:120 Y:45 Z:90</div></div></div>`,
+    'rxy':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1e2e,#001428);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:120px">${['','⬆️','','⬅️','🔘','➡️','','⬇️',''].map(i=>`<div style="width:36px;height:36px;background:${i?'rgba(0,200,255,.15)':'transparent'};border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;${i?'border:1px solid rgba(0,200,255,.3)':''}">${i}</div>`).join('')}</div><div style="display:flex;gap:16px">${['🅰️','🅱️'].map(b=>`<div style="width:36px;height:36px;background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px">${b}</div>`).join('')}</div><div style="font-family:monospace;font-size:9px;color:#4caf50">📡 BLE Connected</div></div></div>`,
+    'sdr-lab':()=>`<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;align-items:flex-end;gap:2px;height:60px">${[3,5,8,12,15,20,18,14,10,8,12,16,20,17,11,7,4,6,9,14].map(h=>`<div style="width:8px;height:${h*3}px;background:linear-gradient(to top,#4caf50,#ffc107);border-radius:2px;opacity:.8"></div>`).join('')}</div><div style="font-family:monospace;font-size:10px;color:#4caf50">📻 88.0 ━━━━━━━ 108.0 MHz</div><div style="font-family:monospace;font-size:9px;color:#888">FM · AM · ADS-B · NOAA</div></div></div>`,
+    'hackrf-one':()=>`<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;align-items:flex-end;gap:1px;height:50px">${Array.from({length:30},(_,i)=>Math.sin(i*.4)*10+12).map(h=>`<div style="width:5px;height:${h}px;background:#f44336;border-radius:1px;opacity:.7"></div>`).join('')}</div><div style="font-family:monospace;font-size:10px;color:#f44336">⚡ 1 MHz — 6 GHz</div><div style="font-family:monospace;font-size:9px;color:#888">HackRF One · SDR Transceiver</div></div></div>`,
+    'firmware-update':()=>`<div class="card-sim"><div style="background:#0a1a0a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:32px">📦</div><div style="width:80%;height:14px;background:#222;border-radius:7px;overflow:hidden"><div style="width:72%;height:100%;background:linear-gradient(90deg,#4caf50,#8bc34a);border-radius:7px;animation:led-blink 2s infinite"></div></div><div style="font-family:monospace;font-size:11px;color:#4caf50">⬆️ Flashing... 72%</div><div style="font-family:monospace;font-size:9px;color:#888">OTA · USB · BLE</div></div></div>`,
+    'evic-toolkit':()=>`<div class="card-sim"><div style="background:#0a1a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">🔌</div><div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:50%;background:#4caf50;box-shadow:0 0 8px #4caf50;animation:led-blink 2s infinite"></div><span style="font-family:monospace;font-size:11px;color:#4caf50">Charging: 7.4 kW</span></div><div style="width:70%;height:8px;background:#222;border-radius:4px"><div style="width:65%;height:100%;background:#4caf50;border-radius:4px"></div></div><div style="font-family:monospace;font-size:9px;color:#888">🚗 EV · OCPP 1.6</div></div></div>`,
+    'ocpp':()=>`<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:24px">🚗</span><span style="color:#4caf50;font-size:16px">⚡</span><span style="font-size:24px">🔋</span></div><div style="font-family:monospace;font-size:10px;color:#2196f3;background:#111;padding:6px 10px;border-radius:4px">BootNotification → OK</div><div style="font-family:monospace;font-size:10px;color:#4caf50;background:#111;padding:6px 10px;border-radius:4px">StartTransaction → 7.4kW</div></div></div>`,
+    'tty':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>📟 Serial</span></div><div class="mini-body"><span class="g">tty@usb:~$</span> connect /dev/tty<br><span class="y">[+] 115200 baud</span><br><span class="g">tty@usb:~$</span> send "hello"<br><span class="w">→ hello</span><br><span class="w">← OK ✓</span></div></div></div>`,
+    'ble-dashboard':()=>`<div class="card-sim"><div style="background:#0a1a2a;height:100%;display:flex;flex-direction:column;gap:5px;padding:10px"><div style="color:#2196f3;font-size:10px;font-family:monospace">📶 BLE Scanner</div>${[['🎮 micro:bit','-42dBm','#4caf50'],['💡 WLED','-55dBm','#ff9800'],['⌚ Mi Band','-68dBm','#f44336'],['🔊 Speaker','-72dBm','#f44336']].map(([n,d,c])=>`<div style="background:rgba(255,255,255,.05);border-radius:5px;padding:5px 8px;display:flex;justify-content:space-between"><span style="color:#eee;font-size:9px;font-family:monospace">${n}</span><span style="color:${c};font-size:9px;font-family:monospace">${d}</span></div>`).join('')}</div></div>`,
+    'dhcp-lab':()=>`<div class="card-sim"><div style="background:#0a1a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:24px">💻</span><span style="color:#ff9800;font-size:14px">→ DISCOVER →</span><span style="font-size:24px">🖧</span></div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:24px">💻</span><span style="color:#4caf50;font-size:14px">← OFFER ←</span><span style="font-size:24px">🖧</span></div><div style="font-family:monospace;font-size:10px;color:#4caf50">IP: 192.168.1.42 ✓</div></div></div>`,
+    'bonjour':()=>`<div class="card-sim"><div style="background:#0a1a2a;height:100%;display:flex;flex-direction:column;gap:6px;padding:12px"><div style="color:#4caf50;font-size:10px;font-family:monospace">🔍 mDNS Discovery</div>${[['🖨️ Imprimante','_ipp._tcp'],['💻 MacBook','_ssh._tcp'],['📺 Smart TV','_airplay._tcp']].map(([n,s])=>`<div style="background:rgba(255,255,255,.05);border-radius:5px;padding:6px 8px"><span style="color:#eee;font-size:10px;font-family:monospace">${n}</span><br><span style="color:#888;font-size:8px;font-family:monospace">${s}</span></div>`).join('')}</div></div>`,
+    'scapy':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🐍 Scapy</span></div><div class="mini-body"><span class="g">>>></span> pkt = IP()/TCP()<br><span class="g">>>></span> pkt.dst = <span class="y">"1.2.3.4"</span><br><span class="g">>>></span> send(pkt)<br><span class="w">Sent 1 packet ✓</span><br><span class="g">>>></span> _</div></div></div>`,
+    'tesbih':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a0a,#1a2a1a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px"><div style="font-size:48px">📿</div><div style="font-family:Amiri,serif;font-size:24px;color:#4caf50">سبحان الله</div><div style="font-size:28px;color:#ffd54f;font-family:Fredoka,sans-serif">33</div></div></div>`,
+    'eid':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#001a2a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px"><div style="font-size:48px">🎉</div><div style="font-family:Amiri,serif;font-size:20px;color:#ffd54f">عيد مبارك</div><div style="display:flex;gap:8px;font-size:20px">🌙✨🕌✨🌙</div></div></div>`,
+    'nusuk':()=>`<div class="card-sim"><div style="background:linear-gradient(180deg,#0c1445,#1a237e);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:40px">🕋</div><div style="font-family:Amiri,serif;font-size:16px;color:#ffd54f">الحج والعمرة</div><div style="display:flex;gap:10px;font-size:16px">🕌📖🤲🧭</div></div></div>`,
+    'tethkir':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a0a,#001a1a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">📋</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px">${['🕌 Fajr ✓','☀️ Dohr ✓','🌤️ Asr','🌅 Maghrib'].map(i=>`<div style="background:rgba(255,255,255,.06);border-radius:6px;padding:4px 8px;font-size:9px;color:#4caf50;font-family:monospace">${i}</div>`).join('')}</div></div></div>`,
+    'virus':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🦠 Virus Lab</span></div><div class="mini-body"><span class="g">lab@safe:~$</span> analyze<br><span class="y">🦠 Type: Worm</span><br><span class="w">📋 Propagation: Email</span><br><span class="g">lab@safe:~$</span> quarantine<br><span class="y">🛡️ Neutralise !</span></div></div></div>`,
+    'true-crypt':()=>`<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">🔒</div><div style="width:80%;height:10px;background:#222;border-radius:5px"><div style="width:100%;height:100%;background:linear-gradient(90deg,#f44336,#ff9800,#4caf50);border-radius:5px"></div></div><div style="font-family:monospace;font-size:10px;color:#4caf50">Force: ████████ 256-bit</div><div style="font-family:monospace;font-size:9px;color:#888">🗄️ Volume chiffre</div></div></div>`,
+    'hacktivist-kids':()=>`<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:36px">🕵️</div><div style="display:flex;gap:8px;font-size:20px">💀📧🔓🎭</div><div style="font-family:monospace;font-size:10px;color:#f44336">⚠️ Mission: Social Engineering</div><div style="font-family:monospace;font-size:9px;color:#4caf50">Status: AGENT JUNIOR ✓</div></div></div>`,
+    'ops-catalog':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1a2e,#0a1e2e);height:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:10px;align-content:center">${['🤖','🔐','📡','⚡','🎮','🌐','📟','🧪','🔭','🎨','📊','🛠️','💡','🔬','🚀','📱'].map(i=>`<div style="background:rgba(255,255,255,.06);border-radius:6px;padding:4px;text-align:center;font-size:14px">${i}</div>`).join('')}</div></div>`,
+    'ops-catalog-kids-apps':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a0a2e,#2a1a3e);height:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:10px;align-content:center">${['🎮','🧩','🎨','🎵','📚','🔢','🌍','🧠','🐾','✏️','🎯','🚀','🏗️','👾','🌈','⭐'].map(i=>`<div style="background:rgba(255,255,255,.06);border-radius:6px;padding:4px;text-align:center;font-size:14px">${i}</div>`).join('')}</div></div>`,
+    'ops-catalog-kids-quizzes':()=>`<div class="card-sim"><div style="background:#0a1a2a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">❓</div><div style="background:rgba(255,255,255,.06);border-radius:10px;padding:10px;text-align:center"><div style="font-size:11px;color:#eee;font-family:Fredoka,sans-serif">2 + 2 = ?</div><div style="display:flex;gap:6px;margin-top:6px">${['3','4','5'].map((a,i)=>`<div style="background:${i===1?'#4caf50':'rgba(255,255,255,.1)'};color:white;padding:4px 10px;border-radius:6px;font-size:11px;font-family:monospace">${a}</div>`).join('')}</div></div><div style="font-family:Fredoka,sans-serif;font-size:10px;color:#ffc107">⭐ 2215 quiz</div></div></div>`,
+    'sada':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1a2e,#2a1a1a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;gap:12px;font-size:24px">🇫🇷🇬🇧🇸🇦</div><div style="font-family:Fredoka,sans-serif;font-size:14px;color:#ffc107">564 pages</div><div style="display:flex;gap:6px">${['📖','🎮','📝'].map(i=>`<div style="font-size:18px">${i}</div>`).join('')}</div></div></div>`,
+    'PlanPilot':()=>`<div class="card-sim"><div style="background:#0a1a0a;height:100%;display:flex;flex-direction:column;gap:6px;padding:12px"><div style="color:#4caf50;font-size:10px;font-family:Fredoka,sans-serif">📋 Ma journee</div>${[['09:00','🏫 Ecole','#4caf50'],['14:00','🔧 Maker','#2196f3'],['16:00','⚽ Sport','#ff9800']].map(([t,l,c])=>`<div style="display:flex;gap:8px;align-items:center"><span style="font-family:monospace;font-size:9px;color:#888">${t}</span><div style="flex:1;background:${c}22;border-left:3px solid ${c};padding:4px 8px;border-radius:0 6px 6px 0;font-size:9px;color:${c};font-family:Fredoka,sans-serif">${l}</div></div>`).join('')}</div></div>`,
+    'piper-arabic-tts':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#0a1a1a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">🔊</div><div style="font-family:Amiri,serif;font-size:20px;color:#ffd54f;text-align:center">مرحبا بالعالم</div><div style="display:flex;gap:2px;align-items:flex-end">${[3,5,8,12,8,5,3,6,10,14,10,6].map(h=>`<div style="width:4px;height:${h}px;background:#4caf50;border-radius:2px"></div>`).join('')}</div><div style="font-family:monospace;font-size:9px;color:#888">Piper TTS · Neural Voice</div></div></div>`,
+    'arabic-tts':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#001a0a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:32px">🗣️</div><div style="font-family:Amiri,serif;font-size:18px;color:#ffd54f;text-align:center">السلام عليكم</div><div style="display:flex;gap:2px;align-items:flex-end">${[4,7,11,8,5,9,13,10,6,3,7,11].map(h=>`<div style="width:4px;height:${h}px;background:#ff9800;border-radius:2px"></div>`).join('')}</div><div style="font-family:monospace;font-size:9px;color:#888">Text → Speech</div></div></div>`,
+    'kalami':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a1a,#1a1400);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;gap:8px;font-size:24px">🎤➡️🌐</div><div style="font-family:Amiri,serif;font-size:16px;color:#ffd54f">كلامي</div><div style="display:flex;gap:4px;font-size:11px"><span style="background:#1a3a1a;color:#4caf50;padding:2px 6px;border-radius:4px">FR</span><span style="color:#888">↔</span><span style="background:#3a1a00;color:#ff9800;padding:2px 6px;border-radius:4px">عربي</span></div></div></div>`,
+    'al-maqlub':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#2a1e00);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px"><div style="font-family:Amiri,serif;font-size:18px;color:#ffd54f;direction:rtl;text-align:center;line-height:1.6">بالعكس اقرأ<br>🔄<br>اقرأ بالعكس</div><div style="font-size:9px;color:#d4a03c;letter-spacing:4px">✦ ✧ ✦</div></div></div>`,
+    'builders-of-light':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#001a2a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;gap:8px;font-size:24px">🔭🧪📐</div><div style="font-family:Amiri,serif;font-size:14px;color:#ffd54f;text-align:center">Ibn al-Haytham<br>Al-Khwarizmi<br>Ibn Sina</div><div style="font-size:9px;color:#d4a03c;letter-spacing:4px">✦ ✧ ✦</div></div></div>`,
+    'luminaries-of-islam':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a0a1a,#1a1400);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:36px">🌟</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">${['🔭','⚗️','📐','🗺️','📖','🏥'].map(i=>`<div style="text-align:center;font-size:18px">${i}</div>`).join('')}</div><div style="font-size:9px;color:#d4a03c;letter-spacing:4px">✦ ✧ ✦ ✧ ✦</div></div></div>`,
+    'time-machine':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a0a2a,#001a1a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:36px">⏳</div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:#888">800</span><span style="color:#d4a03c">━━━━━━━</span><span style="font-size:11px;color:#ffd54f">1200</span></div><div style="display:flex;gap:10px;font-size:20px">🕌📚🔭</div></div></div>`,
+    'jisr':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#001a2a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;gap:6px;align-items:center"><span style="font-size:20px">🏛️</span><span style="color:#d4a03c;font-size:16px">🌉</span><span style="font-size:20px">🕌</span></div><div style="font-family:Amiri,serif;font-size:14px;color:#ffd54f;text-align:center">East ↔ West</div><div style="font-size:9px;color:#d4a03c;letter-spacing:4px">✦ ✧ ✦</div></div></div>`,
+    'classroom':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a2a,#1a2a1a);height:100%;display:flex;flex-direction:column;gap:6px;padding:12px"><div style="color:#4caf50;font-size:10px;font-family:Fredoka,sans-serif">🏫 Classe Virtuelle</div>${[['👨‍🏫 Prof','En ligne','#4caf50'],['👧 Alice','Connectee','#4caf50'],['👦 Bob','Connecte','#4caf50'],['👧 Carla','Absente','#f44336']].map(([n,s,c])=>`<div style="background:rgba(255,255,255,.05);border-radius:5px;padding:5px 8px;display:flex;justify-content:space-between"><span style="color:#eee;font-size:9px">${n}</span><span style="color:${c};font-size:9px">● ${s}</span></div>`).join('')}</div></div>`,
+    'save-our-planet':()=>`<div class="card-sim"><div style="background:linear-gradient(180deg,#001a0a,#0a1a2a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:48px">🌍</div><div style="display:flex;gap:8px;font-size:20px">🤖🌱♻️🔋</div><div style="font-family:Fredoka,sans-serif;font-size:11px;color:#4caf50">Mission: Save the Planet!</div></div></div>`,
+    '3d-lab':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a2a,#1a0a2a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="font-size:48px;transform:perspective(200px) rotateY(20deg) rotateX(10deg);animation:emoji-bob 4s ease-in-out infinite">🎲</div><div style="display:flex;gap:8px;font-size:20px">🔺🟦🔵🟡</div><div style="font-family:monospace;font-size:10px;color:#a78bfa">X:120 Y:45 Z:90</div></div></div>`,
+    'git-lab':()=>`<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🌿 Git</span></div><div class="mini-body"><span class="g">diy@git:~$</span> log --oneline<br><span class="y">a1b2c3</span> <span class="w">feat: add LED</span><br><span class="y">d4e5f6</span> <span class="w">fix: BLE bug</span><br><span class="g">diy@git:~$</span> branch<br><span class="y">* main</span><br><span class="w">&nbsp; dev</span></div></div></div>`,
+    'ops-catalog-islamic-kids-apps':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#0a1a0a,#1a1400);height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:10px;align-content:center">${['🕌','📿','🌙','📖','🤲','⭐','🕋','💫','🎮'].map(i=>`<div style="background:rgba(255,255,255,.06);border-radius:6px;padding:4px;text-align:center;font-size:16px">${i}</div>`).join('')}</div></div>`,
+    'ops-catalog-islamic-kids-quizzes':()=>`<div class="card-sim"><div style="background:linear-gradient(135deg,#1a1400,#0a0a1a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="font-size:32px">🕌❓</div><div style="background:rgba(255,255,255,.06);border-radius:10px;padding:8px;text-align:center"><div style="font-size:11px;color:#ffd54f;font-family:Fredoka,sans-serif">Who wrote Al-Qanun?</div><div style="display:flex;gap:4px;margin-top:4px">${['Al-Razi','Ibn Sina','Jabir'].map((a,i)=>`<div style="background:${i===1?'#4caf50':'rgba(255,255,255,.1)'};color:white;padding:3px 8px;border-radius:4px;font-size:9px">${a}</div>`).join('')}</div></div><div style="font-size:10px;color:#ffc107">⭐ 1091 quiz</div></div></div>`,
+  };
+  if(SIMS[n]){buildMiniSim._wasSpecific=true;return SIMS[n]();}
+  buildMiniSim._wasSpecific=false;
+
+  // Category fallbacks for apps without specific sim
+  if(c.includes('ai')&&!c.includes('microbit')&&!c.includes('hardware')){
+    return `<div class="card-sim"><div class="mini-chat"><div class="mini-chat-bar">${e} Chat</div><div class="mini-chat-body"><div class="mini-msg u">🧒 ${LANG==='fr'?'Raconte !':'Tell me!'}</div><div class="mini-msg b">🤖 ${LANG==='fr'?'Il etait une fois...':'Once upon a time...'}</div><div class="mini-msg u">🧒 ${LANG==='fr'?'Et ensuite ?':'And then?'}</div><div class="mini-msg b">${e} ${LANG==='fr'?'A toi de jouer !':'Your turn!'}</div></div></div></div>`;
+  }
+  if(c.includes('microbit')){
+    const patterns={'morse-code':[1,0,1,0,0,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0,0,0,1,0,1],'bit-54-activities':[1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1],'default':[0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0]};
+    const l=patterns[n]||patterns['default'];
+    return `<div class="card-sim"><div style="background:#1a2e3e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="background:#222;border-radius:14px;padding:16px;border:3px solid #444;box-shadow:0 4px 20px rgba(0,0,0,.4)"><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">${l.map(v=>`<div style="width:14px;height:14px;border-radius:3px;background:${v?'#f44336':'#2a0a0a'};box-shadow:${v?'0 0 8px #f44336':'none'};transition:.3s"></div>`).join('')}</div></div></div></div>`;
+  }
+  if(c.includes('hardware')){
+    const hwSims=[
+      `<div class="card-sim"><div style="background:#0a1a0a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px"><div style="display:flex;gap:4px">${[1,2,3,4,5,6,7,8].map(i=>`<div style="width:10px;height:${10+i*6}px;border-radius:3px;background:hsl(${i*40},70%,50%);box-shadow:0 0 6px hsl(${i*40},70%,50%);animation:led-blink ${.5+i*.2}s infinite"></div>`).join('')}</div><div style="font-family:monospace;font-size:10px;color:#4caf50">NeoPixel Strip</div></div></div>`,
+      `<div class="card-sim"><div style="background:#1a1a0a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:28px">🌡️</span><span style="font-size:24px;color:#ff9800;font-family:Fredoka,sans-serif">23.5°C</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:28px">💧</span><span style="font-size:24px;color:#2196f3;font-family:Fredoka,sans-serif">65%</span></div></div></div>`,
+      `<div class="card-sim"><div style="background:#0a0a1a;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="width:80px;height:50px;background:#111;border:2px solid #333;border-radius:6px;display:flex;align-items:center;justify-content:center"><span style="color:#0f0;font-size:9px;font-family:monospace">ESP32-C3</span></div><div style="display:flex;gap:16px">${['📡','💡','🔊'].map(i=>`<div style="font-size:24px">${i}</div>`).join('')}</div></div></div>`
+    ];
+    const idx=n.split('').reduce((s,c)=>s+c.charCodeAt(0),0)%hwSims.length;
+    return hwSims[idx];
+  }
+  if(c.includes('security')){
+    return `<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>🔐 ${LANG==='fr'?'Securite':'Security'}</span></div><div class="mini-body"><span class="g">agent@diy:~$</span> analyze<br><span class="w">${e} ${p||'...'}</span><br><span class="g">agent@diy:~$</span> protect<br><span class="y">🛡️ [OK]</span><br><span class="g">agent@diy:~$</span> _</div></div></div>`;
+  }
+  if(c.includes('network')){
+    return `<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>📡 ${LANG==='fr'?'Reseau':'Network'}</span></div><div class="mini-body"><span class="g">diy@net:~$</span> scan<br><span class="y">📶 3 ${LANG==='fr'?'appareils':'devices'}</span><br><span class="w">${e} ${p||'...'}</span><br><span class="g">diy@net:~$</span> _</div></div></div>`;
+  }
+  if(c.includes('arabic')){
+    return `<div class="card-sim"><div class="mini-book"><div class="orn">✦ ✧ ✦ ✧ ✦</div><div style="font-size:56px;margin:8px 0">${e}</div><div class="orn">✦ ✧ ✦ ✧ ✦</div></div></div>`;
+  }
+  if(c.includes('learning')||c.includes('games')){
+    return `<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>${e} IDE</span></div><div class="mini-body"><span class="g">function</span> <span class="y">play</span>() {<br>&nbsp;&nbsp;<span class="g">let</span> score = <span class="y">0</span>;<br>&nbsp;&nbsp;score<span class="y">++</span>;<br>&nbsp;&nbsp;console.log(<span class="y">"${e} Lvl"</span>+score);<br>}<br><span class="w">> ${e} ${LANG==='fr'?'Bravo !':'Great!'} 🚀</span></div></div></div>`;
+  }
+  return `<div class="card-sim"><div class="mini-term"><div class="mini-bar"><div class="mini-dot r"></div><div class="mini-dot y"></div><div class="mini-dot g"></div><span>${e} Terminal</span></div><div class="mini-body"><span class="g">diy:~$</span> run<br><span class="y">${LANG==='fr'?'Chargement...':'Loading...'}</span><br><span class="w">[OK] ${p||LANG==='fr'?'Pret !':'Ready!'}</span><br><span class="g">diy:~$</span> _</div></div></div>`;
+}
+
+function render(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  const filtered=APPS.filter(a=>{
+    if(activeFilter!=='all'&&!a.cats.includes(activeFilter))return false;
+    if(q){
+      const haystack=(a.name+' '+a.desc.fr+' '+a.desc.en+' '+(a.desc.ar||'')+' '+a.cats.join(' ')).toLowerCase();
+      return haystack.includes(q);
+    }
+    return true;
+  });
+  gridEl.innerHTML='';
+  if(!filtered.length){emptyEl.style.display='block';return;}
+  emptyEl.style.display='none';
+  filtered.forEach((a,i)=>{
+    const url=PAGES+a.name+'/';
+    const card=document.createElement('a');
+    card.className='card';card.href=url;card.target='_blank';card.rel='noopener';
+    const hasThumb=!!a.thumb;
+    const gradClass=hasThumb?'':(' grad-'+((i)%10));
+    const thumbHTML=hasThumb
+      ?`<img src="${BASE}${a.thumb}" alt="${a.name}" loading="lazy" onerror="this.classList.add('broken');this.parentElement.classList.remove('has-img');this.parentElement.classList.add('grad-${i%10}');this.insertAdjacentHTML('afterend','<span class=card-emoji>${a.emoji}</span>')"/>`
+      :buildMiniSim(a);
+    const tagsHTML=a.cats.map(c=>`<span class="tag ${TAG_COLORS[c]||''}">${CATS[c]?CATS[c][LANG]:c}</span>`).join('');
+    card.innerHTML=`
+      <div class="card-thumb${hasThumb?' has-img':''}${gradClass}">${thumbHTML}</div>
+      <div class="card-body">
+        <div class="card-name"><span class="emoji-sm">${a.emoji}</span>${a.name}</div>
+        ${a.purpose?`<div class="card-purpose">${a.purpose[LANG]||a.purpose.fr}</div>`:''}
+        <div class="card-desc">${a.desc[LANG]||a.desc.fr}</div>
+        <div class="card-tags">${tagsHTML}</div>
+      </div>
+      <span class="card-link">Ouvrir ↗</span>`;
+    gridEl.appendChild(card);
   });
 }
-setTimeout(()=>{showSpot(0);setInterval(()=>{curIdx=(curIdx+1)%DATA.length;showSpot(curIdx);},4500);},3200);
 
-const clock=new THREE.Clock();let t=0;
-(function loop(){
-  requestAnimationFrame(loop);const dt=clock.getDelta();t+=dt;
-  RINGS.forEach((ring,ri)=>{
-    DATA.filter(d=>d.ring===ri).forEach(d=>{
-      d.angle+=ring.speed*dt*60;
-      d.mesh.position.x=Math.sin(d.angle)*ring.r;d.mesh.position.z=Math.cos(d.angle)*ring.r;
-      d.mesh.lookAt(0,ring.y,0);
-    });
+document.getElementById('search').addEventListener('input',render);
+
+function setLang(l){
+  LANG=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',
+    b.textContent.trim()===l.toUpperCase()||(l==='ar'&&b.textContent.includes('ع'))));
+  document.getElementById('sub').textContent=I18N[l].sub;
+  document.getElementById('search').placeholder=I18N[l].search;
+  document.getElementById('empty-text').textContent=I18N[l].noResult;
+  document.getElementById('cat-label').textContent=I18N[l].catLabel;
+  document.documentElement.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    const c=b.dataset.cat;
+    b.innerHTML=`${CATS[c][l]}<span class="count">${catCounts[c]}</span>`;
   });
-  // Animate all cards: gentle float + active card grows
-  DATA.forEach((d,i)=>{
-    const active = i===curIdx;
-    const targetS = active ? 1.18 : 1.0;
-    d.mesh.scale.x += (targetS - d.mesh.scale.x) * 0.06;
-    d.mesh.scale.y += (targetS - d.mesh.scale.y) * 0.06;
-    // gentle Y float for non-active
-    if(!active) d.mesh.position.y = RINGS[d.ring].y + Math.sin(t*0.8 + i*0.4)*0.08;
+  render();
+  if(demoActive) showDemoSlide(demoIndex,0);
+}
+
+// Theme toggle
+let isDark=false;
+function toggleTheme(){
+  isDark=!isDark;
+  document.body.classList.toggle('dark',isDark);
+  document.querySelectorAll('.theme-btn').forEach(b=>b.textContent=isDark?'☀️':'🌙');
+}
+
+// Sticky top bar
+window.addEventListener('scroll',()=>{
+  document.getElementById('topbar').classList.toggle('hidden',window.scrollY<=200);
+});
+
+render();
+
+// ═══════════════════════════════════════
+//  DEMO MODE — 3D Spectacular for Kids
+// ═══════════════════════════════════════
+let demoActive=false,demoIndex=0,demoPaused=false,demoTimer=null,demoFilter='all',demoPlaylist=[];
+const DEMO_INTERVAL=6000;
+const DEMO_BG_CLASSES=['demo-bg-0','demo-bg-1','demo-bg-2','demo-bg-3','demo-bg-4','demo-bg-5','demo-bg-6','demo-bg-7','demo-bg-8','demo-bg-9'];
+// What kids need for each category
+const CAT_NEEDS={
+  ai:{fr:'Navigateur web',en:'Web browser',ar:'متصفح ويب'},
+  microbit:{fr:'micro:bit + cable USB',en:'micro:bit + USB cable',ar:'micro:bit + كابل USB'},
+  hardware:{fr:'Composants electroniques',en:'Electronic parts',ar:'مكونات إلكترونية'},
+  camera:{fr:'Webcam / Camera',en:'Webcam / Camera',ar:'كاميرا ويب'},
+  security:{fr:'Navigateur web',en:'Web browser',ar:'متصفح ويب'},
+  network:{fr:'Connexion reseau',en:'Network connection',ar:'اتصال شبكة'},
+  arabic:{fr:'Navigateur web',en:'Web browser',ar:'متصفح ويب'},
+  learning:{fr:'Navigateur web',en:'Web browser',ar:'متصفح ويب'},
+  classroom:{fr:'2+ ordinateurs en reseau',en:'2+ networked computers',ar:'حاسوبان+ على الشبكة'},
+  games:{fr:'Navigateur web',en:'Web browser',ar:'متصفح ويب'},
+  tools:{fr:'Navigateur web',en:'Web browser',ar:'متصفح ويب'},
+};
+const DIFFICULTY={
+  ai:'⭐⭐',microbit:'⭐⭐⭐',hardware:'⭐⭐⭐',camera:'⭐⭐',
+  security:'⭐⭐⭐',network:'⭐⭐',arabic:'⭐',learning:'⭐',
+  classroom:'⭐⭐',games:'⭐',tools:'⭐⭐',
+};
+const AGE_RANGE={
+  ai:'8+',microbit:'10+',hardware:'10+',camera:'8+',
+  security:'12+',network:'10+',arabic:'6+',learning:'6+',
+  classroom:'8+',games:'6+',tools:'10+',
+};
+
+function buildDemoPlaylist(){
+  demoPlaylist=demoFilter==='all'?APPS.slice():APPS.filter(a=>a.cats.includes(demoFilter));
+}
+
+function buildDemoCatPills(){
+  const el=document.getElementById('demoCats');
+  el.innerHTML='';
+  const cats=['all','ai','microbit','hardware','security','network','arabic','learning','games','tools'];
+  const CAT_EMOJI={all:'🌟',ai:'🤖',microbit:'📟',hardware:'⚡',security:'🔐',network:'📡',arabic:'🕌',learning:'📚',games:'🎮',tools:'🛠️',camera:'📷',classroom:'🏫'};
+  cats.forEach(c=>{
+    const count=c==='all'?APPS.length:APPS.filter(a=>a.cats.includes(c)).length;
+    if(count===0)return;
+    const pill=document.createElement('button');
+    pill.className='demo-cat-pill'+(c===demoFilter?' on':'');
+    pill.innerHTML=`${CAT_EMOJI[c]||''} ${CATS[c]?CATS[c][LANG]:c} <span style="opacity:.6;font-size:10px">${count}</span>`;
+    pill.onclick=()=>{
+      demoFilter=c;
+      document.querySelectorAll('.demo-cat-pill').forEach(p=>p.classList.toggle('on',false));
+      pill.classList.add('on');
+      buildDemoPlaylist();
+      demoIndex=0;
+      showDemoSlide(0);
+      startDemoTimer();
+    };
+    el.appendChild(pill);
   });
-  pt1.intensity=3.5+Math.sin(t*1.4)*1;pt1.position.x=Math.sin(t*.25)*5;pt1.position.y=2+Math.cos(t*.18)*2;
-  camera.position.y=Math.sin(t*.15)*.6;camera.position.x=Math.cos(t*.1)*.4;camera.lookAt(0,-1,0);
-  renderer.render(scene,camera);
-})();
-window.addEventListener('resize',()=>{renderer.setSize(W(),H());camera.aspect=W()/H();camera.updateProjectionMatrix();});
+}
+
+function toggleDemo(){
+  demoActive=!demoActive;
+  document.body.classList.toggle('demo-mode',demoActive);
+  document.querySelectorAll('.demo-btn').forEach(b=>b.classList.toggle('on',demoActive));
+  if(demoActive){
+    demoFilter='all';
+    demoIndex=0;demoPaused=false;
+    buildDemoPlaylist();
+    buildDemoCatPills();
+    document.getElementById('demoPauseBtn').innerHTML='⏸ Pause';
+    showDemoSlide(0);
+    startDemoTimer();
+  } else {
+    clearInterval(demoTimer);
+    document.getElementById('demoStage').innerHTML='';
+    document.getElementById('demoCats').innerHTML='';
+  }
+}
+
+function buildSimulation(a,purpose){
+  const cats=a.cats;
+  const name=a.name;
+  const e=a.emoji;
+
+  // Reuse grid mini-sim for demo if it has a specific (non-fallback) simulation
+  // buildMiniSim checks SIMS[name] first — if it exists, the app has a hand-crafted visual
+  const _tmpSims=buildMiniSim._SIMS||(buildMiniSim._SIMS={});
+  // We call buildMiniSim which internally checks SIMS — tag the result
+  const _gridResult=buildMiniSim(a);
+  if(buildMiniSim._wasSpecific){
+    return _gridResult.replace(/card-sim/g,'demo-sim');
+  }
+
+  // APP-SPECIFIC demo-only sims (too detailed/big for grid cards)
+  const DEMO_SIMS={
+    'bit-bot':()=>`<div class="demo-sim"><div class="sim-chat"><div class="sim-bar">🤖 Bit-Bot AI</div><div class="sim-messages"><div class="sim-bubble user">🧒 Salut robot !</div><div class="sim-bubble bot">🤖 Bonjour ! Je suis ton compagnon IA ! Choisis ma personnalite 🎭</div><div class="sim-bubble user">🧒 Mode pirate !</div><div class="sim-bubble bot">🏴‍☠️ Arrr ! A vos ordres capitaine ! Que voulez-vous explorer ?</div><div class="sim-bubble user">🧒 Les etoiles !</div><div class="sim-bubble bot">🏴‍☠️ Cap sur les constellations ! ⭐🔭 Le micro:bit clignote...</div></div><div class="sim-input"><div class="sim-input-box">${LANG==='fr'?'Parle a ton robot...':'Talk to your robot...'}</div><div class="sim-send">🎤</div></div></div></div>`,
+    'rxy':()=>`<div class="demo-sim"><div style="background:linear-gradient(135deg,#0a1e2e,#001428);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:180px">${['','⬆️','','⬅️','🔘','➡️','','⬇️',''].map(i=>`<div style="width:52px;height:52px;background:${i?'rgba(0,200,255,.12)':'transparent'};border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;${i?'border:2px solid rgba(0,200,255,.3);box-shadow:0 0 15px rgba(0,200,255,.1)':''}">${i}</div>`).join('')}</div><div style="display:flex;gap:24px">${['🅰️','🅱️'].map(b=>`<div style="width:52px;height:52px;background:rgba(255,100,100,.12);border:2px solid rgba(255,100,100,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 15px rgba(255,100,100,.1)">${b}</div>`).join('')}</div><div style="font-family:monospace;font-size:13px;color:#4caf50">📡 BLE micro:bit Connected ✓</div></div></div>`,
+    'smart-home':()=>`<div class="demo-sim"><div style="background:linear-gradient(135deg,#0a1a0a,#001a1a);height:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:20px;align-content:center">${[['💡','Salon','on','#4caf50'],['🌡️','23.5°C','','#ff9800'],['🔒','Porte','off','#f44336'],['💨','Ventilo','on','#2196f3'],['📷','Camera','on','#9c27b0'],['🔔','Alarme','off','#ff5722']].map(([i,l,s,c])=>`<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:6px"><span style="font-size:28px">${i}</span><span style="font-size:12px;color:#eee;font-family:Fredoka,sans-serif">${l}</span>${s?`<div style="width:36px;height:18px;border-radius:9px;background:${s==='on'?c:'#444'};position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;${s==='on'?'right:2px':'left:2px'}"></div></div>`:''}</div>`).join('')}</div></div>`,
+    'flight-tracker':()=>`<div class="demo-sim"><div style="background:linear-gradient(180deg,#0a1a3a,#1a2a4a);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px"><div style="font-size:72px;transform:rotate(-30deg);filter:drop-shadow(0 0 20px rgba(255,255,255,.3));animation:emoji-bob 4s ease-in-out infinite">✈️</div><div style="font-family:monospace;font-size:16px;color:#4caf50">AF1234 · CDG → JFK</div><div style="font-family:monospace;font-size:13px;color:#64b5f6">FL380 · 890 km/h · 48.8°N</div><div style="display:flex;gap:16px;font-size:24px">🛫 ━━━━━ ✈️ ━━━ 🛬</div></div></div>`,
+    'satellites':()=>`<div class="demo-sim"><div style="background:radial-gradient(circle at 30% 70%,#0a2a4a,#000);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative"><div style="width:200px;height:200px;border:1px dashed rgba(100,180,255,.15);border-radius:50%;position:absolute;animation:spin 20s linear infinite"></div><div style="width:140px;height:140px;border:1px dashed rgba(100,180,255,.1);border-radius:50%;position:absolute;animation:spin 12s linear infinite reverse"></div><div style="font-size:72px;animation:emoji-bob 5s ease-in-out infinite">🛰️</div><div style="font-family:monospace;font-size:14px;color:#64b5f6">ISS · 408 km · 27 600 km/h</div></div></div>`,
+  };
+  if(DEMO_SIMS[name]) return DEMO_SIMS[name]();
+
+  // AI/Chat → immersive chat filling the panel
+  if(cats.includes('ai')&&!cats.includes('microbit')&&!cats.includes('hardware')){
+    const msgs=LANG==='fr'?[
+      {u:true,t:'Raconte-moi une histoire de robots 🤖'},
+      {u:false,t:'Il etait une fois un petit robot qui apprenait a penser...'},
+      {u:true,t:'Et il a fait quoi ?'},
+      {u:false,t:'Il a construit un monde entier avec ses amis makers ! 🌍✨'},
+      {u:true,t:'Trop cool ! On peut faire pareil ?'},
+      {u:false,t:'Bien sur ! C\'est exactement ce qu\'on fait ici ! 🚀'}
+    ]:[
+      {u:true,t:'Tell me a story about robots 🤖'},
+      {u:false,t:'Once upon a time a little robot learned to think...'},
+      {u:true,t:'And what did it do?'},
+      {u:false,t:'It built a whole world with its maker friends! 🌍✨'},
+      {u:true,t:'So cool! Can we do that too?'},
+      {u:false,t:'Of course! That\'s exactly what we do here! 🚀'}
+    ];
+    return `<div class="demo-sim"><div class="sim-chat">
+      <div class="sim-bar">${e} Workshop-DIY Chat</div>
+      <div class="sim-messages">${msgs.map(m=>`<div class="sim-bubble ${m.u?'user':'bot'}">${m.u?'🧒':'🤖'} ${m.t}</div>`).join('')}</div>
+      <div class="sim-input"><div class="sim-input-box">${LANG==='fr'?'Tape ta question...':'Type your question...'}</div><div class="sim-send">➤</div></div>
+    </div></div>`;
+  }
+
+  // micro:bit → BIG board filling the space
+  if(cats.includes('microbit')){
+    const patterns={
+      'morse-code':[1,0,1,0,0, 0,1,0,1,0, 1,0,1,0,1, 0,1,0,1,0, 0,0,1,0,1],
+      'makecode-adventures':[0,1,0,1,0, 1,1,1,1,1, 1,1,1,1,1, 0,1,1,1,0, 0,0,1,0,0],
+      'salat-times':[0,0,1,0,0, 0,1,1,1,0, 1,1,1,1,1, 0,1,1,1,0, 0,0,1,0,0],
+      'default':[0,1,0,1,0, 1,0,1,0,1, 0,1,1,1,0, 1,0,1,0,1, 0,1,0,1,0]
+    };
+    const leds=patterns[name]||patterns['default'];
+    const ledsHTML=leds.map(v=>`<div class="sim-mb-led${v?' on':''}"></div>`).join('');
+    return `<div class="demo-sim"><div class="sim-microbit">
+      <div class="sim-mb-board" style="transform:scale(1.4)">
+        <div class="sim-mb-btn a"></div><div class="sim-mb-btn b"></div>
+        <div class="sim-mb-leds">${ledsHTML}</div>
+      </div>
+    </div></div>`;
+  }
+
+  // Hardware → bigger circuit
+  if(cats.includes('hardware')){
+    return `<div class="demo-sim"><div class="sim-circuit">
+      <div class="sim-circuit-row"><div class="sim-led red"></div><div class="sim-wire" style="width:60px"></div><div class="sim-chip">ESP32</div><div class="sim-wire" style="width:60px"></div><div class="sim-led green"></div></div>
+      <div class="sim-circuit-row"><div class="sim-led blue"></div><div class="sim-wire" style="width:60px"></div><div class="sim-chip">GPIO</div><div class="sim-wire" style="width:60px"></div><div class="sim-led yellow"></div></div>
+      <div class="sim-circuit-row"><div class="sim-led green"></div><div class="sim-wire" style="width:60px"></div><div class="sim-chip">I2C</div><div class="sim-wire" style="width:60px"></div><div class="sim-led red"></div></div>
+      <div class="sim-circuit-row"><div class="sim-led yellow"></div><div class="sim-wire" style="width:60px"></div><div class="sim-chip">SPI</div><div class="sim-wire" style="width:60px"></div><div class="sim-led blue"></div></div>
+    </div></div>`;
+  }
+
+  // Security → fuller terminal
+  if(cats.includes('security')){
+    return `<div class="demo-sim"><div class="sim-terminal">
+      <div class="sim-bar"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div><div class="sim-bar-title">Terminal</div></div>
+      <div class="sim-body">
+        <div class="sim-line"><span class="sim-prompt">hacker@diy:~$</span> nmap -sV target</div>
+        <div class="sim-line"><span class="sim-output">[*] Scanning ports...</span></div>
+        <div class="sim-line"><span class="sim-accent">  22/tcp  open  ssh    OpenSSH 8.2</span></div>
+        <div class="sim-line"><span class="sim-accent">  80/tcp  open  http   nginx/1.18</span></div>
+        <div class="sim-line"><span class="sim-accent">  443/tcp open  https  nginx/1.18</span></div>
+        <div class="sim-line"><span class="sim-prompt">hacker@diy:~$</span> encrypt "secret"</div>
+        <div class="sim-line"><span class="sim-output">[+] AES-256: </span><span class="sim-accent">7f3a9b2c4e...</span></div>
+        <div class="sim-line"><span class="sim-prompt">hacker@diy:~$</span> <span style="animation:led-blink 1s infinite">_</span></div>
+      </div>
+    </div></div>`;
+  }
+
+  // Network → fuller terminal
+  if(cats.includes('network')){
+    return `<div class="demo-sim"><div class="sim-terminal">
+      <div class="sim-bar"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div><div class="sim-bar-title">Terminal</div></div>
+      <div class="sim-body">
+        <div class="sim-line"><span class="sim-prompt">diy@net:~$</span> ping workshop-diy.org</div>
+        <div class="sim-line"><span class="sim-output">64 bytes: time=12ms ttl=64</span></div>
+        <div class="sim-line"><span class="sim-output">64 bytes: time=11ms ttl=64</span></div>
+        <div class="sim-line"><span class="sim-prompt">diy@net:~$</span> scan --wifi</div>
+        <div class="sim-line"><span class="sim-accent">  📶 Workshop-DIY   -42dBm  ████████</span></div>
+        <div class="sim-line"><span class="sim-accent">  📶 MakerSpace     -58dBm  █████</span></div>
+        <div class="sim-line"><span class="sim-accent">  📶 IoT-Lab        -65dBm  ███</span></div>
+        <div class="sim-line"><span class="sim-prompt">diy@net:~$</span> <span style="animation:led-blink 1s infinite">_</span></div>
+      </div>
+    </div></div>`;
+  }
+
+  // Arabic/Islamic → ornamental, no text duplication
+  if(cats.includes('arabic')){
+    return `<div class="demo-sim"><div class="sim-book">
+      <div class="sim-ornament">✦ ✧ ✦ ✧ ✦</div>
+      <div style="font-size:80px;margin:16px 0">${e}</div>
+      <div class="sim-ornament">✦ ✧ ✦ ✧ ✦</div>
+    </div></div>`;
+  }
+
+  // Learning/Games → code editor
+  if(cats.includes('learning')||cats.includes('games')){
+    return `<div class="demo-sim"><div class="sim-terminal">
+      <div class="sim-bar"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div><div class="sim-bar-title">Workshop-DIY IDE</div></div>
+      <div class="sim-body">
+        <div class="sim-line"><span class="sim-accent">// ${LANG==='fr'?'Mon premier programme':'My first program'}</span></div>
+        <div class="sim-line"><span class="sim-prompt">function</span> <span class="sim-accent">play</span>() {</div>
+        <div class="sim-line">  <span class="sim-prompt">let</span> score = <span class="sim-accent">0</span>;</div>
+        <div class="sim-line">  <span class="sim-prompt">while</span> (learning) {</div>
+        <div class="sim-line">    score<span class="sim-accent">++</span>;</div>
+        <div class="sim-line">    console.log(<span class="sim-accent">"${e} Level "</span>+score);</div>
+        <div class="sim-line">  }</div>
+        <div class="sim-line">}</div>
+        <div class="sim-line"><span class="sim-output">> ${e} Level 42 — ${LANG==='fr'?'Tu es un pro !':'You are a pro!'} 🚀</span></div>
+      </div>
+    </div></div>`;
+  }
+
+  // Fallback: tools → terminal
+  return `<div class="demo-sim"><div class="sim-terminal">
+    <div class="sim-bar"><div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div><div class="sim-bar-title">Terminal</div></div>
+    <div class="sim-body">
+      <div class="sim-line"><span class="sim-prompt">diy@tools:~$</span> launch ${name}</div>
+      <div class="sim-line"><span class="sim-output">${e} ${LANG==='fr'?'Initialisation...':'Initializing...'}</span></div>
+      <div class="sim-line"><span class="sim-accent">[OK] ${LANG==='fr'?'Pret !':'Ready!'}</span></div>
+      <div class="sim-line"><span class="sim-prompt">diy@tools:~$</span> help</div>
+      <div class="sim-line"><span class="sim-output">  run    — ${LANG==='fr'?'Executer':'Run'}</span></div>
+      <div class="sim-line"><span class="sim-output">  build  — ${LANG==='fr'?'Construire':'Build'}</span></div>
+      <div class="sim-line"><span class="sim-output">  share  — ${LANG==='fr'?'Partager':'Share'}</span></div>
+      <div class="sim-line"><span class="sim-prompt">diy@tools:~$</span> <span style="animation:led-blink 1s infinite">_</span></div>
+    </div>
+  </div></div>`;
+}
+
+function buildSlideHTML(a,idx){
+  const purposeText=a.purpose?(a.purpose[LANG]||a.purpose.fr):'';
+  const descText=a.desc[LANG]||a.desc.fr;
+  const tagsHTML=a.cats.map(c=>`<span class="tag ${TAG_COLORS[c]||''}">${CATS[c]?CATS[c][LANG]:c}</span>`).join('');
+  const hintsArr=a.hints||[];
+  const hintsHTML=hintsArr.map(h=>`<span>${h}</span>`).join('');
+
+  // Screenshot or visual simulation
+  let leftContent='';
+  if(a.thumb){
+    leftContent=`<img src="${BASE}${a.thumb}" alt="${a.name}" loading="lazy"/>`;
+  } else {
+    leftContent=buildSimulation(a,purposeText);
+  }
+
+  // Determine needs, difficulty, age from first category
+  const mainCat=a.cats[0]||'learning';
+  const needs=CAT_NEEDS[mainCat]||CAT_NEEDS.learning;
+  const needsText=needs[LANG]||needs.fr;
+  const diff=DIFFICULTY[mainCat]||'⭐';
+  const age=AGE_RANGE[mainCat]||'6+';
+  // Does it need special hardware?
+  const needsMicrobit=a.cats.includes('microbit');
+  const needsCamera=a.cats.includes('camera');
+  const needsHW=a.cats.includes('hardware')&&!needsMicrobit;
+  let needsIcons='🌐 ';
+  if(needsMicrobit) needsIcons+='📟 ';
+  if(needsCamera) needsIcons+='📸 ';
+  if(needsHW) needsIcons+='🔧 ';
+
+  return `<div class="demo-slide">
+    <div class="demo-left">
+      <div class="demo-screenshot-wrap">${leftContent}</div>
+      <div class="demo-badge">#${idx+1} / ${APPS.length}</div>
+    </div>
+    <div class="demo-right">
+      <div class="demo-app-name">${a.emoji} ${a.name}</div>
+      <div class="demo-purpose">${purposeText}</div>
+      <div class="demo-hints-row">${hintsHTML}</div>
+      <div class="demo-app-desc">${descText}</div>
+      <div class="demo-info-grid">
+        <div class="demo-info-box">
+          <div class="demo-info-box-title">${LANG==='fr'?'Age':'Age'}</div>
+          <div class="demo-info-box-content"><span class="emoji">👦</span> ${age} ans</div>
+        </div>
+        <div class="demo-info-box">
+          <div class="demo-info-box-title">${LANG==='fr'?'Difficulte':LANG==='en'?'Difficulty':'صعوبة'}</div>
+          <div class="demo-info-box-content">${diff}</div>
+        </div>
+        <div class="demo-info-box">
+          <div class="demo-info-box-title">${LANG==='fr'?'Il te faut':LANG==='en'?'You need':'تحتاج'}</div>
+          <div class="demo-info-box-content">${needsIcons}</div>
+        </div>
+        <div class="demo-info-box">
+          <div class="demo-info-box-title">${LANG==='fr'?'Type':'Type'}</div>
+          <div class="demo-info-box-content">${a.cats.slice(0,2).map(c=>CATS[c]?CATS[c][LANG]:c).join(' + ')}</div>
+        </div>
+      </div>
+      <div class="demo-tags">${tagsHTML}</div>
+    </div>
+  </div>`;
+}
+
+function showDemoSlide(idx,dir){
+  const stage=document.getElementById('demoStage');
+  if(!demoPlaylist.length)return;
+  const a=demoPlaylist[idx%demoPlaylist.length];
+  const globalIdx=APPS.indexOf(a);
+
+  // Clean swap: remove everything, insert new
+  stage.innerHTML='';
+  const tmp=document.createElement('div');
+  tmp.innerHTML=buildSlideHTML(a,globalIdx);
+  stage.appendChild(tmp.firstElementChild);
+
+  document.getElementById('demoCounter').textContent=`${idx+1} / ${demoPlaylist.length}`;
+  document.getElementById('demoProgress').style.width=((idx+1)/demoPlaylist.length*100)+'%';
+}
+
+function startDemoTimer(){
+  clearInterval(demoTimer);
+  if(demoPaused||!demoPlaylist.length)return;
+  demoTimer=setInterval(()=>{
+    demoIndex=(demoIndex+1)%demoPlaylist.length;
+    showDemoSlide(demoIndex,1);
+  },DEMO_INTERVAL);
+}
+
+function demoNav(dir){
+  if(!demoPlaylist.length)return;
+  demoIndex=(demoIndex+dir+demoPlaylist.length)%demoPlaylist.length;
+  showDemoSlide(demoIndex,dir);
+  if(!demoPaused)startDemoTimer();
+}
+
+function demoPauseToggle(){
+  demoPaused=!demoPaused;
+  document.getElementById('demoPauseBtn').innerHTML=demoPaused?'▶ Play':'⏸ Pause';
+  if(demoPaused)clearInterval(demoTimer);else startDemoTimer();
+}
+
+// Touch swipe
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{if(demoActive)touchStartX=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{if(!demoActive)return;const d=e.changedTouches[0].clientX-touchStartX;if(Math.abs(d)>60)demoNav(d<0?1:-1);});
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(!demoActive)return;
+  if(e.key==='Escape')toggleDemo();
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();demoNav(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();demoNav(-1);}
+  if(e.key==='p')demoPauseToggle();
+  if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+});
 </script>
 </body>
 </html>
