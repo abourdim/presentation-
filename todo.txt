@@ -1,0 +1,64 @@
+Workshop-DIY Presentation — TODO
+=================================
+Updated: 2026-03-26
+
+✅ DONE
+------
+[x] Light kids-friendly theme (warm cream/green)
+[x] 97 apps with purpose taglines in FR/EN/AR
+[x] 57 app-specific visual simulations (chat, terminal, circuit, LED, gamepad, etc.)
+[x] 23 real screenshots (cleaned 65 bad rawgit/welcome captures)
+[x] Demo mode — full-screen cinematic (Apple Keynote style)
+[x] Cinematic opening sequence (logo + counter 0→97 + tagline, 4.5s)
+[x] Closing sequence ("97 apps. 0€." + big QR + CTA, loops back)
+[x] Category intro cards (giant emoji + title + subtitle before each group)
+[x] Ken Burns effect on screenshots (slow zoom+pan)
+[x] Typewriter effect on purpose text
+[x] News ticker at bottom (scrolling facts)
+[x] Coup de Coeur — 10 featured apps with gold badge + 1.5x display time
+[x] Category transition particles (colored per category)
+[x] Ambient stage colors per category (purple=AI, green=hardware, etc.)
+[x] QR code overlay (workshop-diy.org, bottom-right)
+[x] Category filter pills in demo mode
+[x] RTL fix for Arabic mode (counter, header, glass overlay)
+[x] Grid mini-simulations (unique per-app visuals in grid cards)
+[x] 38 automated QA tests (test.js)
+[x] Presenter controls: Space/arrows/Escape/F for fullscreen
+
+⚠️ KNOWN ISSUES
+----------------
+[ ] 19 apps use generic category fallback sims (mostly tools category)
+[ ] rxy screenshot shows "Welcome" tutorial — not the actual app
+[ ] bit-bot screenshot shows welcome screen — should show chat interface
+[ ] Some "Ouvrir" buttons appear on cards with no real screenshot
+[ ] Demo header can overlap app screenshots on small screens
+
+🔧 TODO — SHORT TERM
+---------------------
+[ ] Re-capture bad screenshots: rxy, bit-bot (skip welcome/tutorial screens)
+[ ] Add specific sims for remaining 19 generic-fallback apps:
+    - 3d-lab, git-lab, save-our-planet, classroom
+    - termlite, warsha, web-kvm, sync-files
+    - callgraph, git-pulse, git-date-rewrite, dir-pulse
+    - bash-toolkit, sanitize-names-toolkit, meridian, mac-weird-keys
+    - posts, flyers, linkedin, fihris, tools, passassion-report
+[ ] Fix duplicate LED patterns on micro:bit cards in grid view
+[ ] End-to-end test: watch all 97 slides in demo, note any visual bugs
+[ ] Push remaining good thumbnails to GitHub Pages
+
+💡 TODO — NICE TO HAVE
+-----------------------
+[ ] Presenter help overlay (press ? to see keyboard shortcuts)
+[ ] Fullscreen API integration (press F to go true fullscreen)
+[ ] Speed control in demo (5s / 7s / 10s / 15s per slide)
+[ ] Sound effects toggle (subtle whoosh on transitions)
+[ ] Print mode / PDF export for offline handout
+[ ] Stats dashboard slide between categories (animated counters)
+[ ] App search in demo mode (type to filter while presenting)
+[ ] Deep links (#app=face-quest to jump to specific app in demo)
+[ ] Mobile responsive for demo mode (currently optimized for big screens)
+[ ] Offline mode: embed thumbnails as base64 for no-internet presentations
+[ ] Add more Coup de Coeur apps based on audience feedback
+[ ] Animated background gradient (slow color shift instead of static)
+[ ] Confetti burst on Coup de Coeur apps
+[ ] Auto-detect screen size and adjust font sizes
