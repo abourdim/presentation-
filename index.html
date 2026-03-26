@@ -237,6 +237,58 @@ body.demo-mode .demo-overlay{display:flex}
 .demo-glass-counter{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:700;color:rgba(255,255,255,.6);
   white-space:nowrap;align-self:flex-end;padding-bottom:4px}
 
+/* Coup de Coeur badge */
+.demo-glass-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#d4a03c,#f59e0b);
+  color:#1a0a00;font-family:'Fredoka',sans-serif;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px;
+  margin-bottom:8px;animation:badge-glow 2s ease-in-out infinite alternate,glass-rise .8s cubic-bezier(.16,1,.3,1) .2s both;
+  box-shadow:0 0 20px rgba(245,158,11,.4)}
+@keyframes badge-glow{0%{box-shadow:0 0 20px rgba(245,158,11,.3)}100%{box-shadow:0 0 40px rgba(245,158,11,.6)}}
+
+/* Cinematic Opening */
+.demo-opening{position:absolute;inset:0;z-index:250;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.demo-opening .op-logo{font-family:'Fredoka',sans-serif;font-size:clamp(48px,10vw,120px);font-weight:700;
+  background:var(--rainbow);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  opacity:0;animation:op-logo-in 1.5s cubic-bezier(.16,1,.3,1) .3s both}
+.demo-opening .op-counter{font-family:'Fredoka',sans-serif;font-size:clamp(64px,12vw,160px);font-weight:700;color:white;
+  opacity:0;animation:op-counter-in 1s ease .8s both}
+.demo-opening .op-label{font-family:'Fredoka',sans-serif;font-size:clamp(14px,2vw,24px);color:rgba(255,255,255,.5);
+  text-transform:uppercase;letter-spacing:.3em;opacity:0;animation:op-counter-in .8s ease 1.5s both}
+.demo-opening .op-tagline{font-family:'Fredoka',sans-serif;font-size:clamp(18px,3vw,32px);font-weight:400;color:#fbbf24;
+  opacity:0;animation:op-counter-in 1s ease 2.5s both}
+@keyframes op-logo-in{0%{opacity:0;transform:scale(.5) translateY(30px);filter:blur(20px)}100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0)}}
+@keyframes op-counter-in{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+
+/* Closing Sequence */
+.demo-closing{position:absolute;inset:0;z-index:250;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  animation:fade-in 1.5s ease both}
+.demo-closing .cl-stat{font-family:'Fredoka',sans-serif;font-size:clamp(36px,6vw,72px);font-weight:700;color:white;text-align:center;
+  opacity:0;animation:op-counter-in 1s ease .5s both}
+.demo-closing .cl-sub{font-family:'Fredoka',sans-serif;font-size:clamp(18px,3vw,32px);color:rgba(255,255,255,.6);
+  opacity:0;animation:op-counter-in 1s ease 1s both}
+.demo-closing .cl-qr{opacity:0;animation:op-counter-in 1s ease 1.5s both;display:flex;flex-direction:column;align-items:center;gap:8px}
+.demo-closing .cl-qr img{border-radius:12px;border:3px solid white}
+.demo-closing .cl-cta{font-family:'Fredoka',sans-serif;font-size:clamp(16px,2.5vw,28px);color:#fbbf24;
+  opacity:0;animation:op-counter-in 1s ease 2s both}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+
+/* News Ticker */
+.demo-ticker{position:absolute;bottom:0;left:0;right:0;z-index:212;height:32px;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);overflow:hidden;border-top:1px solid rgba(255,255,255,.1)}
+.demo-ticker-inner{display:flex;align-items:center;height:100%;white-space:nowrap;
+  animation:ticker-scroll 40s linear infinite;font-family:'Fredoka',sans-serif;font-size:13px;color:rgba(255,255,255,.7)}
+.demo-ticker-inner span{padding:0 40px}
+.demo-ticker-inner .tk-dot{color:#fbbf24;padding:0 8px}
+@keyframes ticker-scroll{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+
+/* Particles */
+.demo-particles{position:absolute;inset:0;z-index:204;pointer-events:none;overflow:hidden}
+.demo-particle{position:absolute;border-radius:50%;animation:particle-float linear infinite;opacity:0}
+@keyframes particle-float{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:.6}90%{opacity:.4}100%{opacity:0;transform:translateY(-20vh) scale(1)}}
+
+/* Typewriter */
+.typewriter{overflow:hidden;border-right:3px solid #fbbf24;white-space:nowrap;animation:tw-blink .8s step-end infinite}
+@keyframes tw-blink{50%{border-color:transparent}}
+
 /* Fake visual simulations */
 .demo-sim{width:100%;height:100%;display:flex;flex-direction:column;font-family:'Courier New',monospace;overflow:hidden;position:relative}
 
@@ -485,8 +537,10 @@ body.dark ::-webkit-scrollbar-thumb{background:var(--border)}
     <button class="demo-exit" onclick="toggleDemo()">Fermer ✕</button>
   </div>
   <div class="demo-cats" id="demoCats"></div>
+  <div class="demo-particles" id="demoParticles"></div>
   <div class="demo-stage" id="demoStage"></div>
   <div class="demo-qr" id="demoQr" title="Scan to browse all apps"><span>workshop-diy.org</span></div>
+  <div class="demo-ticker"><div class="demo-ticker-inner" id="demoTicker"></div></div>
   <div class="demo-progress"><div class="demo-progress-bar" id="demoProgress"></div></div>
   <div class="demo-nav">
     <button onclick="demoNav(-1)" title="Previous">◀</button>
@@ -944,6 +998,9 @@ const CAT_SUBTITLES={
   tools:{fr:'Outils de productivite et developpement',en:'Productivity and development tools'},
 };
 let lastCatShown=null;
+const FEATURED=['face-quest','magic-hands','bit-bot','circuit-lab','linux-kids-lab','crypto-academy','flight-tracker','cowsay','builders-of-light','ops-catalog-kids-apps'];
+const OPENING_DURATION=4500;
+const CLOSING_DURATION=8000;
 const DEMO_BG_CLASSES=['demo-bg-0','demo-bg-1','demo-bg-2','demo-bg-3','demo-bg-4','demo-bg-5','demo-bg-6','demo-bg-7','demo-bg-8','demo-bg-9'];
 // What kids need for each category
 const CAT_NEEDS={
@@ -1012,11 +1069,21 @@ function toggleDemo(){
     const catsEl=document.getElementById('demoCats');
     catsEl.classList.add('show');
     setTimeout(()=>catsEl.classList.remove('show'),4000);
-    // QR code via Google Charts API (works offline if cached)
+    // QR code
     const qrEl=document.getElementById('demoQr');
     qrEl.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://workshop-diy.org" width="80" height="80" alt="QR" style="border-radius:6px"/><span>workshop-diy.org</span>`;
-    showDemoSlide(0);
-    startDemoTimer();
+    // News ticker
+    const tkItems=LANG==='fr'
+      ?['97 apps educatives','11 categories','Made in Chelles 🇫🇷','100% Open Source','Zero collecte de donnees','Fonctionne hors-ligne','workshop-diy.org']
+      :['97 educational apps','11 categories','Made in Chelles 🇫🇷','100% Open Source','Zero data collection','Works offline','workshop-diy.org'];
+    document.getElementById('demoTicker').innerHTML=tkItems.map(t=>`<span>${t}</span><span class="tk-dot">✦</span>`).join('').repeat(3);
+    // Spawn particles
+    spawnParticles('all');
+    // Cinematic opening
+    showOpening(()=>{
+      showDemoSlide(0);
+      startDemoTimer();
+    });
   } else {
     clearInterval(demoTimer);
     document.getElementById('demoStage').innerHTML='';
@@ -1189,10 +1256,14 @@ function buildSlideHTML(a,idx){
     visual=buildSimulation(a,purposeText);
   }
 
+  const isFeatured=FEATURED.includes(a.name);
+  const badgeHTML=isFeatured?`<div class="demo-glass-badge">⭐ Coup de Cœur</div>`:'';
+
   return `<div class="demo-slide">
     <div class="demo-visual">${visual}</div>
     <div class="demo-glass">
       <div class="demo-glass-content">
+        ${badgeHTML}
         <div class="demo-glass-name">${a.emoji} ${a.name}</div>
         <div class="demo-glass-purpose">${purposeText}</div>
         <div class="demo-glass-tags">${tagsHTML}</div>
@@ -1200,6 +1271,66 @@ function buildSlideHTML(a,idx){
       <div class="demo-glass-counter">#${idx+1}</div>
     </div>
   </div>`;
+}
+
+function showOpening(callback){
+  const stage=document.getElementById('demoStage');
+  const tagline=LANG==='fr'?'On construit, on apprend, on partage':'We build, we learn, we share';
+  stage.innerHTML=`<div class="demo-opening">
+    <div class="op-logo">Workshop-DIY</div>
+    <div class="op-counter" id="opCounter">0</div>
+    <div class="op-label">apps</div>
+    <div class="op-tagline">${tagline} 🚀</div>
+  </div>`;
+  // Animate counter from 0 to 97
+  const counterEl=document.getElementById('opCounter');
+  let n=0;const target=APPS.length;
+  const step=Math.ceil(target/60);
+  const iv=setInterval(()=>{
+    n=Math.min(n+step,target);
+    counterEl.textContent=n;
+    if(n>=target){clearInterval(iv);counterEl.textContent=target;}
+  },30);
+  setTimeout(callback,OPENING_DURATION);
+}
+
+function showClosing(callback){
+  const stage=document.getElementById('demoStage');
+  const msg=LANG==='fr'
+    ?{stat:'97 apps. 0€.',sub:'100% Open Source • Zéro collecte de données',cta:'Scannez pour commencer →'}
+    :{stat:'97 apps. 0€.',sub:'100% Open Source • Zero data collection',cta:'Scan to get started →'};
+  stage.innerHTML=`<div class="demo-closing">
+    <div class="cl-stat">${msg.stat}</div>
+    <div class="cl-sub">${msg.sub}</div>
+    <div class="cl-qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://workshop-diy.org" width="160" height="160" alt="QR"/></div>
+    <div class="cl-cta">${msg.cta}</div>
+  </div>`;
+  setTimeout(callback,CLOSING_DURATION);
+}
+
+function spawnParticles(cat){
+  const el=document.getElementById('demoParticles');
+  el.innerHTML='';
+  const color=CAT_COLORS[cat]||'#2e8b57';
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');
+    p.className='demo-particle';
+    const size=3+Math.random()*6;
+    const left=Math.random()*100;
+    const dur=8+Math.random()*12;
+    const delay=Math.random()*10;
+    p.style.cssText=`width:${size}px;height:${size}px;left:${left}%;background:${color};animation-duration:${dur}s;animation-delay:${delay}s;`;
+    el.appendChild(p);
+  }
+}
+
+function typewriterEffect(el,text,speed){
+  el.textContent='';el.classList.add('typewriter');
+  let i=0;
+  const iv=setInterval(()=>{
+    el.textContent=text.slice(0,++i);
+    if(i>=text.length){clearInterval(iv);setTimeout(()=>el.classList.remove('typewriter'),1000);}
+  },speed||40);
 }
 
 function showCatIntro(cat,count,callback){
@@ -1233,10 +1364,10 @@ function showDemoSlide(idx,dir){
     if(currentCat!==lastCatShown && dir!==undefined){
       lastCatShown=currentCat;
       const catCount=APPS.filter(x=>x.cats[0]===currentCat).length;
-      clearInterval(demoTimer);
+      clearTimeout(demoTimer);
       showCatIntro(currentCat,catCount,()=>{
         _renderSlide(stage,a,globalIdx,idx);
-        if(!demoPaused) startDemoTimer();
+        if(!demoPaused) scheduleNextSlide();
       });
       return;
     }
@@ -1250,18 +1381,42 @@ function _renderSlide(stage,a,globalIdx,idx){
   const tmp=document.createElement('div');
   tmp.innerHTML=buildSlideHTML(a,globalIdx);
   stage.appendChild(tmp.firstElementChild);
+  // Typewriter on purpose text
+  const purposeEl=stage.querySelector('.demo-glass-purpose');
+  if(purposeEl){
+    const text=purposeEl.textContent;
+    typewriterEffect(purposeEl,text,35);
+  }
+  // Particles color per category
+  spawnParticles(a.cats[0]||'all');
   document.getElementById('demoCounter').textContent=`${idx+1} / ${demoPlaylist.length}`;
   document.getElementById('demoProgress').style.width=((idx+1)/demoPlaylist.length*100)+'%';
 }
 
-function startDemoTimer(){
-  clearInterval(demoTimer);
+function scheduleNextSlide(){
+  clearTimeout(demoTimer);
   if(demoPaused||!demoPlaylist.length)return;
-  demoTimer=setInterval(()=>{
-    demoIndex=(demoIndex+1)%demoPlaylist.length;
+  const isFeat=FEATURED.includes(demoPlaylist[demoIndex]?.name);
+  const delay=isFeat?DEMO_INTERVAL*1.5:DEMO_INTERVAL;
+  demoTimer=setTimeout(()=>{
+    const nextIdx=(demoIndex+1)%demoPlaylist.length;
+    if(nextIdx===0 && demoIndex>0){
+      lastCatShown=null;
+      showClosing(()=>{
+        demoIndex=0;
+        showOpening(()=>{
+          showDemoSlide(0);
+          scheduleNextSlide();
+        });
+      });
+      return;
+    }
+    demoIndex=nextIdx;
     showDemoSlide(demoIndex,1);
-  },DEMO_INTERVAL);
+    scheduleNextSlide();
+  },delay);
 }
+function startDemoTimer(){scheduleNextSlide();}
 
 function demoNav(dir){
   if(!demoPlaylist.length)return;
@@ -1273,7 +1428,7 @@ function demoNav(dir){
 function demoPauseToggle(){
   demoPaused=!demoPaused;
   document.getElementById('demoPauseBtn').innerHTML=demoPaused?'▶ Play':'⏸ Pause';
-  if(demoPaused)clearInterval(demoTimer);else startDemoTimer();
+  if(demoPaused)clearTimeout(demoTimer);else scheduleNextSlide();
 }
 
 // Touch swipe
