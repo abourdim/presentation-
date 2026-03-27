@@ -162,6 +162,8 @@ body.demo-mode .demo-overlay{display:flex}
 .demo-counter{font-family:'Fredoka',sans-serif;font-size:18px;font-weight:700;color:rgba(255,255,255,.7);direction:ltr;unicode-bidi:bidi-override}
 .demo-exit{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:white;font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;padding:6px 18px;border-radius:12px;cursor:pointer;transition:.25s}
 .demo-exit:hover{background:rgba(239,68,68,.8);border-color:transparent;transform:scale(1.05)}
+@media(max-height:600px){.demo-header{padding:4px 12px}.demo-title{font-size:14px}.demo-counter{font-size:13px}.demo-exit{font-size:10px;padding:4px 10px}}
+@media(max-width:600px){.demo-header{padding:4px 10px;gap:4px}.demo-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40%}.demo-counter{font-size:12px}}
 
 /* DEMO STAGE — fullscreen */
 .demo-stage{position:absolute;inset:0;z-index:205;overflow:hidden;background:#0a0a0a}
@@ -243,6 +245,7 @@ body.demo-mode .demo-overlay{display:flex}
   margin-bottom:8px;animation:badge-glow 2s ease-in-out infinite alternate,glass-rise .8s cubic-bezier(.16,1,.3,1) .2s both;
   box-shadow:0 0 20px rgba(245,158,11,.4)}
 @keyframes badge-glow{0%{box-shadow:0 0 20px rgba(245,158,11,.3)}100%{box-shadow:0 0 40px rgba(245,158,11,.6)}}
+@keyframes confetti-fall{0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:1}80%{opacity:1}100%{transform:translateY(110vh) translateX(var(--drift,0px)) rotate(720deg);opacity:0}}
 
 /* Cinematic Opening */
 .demo-opening{position:absolute;inset:0;z-index:250;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
@@ -596,6 +599,7 @@ body.dark ::-webkit-scrollbar-thumb{background:var(--border)}
   <div class="demo-nav">
     <button onclick="demoNav(-1)" title="Previous">◀</button>
     <button class="demo-pause" onclick="demoPauseToggle()" id="demoPauseBtn">⏸ Pause</button>
+    <button onclick="cycleSpeed()" id="demoSpeedBtn" title="Slide speed">⏩ 7s</button>
     <button onclick="demoNav(1)" title="Next">▶</button>
   </div>
 </div>
@@ -949,8 +953,10 @@ function buildMiniSim(a){
     return `<div class="card-sim"><div class="mini-chat"><div class="mini-chat-bar">${e} Chat</div><div class="mini-chat-body"><div class="mini-msg u">🧒 ${LANG==='fr'?'Raconte !':'Tell me!'}</div><div class="mini-msg b">🤖 ${LANG==='fr'?'Il etait une fois...':'Once upon a time...'}</div><div class="mini-msg u">🧒 ${LANG==='fr'?'Et ensuite ?':'And then?'}</div><div class="mini-msg b">${e} ${LANG==='fr'?'A toi de jouer !':'Your turn!'}</div></div></div></div>`;
   }
   if(c.includes('microbit')){
-    const patterns={'morse-code':[1,0,1,0,0,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0,0,0,1,0,1],'bit-54-activities':[1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1],'default':[0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0]};
-    const l=patterns[n]||patterns['default'];
+    const patterns={'morse-code':[1,0,1,0,0,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0,0,0,1,0,1],'bit-54-activities':[1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1]};
+    // Generate unique LED pattern from app name hash to avoid duplicates
+    function hashLeds(name){const h=name.split('').reduce((s,c,i)=>s+c.charCodeAt(0)*(i+7),0);return Array.from({length:25},(_,i)=>((h*(i+1)*31+i*17)%97)>48?1:0);}
+    const l=patterns[n]||hashLeds(n);
     return `<div class="card-sim"><div style="background:#1a2e3e;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px"><div style="background:#222;border-radius:14px;padding:16px;border:3px solid #444;box-shadow:0 4px 20px rgba(0,0,0,.4)"><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">${l.map(v=>`<div style="width:14px;height:14px;border-radius:3px;background:${v?'#f44336':'#2a0a0a'};box-shadow:${v?'0 0 8px #f44336':'none'};transition:.3s"></div>`).join('')}</div></div></div></div>`;
   }
   if(c.includes('hardware')){
@@ -1008,7 +1014,7 @@ function render(){
         <div class="card-desc">${a.desc[LANG]||a.desc.fr}</div>
         <div class="card-tags">${tagsHTML}</div>
       </div>
-      <span class="card-link">Ouvrir ↗</span>`;
+      ${hasThumb?'<span class="card-link">Ouvrir ↗</span>':''}`;
     gridEl.appendChild(card);
   });
 }
@@ -1052,7 +1058,7 @@ render();
 //  DEMO MODE — 3D Spectacular for Kids
 // ═══════════════════════════════════════
 let demoActive=false,demoIndex=0,demoPaused=false,demoTimer=null,demoFilter='all',demoPlaylist=[];
-const DEMO_INTERVAL=7000;
+let DEMO_INTERVAL=7000;
 const CAT_INTRO_DURATION=3500;
 const CAT_COLORS={all:'#2e8b57',ai:'#7c3aed',microbit:'#0ea5e9',hardware:'#059669',security:'#ef4444',network:'#3b82f6',arabic:'#d4a03c',learning:'#6366f1',games:'#ec4899',tools:'#6b7280',camera:'#8b5cf6',classroom:'#f59e0b'};
 const CAT_SUBTITLES={
@@ -1461,6 +1467,8 @@ function _renderSlide(stage,a,globalIdx,idx){
   }
   // Particles color per category
   spawnParticles(a.cats[0]||'all');
+  // Confetti burst for Coup de Coeur apps
+  if(FEATURED.includes(a.name)) setTimeout(launchConfetti,400);
   // Voice narration
   const purpose=a.purpose?(a.purpose[LANG]||a.purpose.fr):'';
   speakText(a.name+'. '+purpose);
@@ -1525,6 +1533,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='s'||e.key==='S')startStoryMode();
   if(e.key==='c'||e.key==='C')showConstellation();
   if(e.key==='m'||e.key==='M')toggleMirror();
+  if(e.key==='d'||e.key==='D')cycleSpeed();
   if(e.key==='?')showHelp();
 });
 
@@ -1755,7 +1764,7 @@ function showHelp(){
   const stage=document.getElementById('demoStage');
   const keys=[
     ['Space / →','Next slide'],['←','Previous slide'],['P','Pause / Play'],['F','Fullscreen'],
-    ['V','Voice on/off'],['S','Story mode'],['C','Constellation'],['M','Mirror mode'],['Esc','Exit demo'],['?','This help']
+    ['D','Speed 5s/7s/10s/15s'],['V','Voice on/off'],['S','Story mode'],['C','Constellation'],['M','Mirror mode'],['Esc','Exit demo'],['?','This help']
   ];
   stage.innerHTML=`<div style="position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;animation:fade-in .5s ease">
     <div style="font-family:Fredoka,sans-serif;font-size:32px;color:white;font-weight:700">⌨️ ${LANG==='fr'?'Raccourcis':'Shortcuts'}</div>
@@ -1765,6 +1774,44 @@ function showHelp(){
     <div style="font-family:Fredoka,sans-serif;font-size:14px;color:rgba(255,255,255,.4);margin-top:16px">${LANG==='fr'?'Appuyez sur une touche pour continuer':'Press any key to continue'}</div>
   </div>`;
   clearTimeout(demoTimer);
+}
+
+// ═══════════════════════════════════════
+//  🎊 CONFETTI BURST (Coup de Cœur)
+// ═══════════════════════════════════════
+function launchConfetti(){
+  const container=document.getElementById('demoStage');
+  if(!container)return;
+  const colors=['#fbbf24','#f59e0b','#d97706','#fff','#fde68a','#f87171','#4ade80','#60a5fa'];
+  const shapes=['●','★','◆','▲','♦','✦'];
+  for(let i=0;i<60;i++){
+    const el=document.createElement('div');
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    const shape=shapes[Math.floor(Math.random()*shapes.length)];
+    const x=20+Math.random()*60;
+    const delay=Math.random()*0.4;
+    const dur=1.5+Math.random()*1.5;
+    const drift=(Math.random()-0.5)*120;
+    el.textContent=shape;
+    el.style.cssText=`position:absolute;top:-5%;left:${x}%;z-index:300;font-size:${10+Math.random()*14}px;color:${color};pointer-events:none;opacity:1;animation:confetti-fall ${dur}s ${delay}s ease-in forwards`;
+    el.style.setProperty('--drift',drift+'px');
+    container.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+delay)*1000+100);
+  }
+}
+
+// ═══════════════════════════════════════
+//  ⏩ SPEED CONTROL (demo mode)
+// ═══════════════════════════════════════
+const SPEED_OPTIONS=[5000,7000,10000,15000];
+const SPEED_LABELS=['5s','7s','10s','15s'];
+let speedIdx=1; // default 7s
+function cycleSpeed(){
+  speedIdx=(speedIdx+1)%SPEED_OPTIONS.length;
+  DEMO_INTERVAL=SPEED_OPTIONS[speedIdx];
+  const btn=document.getElementById('demoSpeedBtn');
+  if(btn) btn.textContent='⏩ '+SPEED_LABELS[speedIdx];
+  if(!demoPaused) scheduleNextSlide();
 }
 </script>
 </body>

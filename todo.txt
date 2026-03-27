@@ -27,23 +27,24 @@ Updated: 2026-03-26 20:00
 [x] 18 tool-specific sims (termlite, warsha, git-pulse, etc.)
 [x] rxy/bit-bot: rawgit blocks screenshots — using custom sims instead
 
-⚠️ KNOWN ISSUES
-----------------
-[ ] Some "Ouvrir" buttons appear on cards with no real screenshot
-[ ] Demo header can overlap app screenshots on small screens
-[ ] Duplicate LED patterns on micro:bit grid cards (same heart pattern)
+⚠️ KNOWN ISSUES (all fixed 2026-03-27)
+----------------------------------------
+[x] Some "Ouvrir" buttons appear on cards with no real screenshot — hidden on sim-only cards
+[x] Demo header can overlap app screenshots on small screens — responsive header CSS
+[x] Duplicate LED patterns on micro:bit grid cards — unique hash-based patterns per app
 
 🔧 TODO — SHORT TERM
 ---------------------
-[ ] Fix duplicate LED patterns on micro:bit cards in grid view
+[x] Fix duplicate LED patterns on micro:bit cards in grid view
 [ ] End-to-end test: watch all 97 slides in demo, note any visual bugs
 [ ] Push presentation commits to GitHub Pages
 
 💡 TODO — NICE TO HAVE
 -----------------------
-[ ] Presenter help overlay (press ? to see keyboard shortcuts)
-[ ] Fullscreen API integration (press F to go true fullscreen)
-[ ] Speed control in demo (5s / 7s / 10s / 15s per slide)
+[x] Presenter help overlay (press ? to see keyboard shortcuts) — already existed
+[x] Fullscreen API integration (press F to go true fullscreen) — already existed
+[x] Speed control in demo (5s / 7s / 10s / 15s per slide) — press D or click ⏩ button
+[x] Confetti burst on Coup de Coeur apps — 60 particles on featured slides
 [ ] Sound effects toggle (subtle whoosh on transitions)
 [ ] Print mode / PDF export for offline handout
 [ ] Stats dashboard slide between categories (animated counters)
@@ -52,5 +53,4 @@ Updated: 2026-03-26 20:00
 [ ] Mobile responsive for demo mode (currently optimized for big screens)
 [ ] Offline mode: embed thumbnails as base64 for no-internet presentations
 [ ] Add more Coup de Coeur apps based on audience feedback
-[ ] Confetti burst on Coup de Coeur apps
 [ ] Auto-detect screen size and adjust font sizes
